@@ -1,0 +1,11 @@
+{
+  "name": "cybeorch/lab-platform",
+  "description": "CYBEORCH LAB platform",
+  "require": {
+    "php": ">=8.1",
+    "phpmailer/phpmailer": "^6.9"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

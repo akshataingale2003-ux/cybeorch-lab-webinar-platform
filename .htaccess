@@ -1,0 +1,57 @@
+Options -Indexes
+Options -ExecCGI
+DirectoryIndex index.php
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https:; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;"
+    Header always unset X-Powered-By
+    Header always unset Server
+</IfModule>
+
+# Prevent access to sensitive files
+<Files ".env">
+    Require all denied
+</Files>
+<FilesMatch "\.(sql|env|log|bak|sh|py|rb|pl)$">
+    Require all denied
+</FilesMatch>
+
+# Protect includes directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule ^uploads/.*\.(php|php5|phtml|cgi|pl|py|rb|sh)$ - [F,L]
+</IfModule>
+
+# PHP Settings
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value session.cookie_httponly 1
+    php_value session.cookie_secure 0
+    php_value session.use_strict_mode 1
+    php_value upload_max_filesize 5M
+    php_value post_max_size 10M
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript
+</IfModule>
+
+# Cache static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+</IfModule>

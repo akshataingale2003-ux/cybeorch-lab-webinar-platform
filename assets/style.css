@@ -1,0 +1,434 @@
+/**
+ * CYBEORCH — Mandatory full-screen registration popup
+ * Glassmorphism UI · responsive · no close button
+ */
+
+body.cybeorch-registration-locked {
+  overflow: hidden !important;
+  height: 100vh;
+  touch-action: none;
+}
+
+body.cybeorch-registration-locked > *:not(.cybeorch-reg-overlay) {
+  pointer-events: none;
+  user-select: none;
+}
+
+.cybeorch-reg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  overflow: hidden;
+  background: rgba(2, 8, 20, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: cybeorchRegFadeIn 0.5s ease-out;
+}
+
+@keyframes cybeorchRegFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes cybeorchRegSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cybeorch-reg-card {
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100dvh - 1rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1.25rem 1.35rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  background: linear-gradient(
+    145deg,
+    rgba(15, 52, 96, 0.55) 0%,
+    rgba(10, 22, 40, 0.78) 45%,
+    rgba(5, 11, 24, 0.88) 100%
+  );
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 0 48px rgba(0, 212, 255, 0.14);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  animation: cybeorchRegSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+  color: #e0e8f0;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.cybeorch-reg-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-right: 2px;
+}
+
+.cybeorch-reg-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.cybeorch-reg-brand {
+  text-align: center;
+  margin-bottom: 0.25rem;
+  flex-shrink: 0;
+}
+
+.cybeorch-reg-brand h2 {
+  margin: 0;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(1.25rem, 4.5vw, 1.65rem);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.cybeorch-reg-brand .accent {
+  color: #00d4ff;
+}
+
+.cybeorch-reg-tagline {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #7a8fa6;
+  line-height: 1.4;
+  margin: 0 0 0.65rem;
+  flex-shrink: 0;
+}
+
+.cybeorch-reg-card > .cybeorch-reg-alert,
+.cybeorch-reg-card > #cybeorchRegAjaxAlert {
+  flex-shrink: 0;
+}
+
+.cybeorch-reg-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  margin-bottom: 0.65rem;
+}
+
+.cybeorch-reg-alert-error {
+  background: rgba(255, 68, 68, 0.12);
+  border: 1px solid rgba(255, 68, 68, 0.4);
+  color: #ff8888;
+}
+
+.cybeorch-reg-alert-success {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.35);
+  color: #00ff88;
+}
+
+.cybeorch-reg-alert-info {
+  background: rgba(255, 209, 102, 0.1);
+  border: 1px solid rgba(255, 209, 102, 0.42);
+  color: #ffd166;
+}
+
+.cybeorch-reg-field {
+  margin-bottom: 0.65rem;
+}
+
+.cybeorch-reg-field label {
+  display: block;
+  font-size: 0.82rem;
+  color: #7a8fa6;
+  margin-bottom: 0.35rem;
+}
+
+.cybeorch-reg-field input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.95rem;
+  color: #e0e8f0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 212, 255, 0.22);
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cybeorch-reg-field input:focus {
+  outline: none;
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.14);
+}
+
+.cybeorch-reg-field input::placeholder {
+  color: #5a6d82;
+}
+
+.cybeorch-reg-submit {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #00d4ff 0%, #00ff88 100%);
+  color: #050b18;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.cybeorch-reg-submit:hover {
+  transform: translateY(-2px);
+}
+
+.cybeorch-reg-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  transform: none;
+}
+
+.cybeorch-reg-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(5, 11, 24, 0.25);
+  border-top-color: #050b18;
+  border-radius: 50%;
+  animation: cybeorchRegSpin 0.7s linear infinite;
+}
+
+.cybeorch-reg-submit.is-loading .cybeorch-reg-spinner {
+  display: inline-block;
+}
+
+@keyframes cybeorchRegSpin {
+  to { transform: rotate(360deg); }
+}
+
+.cybeorch-reg-footer {
+  text-align: center;
+  margin-top: 0.65rem;
+}
+
+.cybeorch-reg-footer-note {
+  font-size: 0.7rem;
+  color: #5a6d82;
+  margin: 0 0 0.5rem;
+  line-height: 1.35;
+}
+
+.cybeorch-reg-footer-note:last-child {
+  margin-bottom: 0;
+}
+
+.cybeorch-reg-footer-note a {
+  color: #00d4ff;
+  text-decoration: none;
+}
+
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cybeorch-reg-email-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.cybeorch-reg-email-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.cybeorch-reg-btn-secondary {
+  flex-shrink: 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 212, 255, 0.45);
+  background: rgba(0, 212, 255, 0.12);
+  color: #00d4ff;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.cybeorch-reg-btn-secondary:hover:not(:disabled) {
+  background: rgba(0, 212, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.cybeorch-reg-btn-secondary:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.cybeorch-reg-btn-secondary.is-loading .cybeorch-reg-spinner {
+  display: inline-block;
+  border-color: rgba(0, 212, 255, 0.25);
+  border-top-color: #00d4ff;
+}
+
+.cybeorch-reg-otp-block {
+  padding: 0.65rem 0.75rem;
+  margin-bottom: 0.65rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  background: rgba(0, 212, 255, 0.06);
+}
+
+.cybeorch-reg-otp-hint {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: #7a8fa6;
+}
+
+.cybeorch-reg-otp-block #regOtp {
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+  border-color: rgba(0, 212, 255, 0.45);
+}
+
+.cybeorch-reg-otp-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.cybeorch-reg-otp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+.cybeorch-reg-timer {
+  font-size: 0.78rem;
+  color: #7a8fa6;
+  margin: 0.35rem 0 0;
+}
+
+.cybeorch-reg-dev-hint {
+  font-size: 0.78rem;
+  color: #ffd166;
+  margin: 0.35rem 0 0;
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(255, 209, 102, 0.08);
+  border: 1px dashed rgba(255, 209, 102, 0.35);
+}
+
+.cybeorch-reg-closing {
+  animation: cybeorchRegFadeOut 0.5s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes cybeorchRegFadeOut {
+  to { opacity: 0; }
+}
+
+.cybeorch-reg-submit[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.register-after-otp {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.register-after-otp.is-ready {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.register-after-otp .cybeorch-reg-field input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .cybeorch-reg-email-row {
+    flex-direction: column;
+  }
+  .cybeorch-reg-btn-secondary {
+    width: 100%;
+  }
+  .cybeorch-reg-otp-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .cybeorch-reg-card {
+    max-width: 480px;
+  }
+}
+
+@media (max-height: 700px) {
+  .cybeorch-reg-card {
+    padding: 1rem 1.15rem 0.9rem;
+  }
+  .cybeorch-reg-field {
+    margin-bottom: 0.5rem;
+  }
+  .cybeorch-reg-tagline {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+  }
+  .cybeorch-reg-brand h2 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cybeorch-reg-card {
+    padding: 1rem 1.1rem 0.9rem;
+    border-radius: 16px;
+    max-height: calc(100dvh - 1rem);
+  }
+  .cybeorch-reg-overlay {
+    padding: 0.5rem;
+  }
+}
