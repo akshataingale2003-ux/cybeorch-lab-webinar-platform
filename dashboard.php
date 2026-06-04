@@ -3,10 +3,13 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/student-layout.php';
+require_once __DIR__ . '/includes/nxl-wallet.php';
 
 $ctx = studentContext();
 extract($ctx);
 $userId = $ctx['userId'];
+$walletSummary = getWalletSummaryForUser($userId);
+$balance = $walletSummary['balance'];
 
 $webinarCount  = db()->fetchOne('SELECT COUNT(*) as c FROM webinar_registrations WHERE user_id = ?', [$userId])['c'];
 $bootcampCount = db()->fetchOne('SELECT COUNT(*) as c FROM bootcamp_enrollments WHERE user_id = ?', [$userId])['c'];
@@ -85,10 +88,13 @@ renderStudentSidebar('dashboard', $ctx);
       <div class="col-6 col-lg-3">
         <div class="stat-card">
           <div class="stat-icon" style="background:rgba(0,255,136,0.1);color:var(--cyber-green)"><i class="fas fa-coins"></i></div>
-          <div class="stat-value" style="color:var(--cyber-green)"><?= number_format($balance) ?></div>
+          <div class="stat-value" style="color:var(--cyber-green)"><?= number_format($walletSummary['balance']) ?></div>
           <div class="stat-label">NxL Token Balance</div>
-          <?php if ($referralCount > 0): ?>
-          <div class="stat-change up"><i class="fas fa-users me-1"></i><?= (int) $referralCount ?> successful referrals</div>
+          <div class="stat-change up" style="font-size:.75rem;color:var(--cyber-muted)">
+            Earned <?= number_format($walletSummary['total_earned']) ?> · Spent <?= number_format($walletSummary['total_spent']) ?>
+          </div>
+          <?php if ($walletSummary['referrals_made'] > 0): ?>
+          <div class="stat-change up"><i class="fas fa-users me-1"></i><?= (int) $walletSummary['referrals_made'] ?> referrals · <?= number_format($walletSummary['referral_earnings']) ?> NxL</div>
           <?php endif; ?>
         </div>
       </div>
@@ -136,7 +142,7 @@ renderStudentSidebar('dashboard', $ctx);
           </div>
           <p style="color:var(--cyber-muted);font-size:.88rem;margin:0 0 1rem">Share your referral link and earn <strong style="color:var(--cyber-green)"><?= NXL_REFERRAL_BONUS ?> NxL tokens</strong> for every friend who joins!</p>
           <div class="referral-input-row">
-            <input type="text" class="form-control" value="<?= htmlspecialchars(SITE_URL . '/index.php?register_required=1&ref=' . $user['referral_code']) ?>" id="refLink" readonly>
+            <input type="text" class="form-control" value="<?= htmlspecialchars(referralShareUrl((string) $user['referral_code'])) ?>" id="refLink" readonly>
             <button type="button" onclick="copyRef()" class="btn-cyber">
               <i class="fas fa-copy me-1"></i>Copy
             </button>
@@ -159,7 +165,9 @@ renderStudentSidebar('dashboard', $ctx);
               <i class="fas fa-<?= $tx['type'] === 'credit' ? 'arrow-down' : 'arrow-up' ?>"></i>
             </div>
             <div class="tx-desc">
-              <div class="tx-title"><?= htmlspecialchars($tx['description'] ?? ucfirst(str_replace('_', ' ', (string) $tx['reason']))) ?></div>
+              <div class="tx-title"><?= htmlspecialchars(
+                  (string) ($tx['remarks'] ?? $tx['description'] ?? nxlRewardLabel((string) $tx['reason']))
+              ) ?></div>
               <div class="tx-date"><?= timeAgo($tx['created_at']) ?></div>
             </div>
             <div class="tx-amount <?= htmlspecialchars((string) $tx['type']) ?>">

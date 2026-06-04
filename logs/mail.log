@@ -1,0 +1,14 @@
+2026-06-03 11:47:16 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:47:22 [ERROR] registration_otp — SMTP Error: Could not authenticate. {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:52:14 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:52:22 [ERROR] registration_otp — SMTP Error: Could not authenticate. {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:52:48 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:52:52 [ERROR] registration_otp — SMTP Error: Could not authenticate. {"to":"akshataingale2003@gmail.com"}
+2026-06-03 12:04:58 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-03 12:05:07 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-04 01:22:45 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-04 01:22:55 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-04 02:05:59 [INFO] registration_otp — Sending OTP email {"to":"akshataingale29@gmail.com"}
+2026-06-04 02:06:06 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale29@gmail.com"}
+2026-06-04 02:06:06 [INFO] registration_otp — Sending OTP email {"to":"akshataingale29@gmail.com"}
+2026-06-04 02:06:09 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale29@gmail.com"}

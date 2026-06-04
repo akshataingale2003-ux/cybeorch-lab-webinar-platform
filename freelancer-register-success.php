@@ -30,7 +30,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <div class="success-card">
   <div class="success-icon"><i class="fas fa-check"></i></div>
   <h1>Application Submitted!</h1>
-  <p>Thank you for registering as a freelancer with CYBEORCH LAB. Our team will review your profile and contact you when suitable assignments are available.</p>
+  <p>Thank you for registering as a freelancer with CYBEORCH LAB. Our team will review your profile and contact you when suitable hands-on projects are available.</p>
   <div>
     <a href="<?= url('dashboard.php') ?>" class="btn-primary-cyber"><i class="fas fa-th-large me-2"></i>Go to Dashboard</a>
     <a href="<?= url('') ?>" class="btn-outline-cyber"><i class="fas fa-home me-2"></i>Back to Home</a>

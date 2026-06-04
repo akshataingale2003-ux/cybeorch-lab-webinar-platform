@@ -6,7 +6,7 @@ require_once __DIR__ . '/includes/student-layout.php';
 
 $ctx = studentContext();
 $user = $ctx['user'];
-$refLink = url('index.php?register_required=1&ref=' . urlencode($user['referral_code']));
+$refLink = referralShareUrl((string) $user['referral_code']);
 $count = db()->fetchOne('SELECT COUNT(*) as c FROM referrals WHERE referrer_id = ?', [$ctx['userId']])['c'];
 
 renderStudentHead('Refer & Earn');

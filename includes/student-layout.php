@@ -8,7 +8,13 @@ function studentContext(): array
     $userId = (int) $_SESSION['user_id'];
     $user   = db()->fetchOne('SELECT * FROM users WHERE id = ?', [$userId]);
     $wallet = db()->fetchOne('SELECT * FROM wallet WHERE user_id = ?', [$userId]);
-    $balance = $wallet ? (float) $wallet['balance'] : 0.0;
+    if (function_exists('getWalletSummaryForUser')) {
+        require_once __DIR__ . '/nxl-wallet.php';
+        $summary = getWalletSummaryForUser($userId);
+        $balance = $summary['balance'];
+    } else {
+        $balance = $wallet ? (float) $wallet['balance'] : 0.0;
+    }
     $unreadNotifs = (int) db()->fetchOne('SELECT COUNT(*) as c FROM notifications WHERE user_id = ? AND is_read = 0', [$userId])['c'];
     $initials = strtoupper(substr($user['full_name'], 0, 1));
     if (str_contains($user['full_name'], ' ')) {
@@ -81,6 +87,10 @@ function renderStudentSidebar(string $active, array $ctx): void
 
 function renderStudentLayoutEnd(): void
 {
+    if (function_exists('renderNxlRewardPopups')) {
+        require_once __DIR__ . '/nxl-wallet.php';
+        renderNxlRewardPopups();
+    }
     renderStudentPortalNavScript();
     renderSiteScripts(false);
     echo '</body></html>';

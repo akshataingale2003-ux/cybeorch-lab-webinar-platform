@@ -27,6 +27,24 @@ function adminEntityRegistry(): array
             'blockable' => true,
             'title_column' => 'title',
         ],
+        'live_project' => [
+            'table' => 'live_projects',
+            'label' => 'Live project',
+            'blockable' => true,
+            'title_column' => 'title',
+        ],
+        'assignment' => [
+            'table' => 'assignments',
+            'label' => 'Hands-on Projects',
+            'blockable' => true,
+            'title_column' => 'title',
+        ],
+        'freelance_project' => [
+            'table' => 'freelance_projects',
+            'label' => 'Freelance project',
+            'blockable' => true,
+            'title_column' => 'title',
+        ],
         'webinar_registration' => [
             'table' => 'webinar_registrations',
             'label' => 'Webinar registration',
@@ -86,6 +104,37 @@ function adminEntityRegistry(): array
             'label' => 'Contact message',
             'blockable' => true,
             'title_column' => 'name',
+        ],
+        'website_user' => [
+            'table' => 'website_users',
+            'label' => 'Website registration',
+            'blockable' => true,
+            'block_column' => 'is_blocked',
+            'title_column' => 'full_name',
+        ],
+        'form_submission' => [
+            'table' => 'form_submissions',
+            'label' => 'Form submission',
+            'blockable' => false,
+            'title_column' => 'form_label',
+        ],
+        'demo_request' => [
+            'table' => 'demo_requests',
+            'label' => 'Demo request',
+            'blockable' => false,
+            'title_column' => 'full_name',
+        ],
+        'collaboration_inquiry' => [
+            'table' => 'collaboration_inquiries',
+            'label' => 'Collaboration inquiry',
+            'blockable' => false,
+            'title_column' => 'full_name',
+        ],
+        'get_started_inquiry' => [
+            'table' => 'get_started_inquiries',
+            'label' => 'Get Started inquiry',
+            'blockable' => false,
+            'title_column' => 'full_name',
         ],
         'notification' => [
             'table' => 'notifications',
@@ -223,10 +272,13 @@ function renderAdminRecordActions(string $entity, int $id, bool $blocked = false
                     . '<i class="fas fa-ban"></i><span>Block</span></button>';
             }
         }
+        $deleteConfirm = $entity === 'user'
+            ? 'Move this user to Deleted? They cannot log in until restored from Trash.'
+            : ('Delete this ' . $cfg['label'] . '? It will be moved to trash when supported.');
         echo '<button type="button" class="btn-sm-cyber btn-delete" data-admin-action="delete" data-admin-entity="'
             . htmlspecialchars($entity) . '" data-admin-id="' . $id
-            . '" data-admin-confirm="Permanently delete this ' . htmlspecialchars($cfg['label'])
-            . '? This cannot be undone."><i class="fas fa-trash"></i><span>Delete</span></button>';
+            . '" data-admin-confirm="' . htmlspecialchars($deleteConfirm) . '">'
+            . '<i class="fas fa-trash"></i><span>Delete</span></button>';
     }
     echo '</div>';
 }
@@ -270,12 +322,26 @@ function adminTrashCount(): int
     return $total;
 }
 
+function adminParseListSortParam(string $default = 'newest'): string
+{
+    $raw = sanitize((string) ($_GET['sort'] ?? $default));
+    return in_array($raw, ['newest', 'oldest'], true) ? $raw : $default;
+}
+
+function adminSortSqlDirection(string $sort): string
+{
+    return $sort === 'oldest' ? 'ASC' : 'DESC';
+}
+
 /**
  * @return list<array{entity:string,type_label:string,id:int,title:string,deleted_at:string}>
  */
-function adminListTrashedItems(int $limit = 50): array
+function adminListTrashedItems(int $limit = 50, string $sort = 'newest'): array
 {
     ensureAdminActionsSchema();
+    if (!in_array($sort, ['newest', 'oldest'], true)) {
+        $sort = 'newest';
+    }
     $items = [];
     foreach (adminEntityRegistry() as $entity => $cfg) {
         $table = $cfg['table'];
@@ -304,7 +370,10 @@ function adminListTrashedItems(int $limit = 50): array
         } catch (Throwable $e) {
         }
     }
-    usort($items, static fn ($a, $b) => strcmp($b['deleted_at'], $a['deleted_at']));
+    usort($items, static function (array $a, array $b) use ($sort): int {
+        $cmp = strcmp($a['deleted_at'], $b['deleted_at']);
+        return $sort === 'oldest' ? $cmp : -$cmp;
+    });
     return array_slice($items, 0, $limit);
 }
 
@@ -370,6 +439,22 @@ function adminPerformRecordAction(string $action, string $entity, int $id): arra
                 ];
 
             case 'delete':
+                if ($entity === 'user' && adminTableHasColumn($table, 'deleted_at')) {
+                    db()->execute('UPDATE `' . $table . '` SET deleted_at = NOW() WHERE id = ?', [$id]);
+                    return [
+                        'success' => true,
+                        'message' => 'User moved to deleted. Restore from Trash or filter Deleted users.',
+                        'removed' => true,
+                    ];
+                }
+                if (adminTableHasColumn($table, 'deleted_at')) {
+                    db()->execute('UPDATE `' . $table . '` SET deleted_at = NOW() WHERE id = ?', [$id]);
+                    return [
+                        'success' => true,
+                        'message' => $cfg['label'] . ' moved to trash.',
+                        'removed' => true,
+                    ];
+                }
                 db()->execute('DELETE FROM `' . $table . '` WHERE id = ?', [$id]);
                 return [
                     'success' => true,
@@ -416,6 +501,60 @@ function adminPerformRecordAction(string $action, string $entity, int $id): arra
     }
 }
 
+/**
+ * @param list<array{entity: string, id: int|string}> $items
+ * @return array{success: bool, message: string, processed?: int, failed?: int}
+ */
+function adminPerformBulkRecordActions(string $action, array $items): array
+{
+    if (!in_array($action, ['restore', 'purge'], true)) {
+        return ['success' => false, 'message' => 'Bulk action not supported.'];
+    }
+
+    $processed = 0;
+    $failed = 0;
+    foreach ($items as $item) {
+        if (!is_array($item)) {
+            $failed++;
+            continue;
+        }
+        $entity = strtolower(trim((string) ($item['entity'] ?? '')));
+        $id = (int) ($item['id'] ?? 0);
+        if ($entity === '' || $id < 1) {
+            $failed++;
+            continue;
+        }
+        $result = adminPerformRecordAction($action, $entity, $id);
+        if (!empty($result['success'])) {
+            $processed++;
+        } else {
+            $failed++;
+        }
+    }
+
+    if ($processed === 0) {
+        return [
+            'success' => false,
+            'message' => $failed > 0 ? 'No items could be processed.' : 'No items selected.',
+            'processed' => 0,
+            'failed' => $failed,
+        ];
+    }
+
+    $verb = $action === 'restore' ? 'restored' : 'permanently deleted';
+    $message = $processed . ' item(s) ' . $verb . ' successfully.';
+    if ($failed > 0) {
+        $message .= ' ' . $failed . ' item(s) failed.';
+    }
+
+    return [
+        'success' => true,
+        'message' => $message,
+        'processed' => $processed,
+        'failed' => $failed,
+    ];
+}
+
 function adminHandleRecordActionRequest(): void
 {
     header('Content-Type: application/json; charset=utf-8');
@@ -441,6 +580,24 @@ function adminHandleRecordActionRequest(): void
     }
 
     $action = strtolower(trim((string) ($_POST['action'] ?? '')));
+    $isBulk = !empty($_POST['bulk']);
+
+    if ($isBulk) {
+        $rawItems = $_POST['items'] ?? '[]';
+        $items = is_string($rawItems) ? json_decode($rawItems, true) : $rawItems;
+        if (!is_array($items)) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Invalid bulk selection.']);
+            return;
+        }
+        $result = adminPerformBulkRecordActions($action, $items);
+        if (!$result['success']) {
+            http_response_code(400);
+        }
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+        return;
+    }
+
     $entity = strtolower(trim((string) ($_POST['entity'] ?? '')));
     $id = (int) ($_POST['id'] ?? 0);
 

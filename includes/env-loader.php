@@ -59,33 +59,32 @@ function cybeorchEnv(string $key, string $default = ''): string
     return trim((string) $v);
 }
 
-/** Stackmail / CYBEORCH outgoing SMTP (see hosting panel: smtp.stackmail.com). */
+/** Stackmail outgoing SMTP (hosting panel: smtp.stackmail.com, port 465 SSL). */
 function cybeorchSmtpPreset(): array
 {
     return [
         'host'      => 'smtp.stackmail.com',
         'port'      => 465,
         'secure'    => 'ssl',
-        'user'      => 'info@cybeorch.com',
+        'user'      => 'info@xyz.com',
         'from_name' => 'CYBEORCH LAB',
     ];
 }
 
-/** Infer SMTP host/port/secure from the mailbox domain when not set explicitly. */
+/** Infer SMTP host/port/secure from the mailbox when not set explicitly. */
 function cybeorchSmtpSettingsForEmail(string $email, ?string $host = null, ?int $port = null, ?string $secure = null): array
 {
     $preset = cybeorchSmtpPreset();
     $email  = strtolower(trim($email));
-    $domain = '';
-    if (str_contains($email, '@')) {
-        $domain = substr($email, (int) strrpos($email, '@') + 1);
-    }
 
     if ($host === null || $host === '') {
-        if ($domain === 'cybeorch.com' || str_ends_with($domain, '.cybeorch.com')) {
-            $host = $preset['host'];
-        } else {
+        if (
+            str_ends_with($email, '@gmail.com')
+            || str_ends_with($email, '@googlemail.com')
+        ) {
             $host = 'smtp.gmail.com';
+        } else {
+            $host = $preset['host'];
         }
     }
     if ($port === null || $port <= 0) {

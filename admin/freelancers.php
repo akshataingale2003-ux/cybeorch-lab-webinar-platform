@@ -111,7 +111,7 @@ renderAdminPageStart('Freelancer Applications', 'freelancers', 'fa-user-tie');
             </div>
           </div>
           <button type="submit" class="btn-submit mt-3"><i class="fas fa-save me-1"></i>Save</button>
-          <a href="<?= url('admin/freelancers.php') ?>" style="margin-left:0.75rem;color:var(--cyber-muted);font-size:0.88rem">← Back to list</a>
+          <a href="<?= adminUrl('freelancers.php') ?>" style="margin-left:0.75rem;color:var(--cyber-muted);font-size:0.88rem">← Back to list</a>
         </form>
       </div>
     </div>
@@ -121,7 +121,7 @@ renderAdminPageStart('Freelancer Applications', 'freelancers', 'fa-user-tie');
       <div class="form-card-header">All Applications (<?= count($freelancers) ?>)</div>
       <div class="form-card-body">
         <div class="filter-bar">
-          <a href="<?= url('admin/freelancers.php') ?>" class="<?= $statusFilter === '' ? 'active' : '' ?>">All</a>
+          <a href="<?= adminUrl('freelancers.php') ?>" class="<?= $statusFilter === '' ? 'active' : '' ?>">All</a>
           <?php foreach (['pending','reviewed','shortlisted','active','rejected'] as $s): ?>
           <a href="?status=<?= $s ?>" class="<?= $statusFilter === $s ? 'active' : '' ?>"><?= ucfirst($s) ?></a>
           <?php endforeach; ?>

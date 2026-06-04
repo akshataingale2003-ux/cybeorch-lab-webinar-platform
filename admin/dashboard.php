@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../includes/admin-init.php';
+require_once __DIR__ . '/../includes/nxl-wallet.php';
 requireAdminLogin();
+
+$adminWalletNotifs = fetchRecentAdminNotifications(10);
+$adminNotifUnread = getAdminUnreadNotificationCount();
 
 $totalUsers      = (int) dbTry(fn () => db()->fetchOne('SELECT COUNT(*) as c FROM users WHERE ' . adminSqlActive())['c'] ?? 0, 0);
 $totalWebinars   = (int) dbTry(fn () => db()->fetchOne('SELECT COUNT(*) as c FROM webinars WHERE ' . adminSqlActive())['c'] ?? 0, 0);
@@ -13,8 +17,8 @@ $todayRevenue    = (float) dbTry(fn () => db()->fetchOne("SELECT COALESCE(SUM(am
 $totalWallet     = (float) dbTry(fn () => db()->fetchOne('SELECT COALESCE(SUM(balance),0) as s FROM wallet WHERE ' . adminSqlActive())['s'] ?? 0, 0);
 $totalMessages   = (int) dbTry(fn () => getUnreadContactMessageCount(), 0);
 $blockedUsers    = (int) dbTry(fn () => adminBlockedUsersCount(), 0);
-$trashCount      = (int) dbTry(fn () => adminTrashCount(), 0);
-$trashRecent     = dbTry(fn () => adminListTrashedItems(6), []);
+$dashSort        = adminParseListSortParam();
+$dashOrder       = adminSortSqlDirection($dashSort);
 
 $recentRegis = dbTry(
     fn () => db()->fetchAll(
@@ -23,7 +27,7 @@ $recentRegis = dbTry(
          JOIN users u ON u.id=wr.user_id
          JOIN webinars w ON w.id=wr.webinar_id
          WHERE " . adminSqlActive('wr') . "
-         ORDER BY wr.registered_at DESC LIMIT 8"
+         ORDER BY wr.registered_at {$dashOrder} LIMIT 8"
     ),
     []
 );
@@ -31,7 +35,7 @@ $recentRegis = dbTry(
 $recentPayments = dbTry(
     fn () => db()->fetchAll(
         'SELECT p.*, u.full_name, u.email FROM payments p JOIN users u ON u.id=p.user_id
-         WHERE ' . adminSqlActive('p') . ' ORDER BY p.created_at DESC LIMIT 6'
+         WHERE ' . adminSqlActive('p') . " ORDER BY p.created_at {$dashOrder} LIMIT 6"
     ),
     []
 );
@@ -40,6 +44,7 @@ $monthlyRevenue = dbTry(
     fn () => db()->fetchAll(
         "SELECT DATE_FORMAT(paid_at,'%b') as month, SUM(amount) as revenue, COUNT(*) as count
          FROM payments WHERE status='paid' AND paid_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+         AND " . adminSqlActive() . "
          GROUP BY DATE_FORMAT(paid_at,'%Y-%m'), DATE_FORMAT(paid_at,'%b')
          ORDER BY MIN(paid_at) ASC"
     ),
@@ -137,10 +142,37 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 <p style="font-size:0.82rem;color:var(--cyber-muted);margin-bottom:1.25rem"><?= date('D, d M Y • h:i A') ?></p>
 
+    <?php if ($adminWalletNotifs): ?>
+    <div class="section-card mb-4">
+      <div class="section-card-header">
+        <div class="section-card-title">
+          <i class="fas fa-bell" style="color:var(--cyber-orange)"></i>
+          Wallet activity
+          <?php if ($adminNotifUnread > 0): ?>
+          <span class="badge-status badge-pending" style="margin-left:.5rem"><?= (int) $adminNotifUnread ?> new</span>
+          <?php endif; ?>
+        </div>
+        <a href="<?= adminUrl('admin/notifications.php') ?>" style="font-size:.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
+      </div>
+      <div class="section-card-body" style="padding:0">
+        <table class="data-table">
+          <tbody>
+            <?php foreach ($adminWalletNotifs as $an): ?>
+            <tr>
+              <td style="width:140px;color:var(--cyber-muted);font-size:.78rem"><?= date('d M Y, h:i A', strtotime((string) $an['created_at'])) ?></td>
+              <td><?= htmlspecialchars((string) $an['message']) ?></td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Quick Actions -->
     <div class="row g-3 mb-4">
       <div class="col-6 col-md-3">
-        <a href="<?= url('admin/webinars.php?action=add') ?>" class="quick-action">
+        <a href="<?= adminUrl('webinars.php?action=add') ?>" class="quick-action">
           <i class="fas fa-plus-circle" style="color:var(--cyber-accent)"></i>
           <span>Add Webinar</span>
         </a>
@@ -152,7 +184,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="<?= url('admin/wallet.php?action=credit') ?>" class="quick-action">
+        <a href="<?= adminUrl('wallet.php?action=credit') ?>" class="quick-action">
           <i class="fas fa-coins" style="color:var(--cyber-orange)"></i>
           <span>Credit NxL</span>
         </a>
@@ -163,12 +195,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <span>Broadcast</span>
         </a>
       </div>
-     <!-- <div class="col-6 col-md-3">
-        <a href="<?= adminUrl('admin/trash.php') ?>" class="quick-action">
-          <i class="fas fa-trash-restore" style="color:var(--cyber-red)"></i>
-          <span>Trash<?= $trashCount > 0 ? ' (' . $trashCount . ')' : '' ?></span>
-        </a>
-      </div> -->
     </div>
 
     <!-- Stat Cards -->
@@ -215,28 +241,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 
-    <?php if ($trashRecent): ?>
-    <div class="section-card mb-4">
-      <div class="section-card-header">
-        <div class="section-card-title"><i class="fas fa-trash-restore" style="color:var(--cyber-orange)"></i>Trash</div>
-        <a href="<?= adminUrl('admin/trash.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
-      </div>
-      <table class="data-table">
-        <thead><tr><th>Deleted</th><th>Type</th><th>Item</th><th>Actions</th></tr></thead>
-        <tbody>
-          <?php foreach ($trashRecent as $item): ?>
-          <tr data-admin-row="1" data-admin-entity="<?= htmlspecialchars($item['entity']) ?>" data-admin-id="<?= (int) $item['id'] ?>" data-admin-trash="1">
-            <td style="font-size:0.8rem;white-space:nowrap"><?= date('d M Y, h:i A', strtotime($item['deleted_at'])) ?></td>
-            <td><span class="badge-status badge-pending"><?= htmlspecialchars($item['type_label']) ?></span></td>
-            <td><?= htmlspecialchars($item['title']) ?></td>
-            <td><?php renderAdminRecordActions($item['entity'], (int) $item['id'], false, true); ?></td>
-          </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-    </div>
-    <?php endif; ?>
-
     <div class="row g-4 dashboard-recent-row">
       <div class="col-12 col-xl-3 dashboard-chart-col">
         <div class="section-card">
@@ -263,21 +267,20 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
       <div class="col-12 col-xl-9">
         <div class="dashboard-recent-panel">
+          <?php renderAdminSortBar('admin/dashboard.php', $dashSort); ?>
           <div class="section-card">
             <div class="section-card-header">
               <div class="section-card-title"><i class="fas fa-ticket-alt" style="color:var(--cyber-orange)"></i>Recent Registrations</div>
-              <a href="<?= url('admin/registrations.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
+              <a href="<?= adminUrl('registrations.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
             </div>
             <div class="table-scroll">
               <table class="data-table">
                 <thead><tr>
-                  <th>User Registration</th><th>Webinar</th><th>Date</th><th>Status</th><th>Attended</th><th>Actions</th>
+                  <th>User Registration</th><th>Webinar</th><th>Date</th><th>Status</th><th>Attended</th><th></th>
                 </tr></thead>
                 <tbody>
-                <?php foreach ($recentRegis as $r):
-                  $regBlocked = adminRecordIsBlocked($r);
-                ?>
-                <tr<?= renderAdminRecordRowAttrs('webinar_registration', (int) $r['id'], $regBlocked) ?>>
+                <?php foreach ($recentRegis as $r): ?>
+                <tr>
                   <td>
                     <div style="font-size:0.85rem;font-weight:500"><?= htmlspecialchars($r['full_name']) ?></div>
                     <div style="font-size:0.72rem;color:var(--cyber-muted)"><?= htmlspecialchars($r['email']) ?></div>
@@ -292,7 +295,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
                       <span style="color:var(--cyber-muted);font-size:0.8rem"><i class="fas fa-times-circle"></i></span>
                     <?php endif; ?>
                   </td>
-                  <td><?php renderAdminRecordActions('webinar_registration', (int) $r['id'], $regBlocked); ?></td>
+                  <td><a href="<?= adminUrl('admin/registrations.php?tab=webinar') ?>" class="btn-sm-link">Open</a></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($recentRegis)): ?>
@@ -306,18 +309,16 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <div class="section-card">
             <div class="section-card-header">
               <div class="section-card-title"><i class="fas fa-credit-card" style="color:var(--cyber-green)"></i>Recent Payments</div>
-              <a href="<?= url('admin/payments.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
+              <a href="<?= adminUrl('payments.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
             </div>
             <div class="table-scroll">
               <table class="data-table">
                 <thead><tr>
-                  <th>User Registration</th><th>Amount</th><th>For</th><th>Invoice</th><th>Status</th><th>Actions</th>
+                  <th>User Registration</th><th>Amount</th><th>For</th><th>Invoice</th><th>Status</th><th></th>
                 </tr></thead>
                 <tbody>
-                <?php foreach ($recentPayments as $p):
-                  $payBlocked = adminRecordIsBlocked($p);
-                ?>
-                <tr<?= renderAdminRecordRowAttrs('payment', (int) $p['id'], $payBlocked) ?>>
+                <?php foreach ($recentPayments as $p): ?>
+                <tr>
                   <td>
                     <div style="font-size:0.85rem;font-weight:500"><?= htmlspecialchars($p['full_name']) ?></div>
                     <div style="font-size:0.72rem;color:var(--cyber-muted)"><?= date('d M, h:i A', strtotime($p['created_at'])) ?></div>
@@ -326,7 +327,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
                   <td style="font-size:0.8rem;text-transform:capitalize"><?= str_replace('_',' ',$p['payment_for']) ?></td>
                   <td style="font-size:0.75rem;color:var(--cyber-muted)"><?= htmlspecialchars($p['invoice_no'] ?? '–') ?></td>
                   <td><span class="badge-status badge-<?= $p['status'] === 'paid' ? 'paid' : 'pending' ?>"><?= strtoupper($p['status']) ?></span></td>
-                  <td><?php renderAdminRecordActions('payment', (int) $p['id'], $payBlocked); ?></td>
+                  <td><a href="<?= adminUrl('admin/payments.php?view=' . (int) $p['id']) ?>" class="btn-sm-link">View</a></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($recentPayments)): ?>

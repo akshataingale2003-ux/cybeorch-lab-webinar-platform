@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 function enforcePublicSiteAuth(): void
 {
-    if (PHP_SAPI === 'cli') {
+    if (!isPublicAuthEnabled() || PHP_SAPI === 'cli') {
         return;
     }
 
@@ -39,6 +39,7 @@ function enforcePublicSiteAuth(): void
 
     $guestAuthPages = [
         'login.php',
+        'signup.php',
         'register-website.php',
         'forgot-password.php',
         'logout.php',
@@ -63,29 +64,42 @@ function enforcePublicSiteAuth(): void
         return;
     }
 
-    /** All other pages require popup registration first. */
-    if (!hasWebsiteAccess()) {
-        header('Location: ' . url('index.php?register_required=1'));
-        exit;
-    }
-
-    /** Marketing/enquiry pages (registered guest, no user registration & trainee login required). */
-    $websiteBrowsingPages = [
+    /**
+     * Public catalog & marketing pages (no website popup, no trainee login).
+     * Admin-managed webinars, bootcamps, live projects, assignments, etc. must be visible here.
+     */
+    $publicCatalogPages = [
         'webinars.php',
         'bootcamps.php',
+        'checkout.php',
+        'products.php',
+        'services.php',
         'aboutus.php',
         'about.php',
         'contact.php',
         'terms.php',
         'privacy.php',
         'freelancer.php',
+        'freelance-projects.php',
+        'live-projects.php',
+        'hands-on-projects.php',
         'enquire-enroll.php',
+        'secure-payment.php',
+        'get-started.php',
         'assignment-register.php',
         'start-project.php',
         'book-consulting.php',
+        'webinar-registration-confirm.php',
+        'registration-success.php',
     ];
-    if (in_array($script, $websiteBrowsingPages, true)) {
+    if (in_array($script, $publicCatalogPages, true)) {
         return;
+    }
+
+    /** Remaining pages require website popup registration first. */
+    if (!hasWebsiteAccess()) {
+        header('Location: ' . url('index.php?register_required=1'));
+        exit;
     }
 
     /** Dashboard, wallet, profile, etc. require user registration & trainee session (created on popup register). */

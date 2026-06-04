@@ -31,7 +31,14 @@ function razorpayIsConfigured(): bool
 class Payment {
 
     // Create Razorpay Order
-    public static function createOrder(int $userId, float $amount, string $payFor, int $refId, array $notes = []): array {
+    public static function createOrder(
+        int $userId,
+        float $amount,
+        string $payFor,
+        int $refId,
+        array $notes = [],
+        string $currency = 'INR'
+    ): array {
         if (!razorpayIsConfigured()) {
             return ['success' => false, 'message' => paymentUserMessage()];
         }
@@ -39,13 +46,19 @@ class Payment {
         if ($amount <= 0) {
             return ['success' => false, 'message' => paymentUserMessage()];
         }
+
+        $currency = strtoupper(trim($currency));
+        if (!in_array($currency, ['INR', 'USD'], true)) {
+            $currency = 'INR';
+        }
+
         $orderId = 'CYB_' . strtoupper(uniqid());
-        $amountPaise = (int)($amount * 100); // Razorpay uses paise
+        $amountPaise = (int) round($amount * 100);
 
         // Call Razorpay API to create order
         $payload = json_encode([
             'amount'   => $amountPaise,
-            'currency' => RAZORPAY_CURRENCY,
+            'currency' => $currency,
             'receipt'  => $orderId,
             'notes'    => $notes,
         ]);
@@ -74,8 +87,8 @@ class Payment {
         // Save order in DB
         $invoiceNo = generateInvoiceNo();
         $paymentId = db()->insert(
-            "INSERT INTO payments (user_id, order_id, razorpay_order_id, amount, payment_for, reference_id, invoice_no, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'created')",
-            [$userId, $orderId, $rzpOrder['id'], $amount, $payFor, $refId, $invoiceNo]
+            "INSERT INTO payments (user_id, order_id, razorpay_order_id, amount, currency, payment_for, reference_id, invoice_no, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'created')",
+            [$userId, $orderId, $rzpOrder['id'], $amount, $currency, $payFor, $refId, $invoiceNo]
         );
 
         return [
@@ -83,6 +96,7 @@ class Payment {
             'order_id'         => $orderId,
             'razorpay_order_id'=> $rzpOrder['id'],
             'amount_paise'     => $amountPaise,
+            'currency'         => $currency,
             'payment_db_id'    => $paymentId,
         ];
     }
@@ -124,8 +138,11 @@ class Payment {
                 [$payment['id'], $userId, $refId]
             );
             // Award NxL tokens preview (full award on attendance)
+            $paidLabel = (($payment['currency'] ?? 'INR') === 'USD')
+                ? '$' . number_format((float) $payment['amount'], 0) . ' USD'
+                : '₹' . number_format((float) $payment['amount']);
             sendNotification($userId, 'payment', 'Payment Confirmed ✓',
-                'Your webinar registration payment of ₹' . $payment['amount'] . ' was successful!', $refId, 'webinar');
+                'Your webinar registration payment of ' . $paidLabel . ' was successful!', $refId, 'webinar');
 
         } elseif ($payment['payment_for'] === 'bootcamp') {
             db()->execute(
@@ -141,22 +158,20 @@ class Payment {
         // Process referral reward if applicable
         self::processReferralReward($userId);
 
+        $payment = db()->fetchOne('SELECT * FROM payments WHERE razorpay_order_id = ?', [$rzpOrderId]);
+        if ($payment) {
+            require_once __DIR__ . '/form-submissions.php';
+            $user = db()->fetchOne('SELECT full_name, email, phone FROM users WHERE id = ?', [$userId]);
+            recordPaymentFormSubmission($payment, $user ?: null);
+        }
+
         return ['success' => true, 'message' => 'Payment verified and processed successfully!', 'data' => $payment];
     }
 
-    // Process referral bonus
-    private static function processReferralReward(int $userId): void {
-        $referral = db()->fetchOne(
-            "SELECT r.*, u.full_name as referrer_name FROM referrals r JOIN users u ON u.id = r.referrer_id WHERE r.referred_id = ? AND r.status = 'pending'",
-            [$userId]
-        );
-        if ($referral) {
-            creditWallet($referral['referrer_id'], NXL_REFERRAL_BONUS, 'referral_bonus', $userId,
-                "Referral bonus - your friend joined CYBEORCH LAB!");
-            db()->execute("UPDATE referrals SET status = 'rewarded', rewarded_at = NOW() WHERE id = ?", [$referral['id']]);
-            sendNotification($referral['referrer_id'], 'referral', '🎉 Referral Bonus Credited!',
-                'You earned ' . NXL_REFERRAL_BONUS . ' NxL tokens for referring a friend!');
-        }
+    private static function processReferralReward(int $userId): void
+    {
+        require_once __DIR__ . '/nxl-wallet.php';
+        processReferralRewardForReferredUser($userId, true);
     }
 
     /** Complete webinar/bootcamp registration after free checkout or local demo payment. */
@@ -176,13 +191,24 @@ class Payment {
                 return false;
             }
             $regNo = generateRegNo('CYB-W');
-            db()->execute(
+            $regId = db()->insert(
                 'INSERT INTO webinar_registrations (user_id, webinar_id, registration_no, payment_id, payment_status) VALUES (?,?,?,?,?)',
                 [$userId, $refId, $regNo, $paymentId, $paymentStatus]
             );
-            db()->execute('UPDATE webinars SET registered_seats = registered_seats + 1 WHERE id = ?', [$refId]);
+            // Seats booked must be derived from webinar_registrations (no caching).
             $title = db()->fetchOne('SELECT title FROM webinars WHERE id = ?', [$refId])['title'] ?? 'webinar';
             sendNotification($userId, 'registration', 'Registration confirmed', "You are registered for: {$title}");
+            $user = db()->fetchOne('SELECT full_name, email, phone FROM users WHERE id = ?', [$userId]);
+            require_once __DIR__ . '/form-submissions.php';
+            recordWebinarRegistrationForm($regId, [
+                'full_name'       => $user['full_name'] ?? '',
+                'email'           => $user['email'] ?? '',
+                'phone'           => $user['phone'] ?? '',
+                'title'           => $title,
+                'registration_no' => $regNo,
+                'payment_status'  => $paymentStatus,
+                'webinar_id'      => $refId,
+            ]);
             return true;
         }
 
@@ -194,7 +220,7 @@ class Payment {
             return false;
         }
         $regNo = generateRegNo('CYB-B');
-        db()->execute(
+        $enrollId = db()->insert(
             'INSERT INTO bootcamp_enrollments (user_id, bootcamp_id, enrollment_no, payment_id, payment_status) VALUES (?,?,?,?,?)',
             [$userId, $refId, $regNo, $paymentId, $paymentStatus]
         );
@@ -202,6 +228,17 @@ class Payment {
         creditWallet($userId, NXL_BOOTCAMP_REWARD, 'bootcamp_reward', $refId, 'Bootcamp enrollment NxL reward!');
         $title = db()->fetchOne('SELECT title FROM bootcamps WHERE id = ?', [$refId])['title'] ?? 'bootcamp';
         sendNotification($userId, 'payment', 'Enrollment confirmed', "You are enrolled in: {$title}");
+        $user = db()->fetchOne('SELECT full_name, email, phone FROM users WHERE id = ?', [$userId]);
+        require_once __DIR__ . '/form-submissions.php';
+        recordBootcampRegistrationForm($enrollId, [
+            'full_name'     => $user['full_name'] ?? '',
+            'email'         => $user['email'] ?? '',
+            'phone'         => $user['phone'] ?? '',
+            'title'         => $title,
+            'enrollment_no' => $regNo,
+            'payment_status'=> $paymentStatus,
+            'bootcamp_id'   => $refId,
+        ]);
         return true;
     }
 

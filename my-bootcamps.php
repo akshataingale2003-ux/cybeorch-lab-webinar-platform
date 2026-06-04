@@ -3,13 +3,17 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/training-public.php';
+require_once __DIR__ . '/includes/webinar-register-helpers.php';
+require_once __DIR__ . '/includes/program-pricing.php';
 require_once __DIR__ . '/includes/student-layout.php';
 
 startSession();
 requireLogin();
 
 $ctx = studentContext();
-$bootcamps = db()->fetchAll("SELECT * FROM bootcamps WHERE status = 'open' ORDER BY start_date ASC");
+$bootcamps = publicFilterDisplayBootcamps(
+    db()->fetchAll("SELECT * FROM bootcamps WHERE status = 'open' ORDER BY start_date ASC")
+);
 
 renderStudentHead('Bootcamps');
 renderStudentSidebar('bootcamps', $ctx);
@@ -21,7 +25,9 @@ renderStudentSidebar('bootcamps', $ctx);
   <div class="content">
     <?php if (empty($bootcamps)): ?>
     <div class="card-panel text-center" style="color:var(--cyber-muted)">No open bootcamps at the moment.</div>
-    <?php else: foreach ($bootcamps as $b): ?>
+    <?php else: foreach ($bootcamps as $b):
+        $b = bootcampRowWithProgramDefaults($b);
+    ?>
     <div class="card-panel">
       <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
         <div>
@@ -29,12 +35,13 @@ renderStudentSidebar('bootcamps', $ctx);
           <p style="color:var(--cyber-muted);font-size:.88rem;margin:0"><?= htmlspecialchars($b['short_desc'] ?? '') ?></p>
           <p style="font-size:.82rem;color:var(--cyber-muted);margin-top:.5rem">
             <?= date('d M', strtotime($b['start_date'])) ?> &ndash; <?= date('d M Y', strtotime($b['end_date'])) ?>
-            &middot; <?= (int) $b['duration_weeks'] ?> weeks
+            &middot; <?= htmlspecialchars(bootcampDurationDisplay($b)) ?>
+            <?php if ((float) ($b['discounted_fee'] ?? 0) > 0): ?>
+            &middot; <?= htmlspecialchars(bootcampOptionPriceLabel($b)) ?>
+            <?php endif; ?>
           </p>
         </div>
-        <a href="<?= trainingDetailUrl('bootcamp', $b) ?>" class="btn-cyber">
-          Enroll &ndash; <?= formatRupee((float) $b['discounted_fee']) ?>
-        </a>
+        <?php renderBootcampCardRegisterCta($b, 'btn-cyber', 'white-space:nowrap'); ?>
       </div>
     </div>
     <?php endforeach; endif; ?>

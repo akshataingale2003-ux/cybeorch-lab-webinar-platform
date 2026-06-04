@@ -16,8 +16,8 @@ $whatWeDo = [
     'UI/UX and Product Prototype Development',
     'AI & Automation Based Solutions',
     'Startup Technology Support & MVP Development',
-    'Internship & Industrial Training Programs',
-    'Freelance Project Assignments',
+    'Internship & Industrial Software Development Company Programs',
+    'Freelance Hands-on Projects',
     'Skill Development Bootcamps',
     'Research, Testing & Deployment Activities',
 ];
@@ -173,7 +173,7 @@ a{text-decoration:none}
         $internshipCol2 = array_slice($internshipPoints, $internshipHalf);
       ?>
       <h2 class="section-title text-center mb-2">Internship &amp; <span class="accent">Skill Development</span></h2>
-      <p class="text-center mb-5" style="color:var(--cyber-muted);max-width:720px;margin:0 auto 2.5rem;line-height:1.8"><?= brandMark() ?> provides structured internship and skill development for user registrations & trainees, graduates, and aspiring developers. Participants gain practical exposure through hands-on assignments — not only classroom training.</p>
+      <p class="text-center mb-5" style="color:var(--cyber-muted);max-width:720px;margin:0 auto 2.5rem;line-height:1.8"><?= brandMark() ?> provides structured internship and skill development for user registrations & trainees, graduates, and aspiring developers. Participants gain practical exposure through hands-on projects — not only classroom software development company.</p>
       <div class="row g-4 mb-5">
         <div class="col-12">
           <div class="about-card">
@@ -203,7 +203,7 @@ a{text-decoration:none}
         $freelanceCol2 = array_slice($freelancePoints, $freelanceHalf);
       ?>
       <h2 class="section-title text-center mb-2">Freelance &amp; <span class="accent">On-Roll Opportunities</span></h2>
-      <p class="text-center mb-5" style="color:var(--cyber-muted);max-width:720px;margin:0 auto 2.5rem;line-height:1.8">We collaborate with freelancers, developers, designers, cybersecurity professionals, and project contributors for short-term and long-term assignments. Outstanding performers may receive on-roll project engagement based on performance and availability.</p>
+      <p class="text-center mb-5" style="color:var(--cyber-muted);max-width:720px;margin:0 auto 2.5rem;line-height:1.8">We collaborate with freelancers, developers, designers, cybersecurity professionals, and project contributors for short-term and long-term hands-on projects. Outstanding performers may receive on-roll project engagement based on performance and availability.</p>
       <div class="row g-4 mb-5">
         <div class="col-12">
           <div class="about-card">
@@ -238,7 +238,7 @@ a{text-decoration:none}
         </div>
         <?php endforeach; ?>
       </div>
-<!--<p class="text-center mb-5" style="color:var(--cyber-muted);max-width:720px;margin:0 auto;line-height:1.8"><strong style="color:var(--cyber-text)">CYBEORCH LAB</strong> is not just a training platform &mdash; it is a collaborative technology ecosystem where ideas transform into real-world digital solutions.</p>-->
+<!--<p class="text-center mb-5" style="color:var(--cyber-muted);max-width:720px;margin:0 auto;line-height:1.8"><strong style="color:var(--cyber-text)">CYBEORCH LAB</strong> is not just a software development company platform &mdash; it is a collaborative technology ecosystem where ideas transform into real-world digital solutions.</p>-->
     </div>
   </section>
 

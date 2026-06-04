@@ -56,7 +56,7 @@ CYBEORCH/
    - Upload all files to `public_html/` or your subdomain folder
 5. **Configure `includes/config.php`:**
    ```php
-   define('DB_HOST', 'localhost');
+   define('DB_HOST', 'your_db_host');
    define('DB_USER', 'CYBEORCH_user');
    define('DB_PASS', 'your_strong_password');
    define('DB_NAME', 'CYBEORCH_db');

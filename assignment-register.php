@@ -5,13 +5,13 @@ require_once __DIR__ . '/includes/assignments-data.php';
 startSession();
 
 $navActive = 'assignments';
-$pageTitle = 'Assignment Registration';
+$pageTitle = HANDS_ON_PROJECTS_REGISTRATION_SUBJECT;
 $assignments = getAssignments();
 
 $selectedSlug = sanitize($_GET['assignment'] ?? $_POST['assignment_slug'] ?? '');
 $assignment = getAssignmentBySlug($selectedSlug);
 if (!$assignment && $selectedSlug !== '') {
-    header('Location: ' . url('assignments.php'));
+    header('Location: ' . url('hands-on-projects.php'));
     exit;
 }
 if (!$assignment && $assignments) {
@@ -30,12 +30,12 @@ if (isLoggedIn()) {
 }
 
 $redirectQuery = $selectedSlug !== '' ? '?assignment=' . rawurlencode($selectedSlug) : '';
-handlePublicEnquiryPost('assignment-register.php' . $redirectQuery, 'Assignment Registration', [
-    'Assignment'        => $_POST['assignment_title'] ?? ($assignment['title'] ?? ''),
-    'Assignment Type'   => $_POST['assignment_type'] ?? ($assignment['type'] ?? ''),
-    'Category'          => $_POST['assignment_category'] ?? ($assignment['category'] ?? ''),
-    'Skill Level'       => $_POST['skill_level'] ?? '',
-    'Preferred Start'   => $_POST['preferred_start'] ?? '',
+handlePublicEnquiryPost('assignment-register.php' . $redirectQuery, HANDS_ON_PROJECTS_REGISTRATION_SUBJECT, [
+    'Hands-on Projects'      => $_POST['assignment_title'] ?? ($assignment['title'] ?? ''),
+    'Hands-on Project Type'  => $_POST['assignment_type'] ?? ($assignment['type'] ?? ''),
+    'Category'               => $_POST['assignment_category'] ?? ($assignment['category'] ?? ''),
+    'Skill Level'            => $_POST['skill_level'] ?? '',
+    'Preferred Start'        => $_POST['preferred_start'] ?? '',
 ]);
 
 $skillLevels = [
@@ -45,7 +45,7 @@ $skillLevels = [
 ];
 
 $registerSteps = [
-    ['title' => 'Choose assignment', 'desc' => 'Select the open role you want to apply for from our assignments list.'],
+    ['title' => 'Choose hands-on project', 'desc' => 'Select the open role you want to apply for from our hands-on projects list.'],
     ['title' => 'Submit application', 'desc' => 'Share your contact details, experience, and why you are a good fit.'],
     ['title' => 'Team review', 'desc' => 'Our team reviews applications and contacts shortlisted candidates within 2–3 business days.'],
 ];
@@ -56,7 +56,7 @@ $registerSteps = [
 <meta charset="UTF-8">
 <?php renderStandardViewport(); ?>
 <title><?= htmlspecialchars($pageTitle) ?> &ndash; CYBEORCH LAB</title>
-<meta name="description" content="Apply for open assignments at CYBEORCH LAB — internships, projects, and freelance roles.">
+<meta name="description" content="Apply for open hands-on projects at CYBEORCH LAB — internships, projects, and freelance roles.">
 <?php renderPublicPageHead(); renderPublicEnquiryStyles(); ?>
 </head>
 <body>
@@ -65,7 +65,7 @@ $registerSteps = [
 
 <header class="page-hero">
   <div class="container">
-    <h1>Assignment <span class="accent">Registration</span></h1>
+    <h1>Hands-on Projects <span class="accent">Registration</span></h1>
     <p>Apply for an open role at CYBEORCH LAB. Complete the form below and our team will review your application.</p>
   </div>
 </header>
@@ -105,7 +105,7 @@ $registerSteps = [
         <?php endif; ?>
         <div class="info-card info-card-cta mt-3">
           <div class="info-card-cta-label">Browse all roles</div>
-          <a href="<?= url('assignments.php') ?>" class="btn-outline-cyber d-block text-center"><i class="fas fa-briefcase me-2"></i>Open Assignments</a>
+          <a href="<?= url('hands-on-projects.php') ?>" class="btn-outline-cyber d-block text-center"><i class="fas fa-briefcase me-2"></i>Open Hands-on Projects</a>
         </div>
       </div>
 
@@ -118,7 +118,7 @@ $registerSteps = [
             <input type="hidden" name="csrf_token" value="<?= generateCSRF() ?>">
             <div class="row g-3">
               <div class="col-12">
-                <label class="form-label">Assignment *</label>
+                <label class="form-label">Hands-on Projects *</label>
                 <select name="assignment_slug" class="form-select" required id="assignmentSelect">
                   <?php foreach ($assignments as $a): ?>
                   <option value="<?= htmlspecialchars($a['slug']) ?>"
@@ -162,7 +162,7 @@ $registerSteps = [
               </div>
               <div class="col-12">
                 <label class="form-label">Why are you a good fit? *</label>
-                <textarea name="message" class="form-control" rows="5" placeholder="Tell us about your background, relevant skills, and interest in this assignment..." required><?= postVal('message') ?></textarea>
+                <textarea name="message" class="form-control" rows="5" placeholder="Tell us about your background, relevant skills, and interest in this hands-on project..." required><?= postVal('message') ?></textarea>
               </div>
               <div class="col-12">
                 <button type="submit" class="btn-primary-cyber w-100"><i class="fas fa-paper-plane me-2"></i>Submit Application</button>

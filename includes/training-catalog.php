@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/program-pricing.php';
+
 /**
  * Ensures default bootcamps & webinars exist (by slug) for catalog pages.
  */
@@ -13,7 +15,40 @@ function ensureTrainingCatalog(): void
     $done = true;
 
     try {
+        ensureBootcampPricingSchema();
+
+        $tier399 = cybeorchBootcampTier399();
+        $tier499 = cybeorchBootcampTier499();
+
         $bootcamps = [
+            [
+                'title' => 'Cyber Security Bootcamp',
+                'slug' => 'cyber-security-bootcamp',
+                'description' => 'Comprehensive cybersecurity software development company: network defense, ethical hacking fundamentals, SOC workflows, cloud security, and incident response with hands-on labs and CTF challenges.',
+                'short_desc' => '4-week cyber security bootcamp with live labs, mentorship, and certification prep.',
+                'instructor' => 'Priya Nair',
+                'category' => 'Cyber Security',
+                'start_offset' => 14,
+                'duration_weeks' => 4,
+                'total_seats' => 32,
+                'original_fee' => $tier399['original_fee_inr'],
+                'discounted_fee' => $tier399['fee_inr'],
+                'fee_usd' => $tier399['fee_usd'],
+            ],
+            [
+                'title' => 'Web Application Security Bootcamp',
+                'slug' => 'web-app-security-bootcamp',
+                'description' => 'Learn to identify and exploit web vulnerabilities: OWASP Top 10, SQL injection, XSS, CSRF and more.',
+                'short_desc' => '3-week web security bootcamp with live practice labs.',
+                'instructor' => 'Priya Nair',
+                'category' => 'Web Security',
+                'start_offset' => 20,
+                'duration_weeks' => 3,
+                'total_seats' => 25,
+                'original_fee' => $tier399['original_fee_inr'],
+                'discounted_fee' => $tier399['fee_inr'],
+                'fee_usd' => $tier399['fee_usd'],
+            ],
             [
                 'title' => 'Blockchain Development',
                 'slug' => 'blockchain-development-bootcamp',
@@ -24,8 +59,9 @@ function ensureTrainingCatalog(): void
                 'start_offset' => 25,
                 'duration_weeks' => 4,
                 'total_seats' => 28,
-                'original_fee' => 5499.00,
-                'discounted_fee' => 3499.00,
+                'original_fee' => $tier399['original_fee_inr'],
+                'discounted_fee' => $tier399['fee_inr'],
+                'fee_usd' => $tier399['fee_usd'],
             ],
             [
                 'title' => 'Mobile Application Security Bootcamp',
@@ -37,8 +73,9 @@ function ensureTrainingCatalog(): void
                 'start_offset' => 18,
                 'duration_weeks' => 4,
                 'total_seats' => 24,
-                'original_fee' => 4499.00,
-                'discounted_fee' => 2799.00,
+                'original_fee' => $tier399['original_fee_inr'],
+                'discounted_fee' => $tier399['fee_inr'],
+                'fee_usd' => $tier399['fee_usd'],
             ],
             [
                 'title' => 'Full Stack Development Bootcamp',
@@ -50,8 +87,9 @@ function ensureTrainingCatalog(): void
                 'start_offset' => 30,
                 'duration_weeks' => 6,
                 'total_seats' => 35,
-                'original_fee' => 5999.00,
-                'discounted_fee' => 3999.00,
+                'original_fee' => $tier499['original_fee_inr'],
+                'discounted_fee' => $tier499['fee_inr'],
+                'fee_usd' => $tier499['fee_usd'],
             ],
             [
                 'title' => 'DevOps Bootcamp',
@@ -63,8 +101,9 @@ function ensureTrainingCatalog(): void
                 'start_offset' => 22,
                 'duration_weeks' => 4,
                 'total_seats' => 30,
-                'original_fee' => 4999.00,
-                'discounted_fee' => 3299.00,
+                'original_fee' => $tier399['original_fee_inr'],
+                'discounted_fee' => $tier399['fee_inr'],
+                'fee_usd' => $tier399['fee_usd'],
             ],
         ];
 
@@ -76,10 +115,10 @@ function ensureTrainingCatalog(): void
             $start = date('Y-m-d', strtotime('+' . (int) $b['start_offset'] . ' days'));
             $end = date('Y-m-d', strtotime($start . ' +' . ((int) $b['duration_weeks'] * 7 - 1) . ' days'));
             db()->execute(
-                'INSERT INTO bootcamps (title, slug, description, short_desc, instructor, category, start_date, end_date, duration_weeks, total_seats, original_fee, discounted_fee, certificate, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                'INSERT INTO bootcamps (title, slug, description, short_desc, instructor, category, start_date, end_date, duration_weeks, total_seats, original_fee, discounted_fee, fee_usd, certificate, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                 [
                     $b['title'], $b['slug'], $b['description'], $b['short_desc'], $b['instructor'], $b['category'],
-                    $start, $end, $b['duration_weeks'], $b['total_seats'], $b['original_fee'], $b['discounted_fee'], 1, 'open',
+                    $start, $end, $b['duration_weeks'], $b['total_seats'], $b['original_fee'], $b['discounted_fee'], $b['fee_usd'], 1, 'open',
                 ]
             );
         }
@@ -161,10 +200,8 @@ function ensureTrainingCatalog(): void
             'UPDATE webinars SET fee = 1999.00, is_free = 0 WHERE slug = ?',
             ['ai-tools-automation-webinar']
         );
-        db()->execute(
-            'UPDATE bootcamps SET original_fee = 24999.00, discounted_fee = 18999.00 WHERE slug = ?',
-            ['ethical-hacking-bootcamp']
-        );
+        syncCybeorchCatalogBootcampPricing();
+        syncCybeorchProgramPathBootcamps();
     } catch (Throwable $e) {
         // DB offline — pages use dbTry fallbacks
     }

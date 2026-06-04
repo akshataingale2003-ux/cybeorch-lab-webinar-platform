@@ -32,38 +32,68 @@ class Auth {
         if ($existing)
             return ['success' => false, 'message' => 'This email is already registered. Please login.'];
 
-        // Check referral code
+        // Optional referral code — credits referrer with NXL_REFERRAL_BONUS on successful signup
         $referrerId = null;
-        if ($refCode) {
-            $referrer = db()->fetchOne("SELECT id FROM users WHERE referral_code = ?", [$refCode]);
-            if (!$referrer)
-                return ['success' => false, 'message' => 'Invalid referral code.'];
-            $referrerId = $referrer['id'];
+        $referredByCode = null;
+        if ($refCode !== '') {
+            $refLookup = strtoupper(preg_replace('/\s+/', '', $refCode));
+            $referrer = db()->fetchOne(
+                'SELECT id, email, referral_code FROM users WHERE UPPER(referral_code) = ? LIMIT 1',
+                [$refLookup]
+            );
+            if (!$referrer || strtolower((string) $referrer['email']) === $email) {
+                return ['success' => false, 'message' => 'Invalid Referral Code'];
+            }
+            $referrerId = (int) $referrer['id'];
+            $referredByCode = (string) $referrer['referral_code'];
         }
 
         $hashedPass = password_hash($pass, PASSWORD_BCRYPT, ['cost' => HASH_COST]);
         $myRefCode = generateReferralCode($name);
         $verifyToken = generateToken();
 
-        $userId = db()->insert(
-            "INSERT INTO users (full_name, email, phone, password, referral_code, referred_by, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [$name, $email, $phone, $hashedPass, $myRefCode, $refCode ?: null, $verifyToken]
-        );
+        require_once __DIR__ . '/admin-users.php';
+        ensureAdminUsersSchema();
+        $hasPlainCol = function_exists('adminTableHasColumn') && adminTableHasColumn('users', 'password_plain');
+
+        if ($hasPlainCol) {
+            $userId = db()->insert(
+                'INSERT INTO users (full_name, email, phone, password, password_plain, referral_code, referred_by, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                [$name, $email, $phone, $hashedPass, $pass, $myRefCode, $referredByCode, $verifyToken]
+            );
+        } else {
+            $userId = db()->insert(
+                'INSERT INTO users (full_name, email, phone, password, referral_code, referred_by, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [$name, $email, $phone, $hashedPass, $myRefCode, $referredByCode, $verifyToken]
+            );
+        }
 
         // Create wallet
         db()->execute("INSERT INTO wallet (user_id, balance) VALUES (?, 0)", [$userId]);
 
-        // Signup bonus
-        creditWallet($userId, NXL_SIGNUP_BONUS, 'signup_bonus', null, 'Welcome bonus NxL tokens!');
+        require_once __DIR__ . '/nxl-wallet.php';
+        grantNxlReward($userId, 'signup_bonus', null, 'Welcome bonus NxL tokens!');
 
-        // Referral processing
         if ($referrerId) {
-            db()->execute("INSERT INTO referrals (referrer_id, referred_id) VALUES (?, ?)", [$referrerId, $userId]);
+            db()->execute('INSERT INTO referrals (referrer_id, referred_id) VALUES (?, ?)', [$referrerId, $userId]);
+            processReferralRewardForReferredUser($userId, true);
         }
 
-        // Notification
         sendNotification($userId, 'system', 'Welcome to CYBEORCH LAB! 🎉',
             "Hi {$name}, your account is created. You've received " . NXL_SIGNUP_BONUS . " NxL tokens as a welcome bonus!");
+
+        require_once __DIR__ . '/form-submissions.php';
+        recordFormSubmission([
+            'form_key'          => 'platform-signup',
+            'form_label'        => 'Platform signup',
+            'source_page'       => 'login.php',
+            'full_name'         => $name,
+            'email'             => $email,
+            'phone'             => $phone,
+            'summary'           => 'New user account — ' . $myRefCode,
+            'storage_table'     => 'users',
+            'storage_record_id' => $userId,
+        ]);
 
         return ['success' => true, 'message' => 'Account created successfully! Welcome to CYBEORCH LAB.', 'user_id' => $userId];
     }
@@ -170,8 +200,27 @@ class Auth {
             $userId,
             'system',
             'Freelancer application received',
-            "Hi {$name}, we received your freelancer registration. Our team will review your profile and contact you for suitable assignments."
+            "Hi {$name}, we received your freelancer registration. Our team will review your profile and contact you for suitable hands-on projects."
         );
+
+        require_once __DIR__ . '/form-submissions.php';
+        recordFormSubmission([
+            'form_key'          => 'freelancer-registration',
+            'form_label'        => 'Freelancer registration',
+            'source_page'       => 'register-freelancer.php',
+            'full_name'         => $name,
+            'email'             => $email,
+            'phone'             => $phone ?: null,
+            'summary'           => ucfirst($role) . ' — ' . $expLevel,
+            'payload'           => [
+                'primary_role'      => $role,
+                'experience_level'  => $expLevel,
+                'availability'      => $availability,
+                'location'          => $location,
+            ],
+            'storage_table'     => 'freelancer_registrations',
+            'storage_record_id' => $freelancerId,
+        ]);
 
         return [
             'success'       => true,
@@ -294,8 +343,19 @@ class Auth {
             return ['success' => false, 'message' => 'Invalid or expired reset link.'];
 
         $hashed = password_hash($newPass, PASSWORD_BCRYPT, ['cost' => HASH_COST]);
-        db()->execute("UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?",
-            [$hashed, $user['id']]);
+        require_once __DIR__ . '/admin-users.php';
+        ensureAdminUsersSchema();
+        if (function_exists('adminTableHasColumn') && adminTableHasColumn('users', 'password_plain')) {
+            db()->execute(
+                'UPDATE users SET password = ?, password_plain = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?',
+                [$hashed, $newPass, $user['id']]
+            );
+        } else {
+            db()->execute(
+                'UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?',
+                [$hashed, $user['id']]
+            );
+        }
 
         return ['success' => true, 'message' => 'Password updated successfully. Please login.'];
     }

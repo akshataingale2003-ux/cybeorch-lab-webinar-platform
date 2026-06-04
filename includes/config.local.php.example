@@ -2,12 +2,21 @@
 declare(strict_types=1);
 /**
  * Copy to config.local.php (gitignored) for local SMTP without .env.
- * setup-smtp.php auto-syncs these values into .env on localhost.
+ * setup-smtp.php auto-syncs these values into .env on your local machine.
+ *
+ * Stackmail (outgoing only — used for registration OTP emails):
+ *   Host: smtp.stackmail.com | Port: 465 | Secure: ssl
+ *   Username: full mailbox address (e.g. info@xyz.com)
+ *   Password: your email account password
  */
 define('SMTP_HOST', 'smtp.stackmail.com');
 define('SMTP_PORT', 465);
 define('SMTP_SECURE', 'ssl');
-define('SMTP_USER', 'info@cybeorch.com');
-define('SMTP_PASS', 'Nexus@369');
-define('SMTP_FROM_EMAIL', 'info@cybeorch.com');
+define('SMTP_USER', 'info@xyz.com');
+define('SMTP_PASS', 'nexus@369');
+define('SMTP_FROM_EMAIL', 'info@xyz.com');
 define('SMTP_FROM_NAME', 'CYBEORCH LAB');
+
+// Local XAMPP: use same host as the public site (uncomment one line)
+// define('ADMIN_URL', '');
+// define('ADMIN_URL', 'http://localhost/cybeorch-cybeorch-new');

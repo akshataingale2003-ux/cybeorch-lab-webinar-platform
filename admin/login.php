@@ -7,7 +7,7 @@ require_once __DIR__ . '/../includes/setup_admin.php';
 
 startSession();
 if (isAdminLoggedIn()) {
-    header('Location: ' . url('admin/dashboard.php'));
+    header('Location: ' . adminUrl('dashboard.php'));
     exit;
 }
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = Auth::adminLogin($_POST['username'] ?? '', $_POST['password'] ?? '');
         if ($result['success']) {
             $dest = safeAdminRedirectPath((string) ($_GET['redirect'] ?? $_POST['redirect'] ?? ''));
-            header('Location: ' . url($dest));
+            header('Location: ' . adminUrl($dest));
             exit;
         }
         $error = $result['message'];

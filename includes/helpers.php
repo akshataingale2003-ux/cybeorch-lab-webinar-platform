@@ -238,12 +238,18 @@ function isAdminLoggedIn(): bool
     return true;
 }
 
-// Require login
+// Require login (skipped when PUBLIC_AUTH_ENABLED is false in config.php)
 function requireLogin(string $redirect = 'login.php') {
-
+    if (!isPublicAuthEnabled()) {
+        return;
+    }
     if (!isLoggedIn()) {
-
-        header('Location: ' . url($redirect));
+        $return = publicAuthReturnPath();
+        $dest = url($redirect);
+        if ($return !== '') {
+            $dest .= (str_contains($redirect, '?') ? '&' : '?') . 'redirect=' . rawurlencode($return);
+        }
+        header('Location: ' . $dest);
         exit;
     }
 }
@@ -252,7 +258,7 @@ function requireLogin(string $redirect = 'login.php') {
 function requireAdminLogin() {
 
     if (!isAdminLoggedIn()) {
-        $login = url('admin/login.php');
+        $login = adminUrl('login.php');
         $return = adminAuthReturnPath();
         if ($return !== '') {
             $login .= '?redirect=' . rawurlencode($return);
@@ -300,6 +306,70 @@ function rupee(): string
 function formatRupee(float|int $amount, int $decimals = 0): string
 {
     return rupee() . number_format((float) $amount, $decimals);
+}
+
+/** Bank & UPI details for secure payment page. */
+function cybeorchBankPaymentDetails(): array
+{
+    return [
+        'account_name'   => defined('PAYMENT_ACCOUNT_NAME') ? PAYMENT_ACCOUNT_NAME : SITE_NAME,
+        'bank_name'      => defined('PAYMENT_BANK_NAME') ? PAYMENT_BANK_NAME : '',
+        'account_number' => defined('PAYMENT_ACCOUNT_NUMBER') ? PAYMENT_ACCOUNT_NUMBER : '',
+        'ifsc'           => defined('PAYMENT_IFSC') ? PAYMENT_IFSC : '',
+        'account_type'   => defined('PAYMENT_ACCOUNT_TYPE') ? PAYMENT_ACCOUNT_TYPE : 'Current',
+        'branch'         => defined('PAYMENT_BRANCH') ? PAYMENT_BRANCH : '',
+        'upi_id'         => defined('PAYMENT_UPI_ID') ? PAYMENT_UPI_ID : '',
+    ];
+}
+
+function cybeorchPaymentReferenceCode(string $slug, float $amount): string
+{
+    $slugPart = preg_replace('/[^a-z0-9]/i', '', $slug);
+
+    return 'CYB-' . strtoupper(substr($slugPart !== '' ? $slugPart : 'PAY', 0, 12)) . '-' . (int) round($amount);
+}
+
+/** Payment method tiles for secure-payment.php (integration placeholders). */
+function cybeorchPaymentMethodOptions(): array
+{
+    return [
+        'razorpay' => [
+            'label' => 'Razorpay',
+            'desc'  => 'Cards, UPI, net banking & wallets via Razorpay Checkout.',
+            'icon'  => 'fa-bolt',
+            'badge' => 'Recommended',
+        ],
+        'phonepe' => [
+            'label' => 'PhonePe',
+            'desc'  => 'Pay with PhonePe app or PhonePe Payment Gateway.',
+            'icon'  => 'fa-mobile-screen-button',
+            'badge' => 'Popular',
+        ],
+        'upi' => [
+            'label' => 'UPI',
+            'desc'  => 'Google Pay, Paytm, BHIM & any UPI app.',
+            'icon'  => 'fa-qrcode',
+            'badge' => '',
+        ],
+        'card' => [
+            'label' => 'Debit / Credit Card',
+            'desc'  => 'Visa, Mastercard, RuPay & international cards.',
+            'icon'  => 'fa-credit-card',
+            'badge' => '',
+        ],
+        'netbanking' => [
+            'label' => 'Net Banking',
+            'desc'  => 'All major Indian banks supported.',
+            'icon'  => 'fa-building-columns',
+            'badge' => '',
+        ],
+        'wallet' => [
+            'label' => 'Wallets',
+            'desc'  => 'Paytm, Mobikwik, Amazon Pay & more.',
+            'icon'  => 'fa-wallet',
+            'badge' => '',
+        ],
+    ];
 }
 
 // Sanitize input
@@ -435,10 +505,52 @@ function url(string $path = ''): string {
     return $base . '/' . ltrim($path, '/');
 }
 
+/** Shareable referral signup path (no scheme/host; e.g. cybeorch-cybeorch-new/index.php?register_required=1&ref=CODE). */
+/*function referralShareUrl(string $referralCode): string
+{
+    $path = 'index.php?register_required=1&ref=' . rawurlencode(trim($referralCode));
+
+    return ltrim(url($path), '/');
+} */
+
+/** Asset URL with filemtime cache-buster so browsers pick up replaced images. */
+function urlVersioned(string $path): string
+{
+    $relative = ltrim(str_replace('\\', '/', $path), '/');
+    $fsPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative);
+    $href = url($path);
+    if (!is_file($fsPath)) {
+        return $href;
+    }
+    $sep = str_contains($href, '?') ? '&' : '?';
+    return $href . $sep . 'v=' . filemtime($fsPath);
+}
+
 /** Full URL for favicon and static assets (works in XAMPP subfolders). */
 function absoluteUrl(string $path = ''): string
 {
     return rtrim(SITE_URL, '/') . '/' . ltrim($path, '/');
+}
+
+/** Base URL for the admin panel (ADMIN_URL or SITE_URL when ADMIN_URL is empty). */
+function adminBaseUrl(): string
+{
+    if (defined('ADMIN_URL') && ADMIN_URL !== '') {
+        return rtrim((string) ADMIN_URL, '/');
+    }
+
+    return rtrim(SITE_URL, '/');
+}
+
+/** Full admin URL, e.g. https://admin.cybeorch.com/admin/login.php */
+function adminUrl(string $path = 'dashboard.php'): string
+{
+    $path = ltrim($path, '/');
+    if (!str_starts_with($path, 'admin/')) {
+        $path = 'admin/' . $path;
+    }
+
+    return adminBaseUrl() . '/' . $path;
 }
 
 function generateReferralCode(string $name): string {
@@ -454,21 +566,14 @@ function generateInvoiceNo(): string {
 }
 
 function creditWallet(int $userId, float $amount, string $reason, ?int $referenceId = null, string $description = ''): void {
-    require_once __DIR__ . '/db.php';
-    $wallet = db()->fetchOne('SELECT * FROM wallet WHERE user_id = ?', [$userId]);
-    if (!$wallet) {
-        db()->execute('INSERT INTO wallet (user_id, balance) VALUES (?, 0)', [$userId]);
-        $wallet = db()->fetchOne('SELECT * FROM wallet WHERE user_id = ?', [$userId]);
+    require_once __DIR__ . '/nxl-wallet.php';
+    $standardRewards = ['signup_bonus', 'webinar_reward', 'referral_bonus', 'bootcamp_reward', 'special_reward'];
+    if (in_array($reason, $standardRewards, true)) {
+        grantNxlReward($userId, $reason, $referenceId, $description !== '' ? $description : null);
+        return;
     }
-    $newBalance = (float) $wallet['balance'] + $amount;
-    db()->execute(
-        'UPDATE wallet SET balance = ?, total_earned = total_earned + ? WHERE user_id = ?',
-        [$newBalance, $amount, $userId]
-    );
-    db()->execute(
-        'INSERT INTO wallet_transactions (user_id, type, amount, reason, reference_id, description, balance_after) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [$userId, 'credit', $amount, $reason, $referenceId, $description, $newBalance]
-    );
+    recordWalletTransaction($userId, 'credit', $amount, $reason, $referenceId, $description, $reason, $description);
+    notifyAdminNxlCredit($userId, $amount, $reason, $description);
 }
 
 function sendNotification(int $userId, string $type, string $title, string $message, ?int $referenceId = null, ?string $referenceType = null): void {
@@ -486,20 +591,8 @@ function getWalletBalance(int $userId): float {
 }
 
 function debitWallet(int $userId, float $amount, string $reason, ?int $referenceId = null, string $description = ''): void {
-    require_once __DIR__ . '/db.php';
-    $wallet = db()->fetchOne('SELECT * FROM wallet WHERE user_id = ?', [$userId]);
-    if (!$wallet) {
-        return;
-    }
-    $newBalance = max(0, (float) $wallet['balance'] - $amount);
-    db()->execute(
-        'UPDATE wallet SET balance = ?, total_spent = total_spent + ? WHERE user_id = ?',
-        [$newBalance, $amount, $userId]
-    );
-    db()->execute(
-        'INSERT INTO wallet_transactions (user_id, type, amount, reason, reference_id, description, balance_after) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [$userId, 'debit', $amount, $reason, $referenceId, $description, $newBalance]
-    );
+    require_once __DIR__ . '/nxl-wallet.php';
+    recordWalletTransaction($userId, 'debit', $amount, $reason, $referenceId, $description, $reason, $description);
 }
 
 function generateRegNo(string $prefix = 'CYB'): string {

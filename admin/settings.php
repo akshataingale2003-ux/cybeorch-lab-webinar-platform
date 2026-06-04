@@ -107,7 +107,7 @@ renderAdminPageStart('Settings & Database', 'settings', 'fa-cog');
       <div class="detail-item"><label>Role</label><span><?= htmlspecialchars($adminUser['role']) ?></span></div>
       <div class="detail-item"><label>Last login</label><span><?= $adminUser['last_login'] ? date('d M Y H:i', strtotime($adminUser['last_login'])) : '—' ?></span></div>
     </div>
-    <p style="margin-top:1rem;font-size:0.85rem;color:var(--cyber-muted)">Admin login: <a href="<?= adminUrl('admin/login.php') ?>" class="btn-sm-link">admin/login.php</a></p>
+    <p style="margin-top:1rem;font-size:0.85rem;color:var(--cyber-muted)">Admin login: <a href="<?= adminUrl('login.php') ?>" class="btn-sm-link"><?= htmlspecialchars(adminUrl('login.php')) ?></a></p>
   </div>
 </div>
 <?php endif; ?>

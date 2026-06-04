@@ -12,6 +12,7 @@ require_once __DIR__ . '/admin-schema.php';
 require_once __DIR__ . '/site-database.php';
 require_once __DIR__ . '/admin-layout.php';
 require_once __DIR__ . '/admin-actions.php';
+require_once __DIR__ . '/admin-catalog-limits.php';
 
 startSession();
 
@@ -43,15 +44,6 @@ function adminDb(callable $fn, mixed $default = null): mixed
 
 adminBootstrapDatabase();
 
-function adminUrl(string $path = 'dashboard.php'): string
-{
-    $path = ltrim($path, '/');
-    if (!str_starts_with($path, 'admin/')) {
-        $path = 'admin/' . $path;
-    }
-    return absoluteUrl($path);
-}
-
 function adminDbErrorBanner(): string
 {
     if (!defined('DB_ERROR_MESSAGE')) {
@@ -61,4 +53,34 @@ function adminDbErrorBanner(): string
         . '<i class="fas fa-database me-2"></i>'
         . htmlspecialchars(DB_ERROR_MESSAGE)
         . '</div>';
+}
+
+/** Redirect after POST so refresh cannot resubmit the form (PRG pattern). */
+function adminFlashRedirect(string $adminPath, string $type, string $message): never
+{
+    setFlash($type, $message);
+    header('Location: ' . adminUrl($adminPath));
+    exit;
+}
+
+/** One-time token to block duplicate form submissions (double-click / replay). */
+function adminIssueFormNonce(string $scope): string
+{
+    startSession();
+    $key = 'admin_form_nonce_' . preg_replace('/[^a-z0-9_-]/i', '', $scope);
+    $token = bin2hex(random_bytes(16));
+    $_SESSION[$key] = $token;
+    return $token;
+}
+
+function adminValidateAndConsumeFormNonce(string $scope, string $submitted): bool
+{
+    startSession();
+    $key = 'admin_form_nonce_' . preg_replace('/[^a-z0-9_-]/i', '', $scope);
+    $expected = (string) ($_SESSION[$key] ?? '');
+    if ($expected === '' || $submitted === '' || !hash_equals($expected, $submitted)) {
+        return false;
+    }
+    unset($_SESSION[$key]);
+    return true;
 }

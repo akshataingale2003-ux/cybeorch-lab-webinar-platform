@@ -19,7 +19,7 @@ if (!($setup['ok'] ?? false)) {
 $action = ($setup['fixed'] ?? false) ? 'fixed' : 'already_ok';
 echo "Admin account {$action}.\n\n";
 echo "=== ADMIN LOGIN ===\n";
-echo "URL:      " . SITE_URL . "/admin/login.php\n";
+echo "URL:      " . adminUrl('login.php') . "\n";
 echo "Username: cybeorch_admin   (or email below)\n";
 echo "Email:    admin@cybeorch.com\n";
 echo "Password: Admin@123\n\n";

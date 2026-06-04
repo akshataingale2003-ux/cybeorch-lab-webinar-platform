@@ -74,7 +74,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <div class="detail-row">
         <span class="detail-label">Amount Paid</span>
-        <span class="detail-value" style="color:var(--cyber-green);font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700">₹<?= number_format($payment['amount']) ?></span>
+        <span class="detail-value" style="color:var(--cyber-green);font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700"><?php
+          require_once __DIR__ . '/includes/webinar-register-helpers.php';
+          echo htmlspecialchars(webinarFormatCheckoutAmount((string) ($payment['currency'] ?? 'INR'), (float) $payment['amount']));
+        ?></span>
       </div>
       <div class="detail-row">
         <span class="detail-label">Status</span>

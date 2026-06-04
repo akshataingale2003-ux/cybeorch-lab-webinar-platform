@@ -3,13 +3,27 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/training-public.php';
+require_once __DIR__ . '/includes/public-catalog.php';
+require_once __DIR__ . '/includes/webinar-register-helpers.php';
+require_once __DIR__ . '/includes/program-pricing.php';
 
 startSession();
 
-$bootcamps = dbTry(
-    fn () => db()->fetchAll("SELECT * FROM bootcamps WHERE status = 'open' ORDER BY start_date ASC"),
-    []
-);
+$slug = trim((string) ($_GET['slug'] ?? ''));
+if ($slug !== '') {
+    if (!isCybeorchProgramPathSlug($slug)) {
+        $bootcamp = publicFetchBootcampBySlug($slug);
+        if ($bootcamp && !isCybeorchProgramPathSlug((string) ($bootcamp['slug'] ?? ''))) {
+            header('Location: ' . bootcampSecurePaymentUrl($bootcamp));
+            exit;
+        }
+    }
+    header('Location: ' . url('bootcamps.php'));
+    exit;
+}
+
+/** Catalog bootcamps only — Program Path tracks render in the funnel above, not as duplicate cards. */
+$bootcamps = publicFetchDisplayBootcamps();
 $pageTitle = 'Bootcamps';
 $navActive = 'bootcamps';
 ?>
@@ -20,7 +34,7 @@ $navActive = 'bootcamps';
 <?php renderStandardViewport(); ?>
 <title><?= htmlspecialchars($pageTitle) ?> &ndash; CYBEORCH LAB</title>
 <?php renderSiteFavicon(); ?>
-<meta name="description" content="Intensive cybersecurity bootcamps with hands-on labs, mentorship, and certificates.">
+<meta name="description" content="Cybeorch bootcamps — intensive hands-on programs with live labs, mentorship, and certificates.">
 <?php renderPublicPageHead(); renderTrainingPublicStyles(); ?>
 </head>
 <body>
@@ -38,27 +52,20 @@ $navActive = 'bootcamps';
         <p>Structured progression — entry funnel, mid-level conversions, and premium industry labs.</p>
       </div>
       <div class="funnel-tiers">
-        <div class="funnel-tier funnel-tier--entry">
-          <span class="funnel-tier-label">Entry funnel</span>
-          <h3>30-Day Bootcamp</h3>
-          <div class="funnel-tier-price"><?= formatRupee(14999) ?></div>
-          <p class="funnel-tier-desc">Fast-track foundation with live labs, mentorship, and certificate — ideal first step into cybersecurity.</p>
-          <a href="<?= url('enquire-enroll.php?program=30-day-bootcamp') ?>" class="funnel-tier-cta">Enquire &amp; Enroll</a>
+        <?php foreach (cybeorchProgramPathFunnelTiers() as $tier):
+            $cfg = cybeorchProgramPathCatalog()[$tier['slug']];
+            $row = publicFetchBootcampBySlug($tier['slug']);
+            $priceRow = bootcampRowWithProgramDefaults(is_array($row) ? $row : ['slug' => $tier['slug']]);
+        ?>
+        <div class="funnel-tier funnel-tier--<?= htmlspecialchars($tier['tier']) ?>">
+          <span class="funnel-tier-label"><?= htmlspecialchars($tier['tier_label']) ?></span>
+          <h3><?= htmlspecialchars((string) ($priceRow['title'] ?? $cfg['title'])) ?></h3>
+          <div class="funnel-tier-price"><?php renderBootcampDualPrice($priceRow, 'funnel-tier-price-inner'); ?></div>
+          <p class="funnel-tier-duration"><i class="fa-solid fa-clock me-1" aria-hidden="true"></i><?= htmlspecialchars(bootcampDurationDisplay($priceRow)) ?></p>
+          <p class="funnel-tier-desc"><?= htmlspecialchars((string) $cfg['description']) ?></p>
+          <a href="<?= htmlspecialchars(bootcampProgramPathPaymentUrl($tier['slug'])) ?>" class="funnel-tier-cta"><?= htmlspecialchars($tier['cta']) ?></a>
         </div>
-        <div class="funnel-tier funnel-tier--mid">
-          <span class="funnel-tier-label">Mid-level conversions</span>
-          <h3>90-Day Industry Bootcamp</h3>
-          <div class="funnel-tier-price"><?= formatRupee(24999) ?></div>
-          <p class="funnel-tier-desc">Deeper specialization, capstone projects, and career placement support for graduates ready to level up.</p>
-          <a href="<?= url('enquire-enroll.php?program=90-day-bootcamp') ?>" class="funnel-tier-cta">Upgrade Your Track</a>
-        </div>
-        <div class="funnel-tier funnel-tier--premium">
-          <span class="funnel-tier-label">Premium revenue model</span>
-          <h3>Premium Industry Lab Program</h3>
-          <div class="funnel-tier-price"><?= formatRupee(35000) ?>+</div>
-          <p class="funnel-tier-desc">Elite lab access, enterprise mentors, and real-world industry projects — built for serious professionals and teams.</p>
-          <a href="<?= url('enquire-enroll.php?program=premium-industry-lab') ?>" class="funnel-tier-cta">Enquire &amp; Enroll</a>
-        </div>
+        <?php endforeach; ?>
       </div>
     </div>
   </div>
@@ -82,16 +89,18 @@ $navActive = 'bootcamps';
     <?php else: ?>
     <div class="row g-4">
       <?php foreach ($bootcamps as $b):
+        $b = bootcampRowWithProgramDefaults($b);
         $seatsLeft = max(0, (int) $b['total_seats'] - (int) $b['enrolled_seats']);
+        $priceDecimals = bootcampPriceDecimals($b);
       ?>
       <div class="col-md-6">
         <div class="bootcamp-card">
           <div class="bootcamp-header">
             <div class="bootcamp-price">
               <?php if ((float) $b['original_fee'] > (float) $b['discounted_fee']): ?>
-              <div class="price-original"><?= formatRupee((float) $b['original_fee']) ?></div>
+              <div class="price-original"><?= formatRupee((float) $b['original_fee'], $priceDecimals) ?></div>
               <?php endif; ?>
-              <div class="price-current"><?= formatRupee((float) $b['discounted_fee']) ?></div>
+              <div class="price-current"><?php renderBootcampDualPrice($b); ?></div>
             </div>
             <?php if (!empty($b['category'])): ?>
             <span class="webinar-badge badge-free"><?= htmlspecialchars($b['category']) ?></span>
@@ -101,7 +110,7 @@ $navActive = 'bootcamps';
             </h3>
             <div style="color:rgba(255,255,255,0.65);font-size:.85rem;margin-top:.5rem">
               <i class="fa-solid fa-calendar-days me-1"></i><?= date('d M', strtotime($b['start_date'])) ?> &ndash; <?= date('d M Y', strtotime($b['end_date'])) ?>
-              <span class="ms-2"><i class="fa-solid fa-clock me-1"></i><?= (int) $b['duration_weeks'] ?> weeks</span>
+              <span class="ms-2"><i class="fa-solid fa-clock me-1"></i><?= htmlspecialchars(bootcampDurationDisplay($b)) ?></span>
             </div>
           </div>
           <div class="bootcamp-body">
@@ -113,9 +122,7 @@ $navActive = 'bootcamps';
               <li><i class="fa-solid fa-users" aria-hidden="true"></i> <?= (int) $seatsLeft ?> seats remaining</li>
               <li><i class="fa-solid fa-coins" aria-hidden="true"></i> Earn <?= (int) NXL_BOOTCAMP_REWARD ?> NxL tokens on enrollment</li>
             </ul>
-            <a href="<?= trainingDetailUrl('bootcamp', $b) ?>" class="btn-primary-cyber">
-              <i class="fas fa-rocket me-2"></i>Enroll Now &ndash; <?= formatRupee((float) $b['discounted_fee']) ?>
-            </a>
+            <?php renderBootcampCardRegisterCta($b, 'w-100 text-center', 'font-size:0.9rem; padding:0.65rem'); ?>
           </div>
         </div>
       </div>

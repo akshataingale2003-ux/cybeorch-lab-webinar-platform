@@ -6,10 +6,11 @@
 $navActive = $navActive ?? '';
 $isActive = static fn(string $key): string => $navActive === $key ? ' active' : '';
 $trainingOpen = in_array($navActive, ['bootcamps', 'webinars', 'training'], true);
-$projectsOpen = in_array($navActive, ['live-projects', 'products', 'projects', 'assignments'], true);
+$projectsOpen = in_array($navActive, ['live-projects', 'products', 'projects', 'assignments', 'freelance-projects'], true);
 
 startSession();
-$navUserLoggedIn = isLoggedIn();
+$navAuthEnabled = isPublicAuthEnabled();
+$navUserLoggedIn = $navAuthEnabled && isLoggedIn();
 $navUserInitial = 'U';
 if ($navUserLoggedIn && !empty($_SESSION['user_name'])) {
     $navUserInitial = strtoupper(substr((string) $_SESSION['user_name'], 0, 1));
@@ -53,7 +54,8 @@ if (function_exists('renderPublicDbAlert')) {
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle<?= $projectsOpen ? ' active' : '' ?>" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Projects</a>
           <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item<?= $isActive('assignments') ?>" href="<?= url('assignments.php') ?>">Assignments</a></li>
+            <li><a class="dropdown-item<?= $isActive('assignments') ?>" href="<?= url('hands-on-projects.php') ?>">Hands-on Projects</a></li>
+            <li><a class="dropdown-item<?= $isActive('freelance-projects') ?>" href="<?= url('freelance-projects.php') ?>">Freelance Projects</a></li>
             <li><a class="dropdown-item<?= $isActive('live-projects') ?>" href="<?= url('live-projects.php') ?>">Live Projects</a></li>
             <li><a class="dropdown-item<?= $isActive('products') ?>" href="<?= url('products.php') ?>">Products</a></li>
           </ul>
@@ -68,6 +70,7 @@ if (function_exists('renderPublicDbAlert')) {
           <a class="nav-link<?= $isActive('contact') ?>" href="<?= url('contact.php') ?>">Contact</a>
         </li>
       </ul>
+      <?php if ($navAuthEnabled): ?>
       <div class="d-flex align-items-center gap-2 py-0">
         <?php if ($navUserLoggedIn): ?>
         <div class="dropdown nav-profile-dropdown">
@@ -84,9 +87,11 @@ if (function_exists('renderPublicDbAlert')) {
           </ul>
         </div>
         <?php else: ?>
+        <a href="<?= url('signup.php') ?>" class="btn-nav-register" data-auth-reg-open>Sign Up</a>
         <a href="<?= url('login.php') ?>" class="btn-nav-login">Sign In</a>
         <?php endif; ?>
       </div>
+      <?php endif; ?>
     </div>
   </div>
 </nav>

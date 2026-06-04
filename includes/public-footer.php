@@ -4,6 +4,10 @@ declare(strict_types=1);
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/helpers.php';
 
+if (!function_exists('renderPublicAuthRegistrationAssets')) {
+    require_once __DIR__ . '/auth-registration-popup.php';
+}
+
 function renderPublicFooterStyles(): void
 {
     static $done = false;
@@ -41,15 +45,12 @@ function renderPublicFooter(): void
           <a href="<?= htmlspecialchars(SITE_TWITTER_URL) ?>" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X @<?= htmlspecialchars(SITE_TWITTER_HANDLE) ?>" title="@<?= htmlspecialchars(SITE_TWITTER_HANDLE) ?>"><i class="fab fa-x-twitter"></i></a>
           <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
           <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-          <a href="#" class="social-link" aria-label="Discord"><i class="fab fa-discord"></i></a>
         </div>
       </div>
       <div class="col-lg-2 col-6 footer-links">
         <h6>Platform</h6>
         <a href="<?= url('webinars.php') ?>">Webinars</a>
         <a href="<?= url('bootcamps.php') ?>">Bootcamps</a>
-        <a href="<?= url('index.php') ?>#pricing">Pricing</a>
         <a href="<?= url('dashboard.php') ?>">Dashboard</a>
       </div>
       <div class="col-lg-2 col-6 footer-links">
@@ -78,4 +79,5 @@ function renderPublicFooter(): void
   </div>
 </footer>
     <?php
+    renderPublicAuthRegistrationAssets();
 }

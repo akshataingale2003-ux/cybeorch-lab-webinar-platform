@@ -94,7 +94,7 @@ textarea.form-control{min-height:90px;resize:vertical;}
   </a>
   <div class="auth-card">
     <h1 class="auth-title">Register as a Freelancer</h1>
-    <p class="auth-subtitle">Join CYBEORCH for client projects, product development, and remote collaboration on software, cybersecurity, and AI assignments.</p>
+    <p class="auth-subtitle">Join CYBEORCH for client projects, product development, and remote collaboration on software, cybersecurity, and AI hands-on projects.</p>
 
     <div class="info-badge">
       <i class="fas fa-briefcase mt-1"></i>
@@ -184,7 +184,7 @@ textarea.form-control{min-height:90px;resize:vertical;}
 
       <div class="mb-3">
         <label class="form-label">About You *</label>
-        <textarea name="about" class="form-control" placeholder="Brief introduction, past projects, and what kind of assignments you are looking for..." required><?= htmlspecialchars($_POST['about'] ?? '') ?></textarea>
+        <textarea name="about" class="form-control" placeholder="Brief introduction, past projects, and what kind of hands-on projects you are looking for..." required><?= htmlspecialchars($_POST['about'] ?? '') ?></textarea>
       </div>
 
       <div class="section-heading"><i class="fas fa-link me-2"></i>Portfolio Links <span style="color:var(--cyber-muted);font-weight:400;font-size:0.8rem">(optional)</span></div>
@@ -243,7 +243,7 @@ textarea.form-control{min-height:90px;resize:vertical;}
   <div class="auth-footer">
     <?php if ($loggedIn): ?>
     <a href="<?= url('dashboard.php') ?>">Back to Dashboard</a>
-    <?php else: ?>
+    <?php elseif (isPublicAuthEnabled()): ?>
     Already have an account? <a href="<?= url('login.php') ?>">Sign in here</a>
     <?php endif; ?>
   </div>

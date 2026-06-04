@@ -31,6 +31,9 @@ function ensureWebsiteUsersSchema(): void
 /** Popup registration completed or user logged into platform. */
 function hasWebsiteAccess(): bool
 {
+    if (!isPublicAuthEnabled()) {
+        return true;
+    }
     if (isLoggedIn()) {
         return true;
     }
@@ -140,6 +143,19 @@ function registerWebsiteUser(string $fullName, string $email, string $mobile): a
             'INSERT INTO website_users (full_name, email, mobile) VALUES (?, ?, ?)',
             [$fullName, $email, $mobile]
         );
+
+        require_once __DIR__ . '/form-submissions.php';
+        recordFormSubmission([
+            'form_key'          => 'website-registration',
+            'form_label'        => 'Website popup registration',
+            'source_page'       => 'index.php',
+            'full_name'         => $fullName,
+            'email'             => $email,
+            'phone'             => $mobile,
+            'summary'           => 'Website access registration',
+            'storage_table'     => 'website_users',
+            'storage_record_id' => $userId,
+        ]);
     } catch (Throwable $e) {
         if (str_contains($e->getMessage(), '1062') || str_contains($e->getMessage(), 'Duplicate')) {
             $row = db()->fetchOne('SELECT id FROM website_users WHERE email = ? LIMIT 1', [$email]);
@@ -192,7 +208,7 @@ function provisionPlatformUserAfterWebsiteRegister(string $fullName, string $ema
     }
 }
 
-/** Pages allowed before popup registration. */
+/** Pages allowed before popup registration (public marketing & catalog). */
 function websiteRegistrationExemptScripts(): array
 {
     return [
@@ -209,13 +225,210 @@ function websiteRegistrationExemptScripts(): array
         'terms.php',
         'privacy.php',
         'favicon.php',
+        'webinars.php',
+        'bootcamps.php',
+        'checkout.php',
+        'products.php',
+        'services.php',
+        'aboutus.php',
+        'about.php',
+        'contact.php',
+        'freelancer.php',
+        'freelance-projects.php',
+        'live-projects.php',
+        'hands-on-projects.php',
+        'enquire-enroll.php',
+        'get-started.php',
+        'webinar-registration-confirm.php',
+        'registration-success.php',
+        'secure-payment.php',
+        'assignment-register.php',
+        'start-project.php',
+        'book-consulting.php',
     ];
+}
+
+/** @return array<int, array<string, mixed>> */
+function getWebsiteUsers(int $limit = 500): array
+{
+    return adminFetchWebsiteUsers(['limit' => $limit, 'status' => 'all']);
+}
+
+/**
+ * @param array{status?: string, q?: string, limit?: int} $filters
+ * @return array<int, array<string, mixed>>
+ */
+function websiteUsersSupportsColumn(string $column): bool
+{
+    require_once __DIR__ . '/admin-actions.php';
+    ensureAdminActionsSchema();
+    return adminTableHasColumn('website_users', $column);
+}
+
+/** Linked platform account (users table) for a website registration email. */
+function getPlatformUserForWebsiteEmail(string $email): ?array
+{
+    require_once __DIR__ . '/admin-actions.php';
+    require_once __DIR__ . '/admin-users.php';
+    ensureAdminActionsSchema();
+    ensureAdminUsersSchema();
+
+    $email = strtolower(trim($email));
+    if ($email === '') {
+        return null;
+    }
+
+    $userActive = adminTableHasColumn('users', 'deleted_at')
+        ? adminSqlActive('u')
+        : '1=1';
+
+    $plainSel = adminTableHasColumn('users', 'password_plain') ? ', u.password_plain' : '';
+    $row = dbTry(
+        static fn () => db()->fetchOne(
+            'SELECT u.id, u.email, u.password' . $plainSel . ', COALESCE(u.is_blocked, 0) AS is_blocked
+             FROM users u
+             WHERE LOWER(u.email) = ? AND ' . $userActive . '
+             LIMIT 1',
+            [$email]
+        ),
+        null
+    );
+
+    return $row ?: null;
+}
+
+function adminWebsiteUserHasPlatformPassword(array $row): bool
+{
+    $hash = (string) ($row['platform_password_hash'] ?? '');
+    if ($hash !== '' && str_starts_with($hash, '$2')) {
+        return true;
+    }
+    $platform = getPlatformUserForWebsiteEmail((string) ($row['email'] ?? ''));
+    $hash = (string) ($platform['password'] ?? '');
+    return $hash !== '' && str_starts_with($hash, '$2');
+}
+
+function adminWebsiteUserDisplayPassword(array $row): string
+{
+    require_once __DIR__ . '/admin-users.php';
+    $plain = trim((string) ($row['platform_password_plain'] ?? ''));
+    if ($plain !== '') {
+        return $plain;
+    }
+    $platform = getPlatformUserForWebsiteEmail((string) ($row['email'] ?? ''));
+    if ($platform) {
+        return adminUserDisplayPassword($platform);
+    }
+    return '';
+}
+
+function adminFetchWebsiteUsers(array $filters = []): array
+{
+    ensureWebsiteUsersSchema();
+    require_once __DIR__ . '/admin-actions.php';
+    require_once __DIR__ . '/admin-users.php';
+    ensureAdminActionsSchema();
+    ensureAdminUsersSchema();
+
+    $status = $filters['status'] ?? 'all';
+    $q = trim((string) ($filters['q'] ?? ''));
+    $limit = max(1, min(500, (int) ($filters['limit'] ?? 500)));
+
+    $where = ['1=1'];
+    $params = [];
+    $hasDeleted = websiteUsersSupportsColumn('deleted_at');
+    $hasBlocked = websiteUsersSupportsColumn('is_blocked');
+
+    if ($status === 'deleted' && $hasDeleted) {
+        $where[] = 'w.deleted_at IS NOT NULL';
+    } elseif ($status === 'blocked' && $hasBlocked) {
+        if ($hasDeleted) {
+            $where[] = adminSqlActive('w');
+        }
+        $where[] = 'w.is_blocked = 1';
+    } elseif ($status === 'all') {
+        if ($hasDeleted) {
+            $where[] = adminSqlActive('w');
+        }
+    } elseif ($status === 'active') {
+        if ($hasDeleted) {
+            $where[] = adminSqlActive('w');
+        }
+        if ($hasBlocked) {
+            $where[] = '(w.is_blocked = 0 OR w.is_blocked IS NULL)';
+        }
+    }
+
+    if ($q !== '') {
+        $where[] = '(w.full_name LIKE ? OR w.email LIKE ? OR w.mobile LIKE ?)';
+        $like = '%' . $q . '%';
+        $params = array_merge($params, [$like, $like, $like]);
+    }
+
+    $userActive = adminTableHasColumn('users', 'deleted_at') ? adminSqlActive('u') : '1=1';
+
+    $plainCol = adminTableHasColumn('users', 'password_plain')
+        ? ', u.password_plain AS platform_password_plain'
+        : '';
+    $sql = 'SELECT w.*, u.id AS platform_user_id, u.password AS platform_password_hash' . $plainCol . '
+            FROM website_users w
+            LEFT JOIN users u ON LOWER(u.email) = LOWER(w.email) AND ' . $userActive . '
+            WHERE ' . implode(' AND ', $where) . '
+            ORDER BY w.created_at DESC
+            LIMIT ' . $limit;
+
+    return db()->fetchAll($sql, $params);
+}
+
+function adminCountWebsiteUsersByStatus(): array
+{
+    ensureWebsiteUsersSchema();
+    $hasDeleted = websiteUsersSupportsColumn('deleted_at');
+    $hasBlocked = websiteUsersSupportsColumn('is_blocked');
+
+    $activeWhere = '1=1';
+    if ($hasDeleted) {
+        $activeWhere = adminSqlActive('w') . ($hasBlocked ? ' AND (w.is_blocked = 0 OR w.is_blocked IS NULL)' : '');
+    } elseif ($hasBlocked) {
+        $activeWhere = '(w.is_blocked = 0 OR w.is_blocked IS NULL)';
+    }
+
+    return [
+        'active'  => (int) dbTry(fn () => db()->fetchOne(
+            'SELECT COUNT(*) AS c FROM website_users w WHERE ' . $activeWhere
+        )['c'] ?? 0, 0),
+        'blocked' => $hasBlocked ? (int) dbTry(fn () => db()->fetchOne(
+            'SELECT COUNT(*) AS c FROM website_users w WHERE '
+            . ($hasDeleted ? adminSqlActive('w') . ' AND ' : '')
+            . 'w.is_blocked = 1'
+        )['c'] ?? 0, 0) : 0,
+        'deleted' => $hasDeleted ? (int) dbTry(fn () => db()->fetchOne(
+            'SELECT COUNT(*) AS c FROM website_users w WHERE w.deleted_at IS NOT NULL'
+        )['c'] ?? 0, 0) : 0,
+        'all'     => (int) dbTry(fn () => getWebsiteUsersCount(), 0),
+    ];
+}
+
+function getWebsiteUserById(int $id): ?array
+{
+    ensureWebsiteUsersSchema();
+    if ($id < 1) {
+        return null;
+    }
+    $row = db()->fetchOne('SELECT * FROM website_users WHERE id = ?', [$id]);
+    return $row ?: null;
+}
+
+function getWebsiteUsersCount(): int
+{
+    ensureWebsiteUsersSchema();
+    return (int) (db()->fetchOne('SELECT COUNT(*) AS c FROM website_users')['c'] ?? 0);
 }
 
 /** Redirect guests to homepage popup until registered. */
 function enforceWebsiteRegistration(): void
 {
-    if (PHP_SAPI === 'cli') {
+    if (!isPublicAuthEnabled() || PHP_SAPI === 'cli') {
         return;
     }
 

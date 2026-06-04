@@ -1,7 +1,7 @@
 <?php
 /**
- * Run once in browser to download Font Awesome for offline/XAMPP use.
- * http://localhost/CYBEORCH_LAB_Platform/cybeorch/install_fontawesome.php
+ * Run once in browser to download Font Awesome for offline use.
+ * Visit `/install_fontawesome.php` after deployment/setup.
  */
 declare(strict_types=1);
 

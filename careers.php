@@ -96,7 +96,7 @@ a{text-decoration:none}
       <div class="career-card">
         <i class="fas fa-university"></i>
         <h2>College Collaborations</h2>
-        <p>Partner with CYBEORCH Academy as a campus ambassador, training coordinator, or workshop facilitator. Bring industry-ready cybersecurity programs to your institution.</p>
+        <p>Partner with CYBEORCH Academy as a campus ambassador, software development company coordinator, or workshop facilitator. Bring industry-ready cybersecurity programs to your institution.</p>
         <h3>Opportunities</h3>
         <ul class="career-list">
           <li>Campus Ambassador Program</li>

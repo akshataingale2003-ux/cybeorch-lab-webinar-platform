@@ -6,6 +6,8 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/public-footer.php';
 require_once __DIR__ . '/contact-messages.php';
+require_once __DIR__ . '/form-submissions.php';
+require_once __DIR__ . '/site-contact.php';
 
 function renderPublicEnquiryStyles(): void
 {
@@ -58,9 +60,237 @@ function renderPublicEnquiryStyles(): void
         . '.step-content{flex:1;min-width:0}'
         . '.step-title{font-family:\'Rajdhani\',sans-serif;font-size:1.05rem;font-weight:600;color:var(--cyber-text);margin:0 0 .35rem}'
         . '.step-desc{color:var(--cyber-muted);font-size:.9rem;line-height:1.65;margin:0}'
-        . '@media(max-width:767px){.section{padding:3rem 0}}'
+        . '.enquiry-form-header{margin-bottom:1.75rem}'
+        . '.enquiry-form-intro{color:var(--cyber-muted);font-size:.92rem;line-height:1.7;margin:.75rem 0 0;max-width:42rem}'
+        . '.form-hint{font-size:.8rem;color:var(--cyber-muted);margin-top:.35rem;line-height:1.45}'
+        . '.enquiry-form .row.g-3{--bs-gutter-y:1.15rem}'
+        . '@media(max-width:767px){.section{padding:3rem 0}.enquiry-form{padding:1.5rem}}'
         . '</style>' . "\n";
+    renderContactActionStyles();
     renderPublicFooterStyles();
+}
+
+/** @return array<string, string> */
+function enquireEnrollContactMethods(): array
+{
+    $labels = [];
+    foreach (siteContactChannels() as $key => $channel) {
+        $labels[$key] = $channel['label'];
+    }
+    return $labels;
+}
+
+/** @return array<string, array{label: string, price: string}> */
+function enquireEnrollProgramTracks(): array
+{
+    require_once __DIR__ . '/program-pricing.php';
+
+    $tracks = [];
+    foreach (cybeorchProgramPathCatalog() as $slug => $cfg) {
+        $row = bootcampRowWithProgramDefaults([
+            'slug' => $slug,
+            'discounted_fee' => $cfg['fee_inr'],
+            'fee_usd' => $cfg['fee_usd'],
+        ]);
+        $tracks[$slug] = [
+            'label' => (string) $cfg['title'],
+            'price' => bootcampOptionPriceLabel($row),
+        ];
+    }
+    $tracks['pro-trial'] = ['label' => 'Pro Learner Trial', 'price' => '₹999/month'];
+
+    return $tracks;
+}
+
+/**
+ * Grouped course / webinar / bootcamp options for the enrolment select.
+ *
+ * @return list<array{label: string, options: list<array{value: string, label: string}>}>
+ */
+function enquireEnrollCourseOptionGroups(): array
+{
+    require_once __DIR__ . '/public-catalog.php';
+    require_once __DIR__ . '/webinar-register-helpers.php';
+    require_once __DIR__ . '/program-pricing.php';
+
+    $groups = [];
+
+    $webinars = publicFetchWebinars();
+    if ($webinars !== []) {
+        $options = [];
+        foreach ($webinars as $w) {
+            $slug = (string) ($w['slug'] ?? '');
+            if ($slug === '') {
+                continue;
+            }
+            $when = !empty($w['scheduled_at']) ? date('d M Y', strtotime((string) $w['scheduled_at'])) : 'TBA';
+            $tag = !empty($w['is_free']) ? 'Free' : webinarPaidOptionPriceLabel();
+            $options[] = [
+                'value' => 'webinar:' . $slug,
+                'label' => (string) ($w['title'] ?? 'Webinar') . ' — ' . $when . ' (' . $tag . ')',
+            ];
+        }
+        if ($options !== []) {
+            $groups[] = ['label' => 'Webinars', 'options' => $options];
+        }
+    }
+
+    require_once __DIR__ . '/program-pricing.php';
+    $bootcamps = publicFetchDisplayBootcamps();
+    if ($bootcamps !== []) {
+        $options = [];
+        foreach ($bootcamps as $b) {
+            $slug = (string) ($b['slug'] ?? '');
+            if ($slug === '') {
+                continue;
+            }
+            $options[] = [
+                'value' => 'bootcamp:' . $slug,
+                'label' => (string) ($b['title'] ?? 'Bootcamp') . ' — ' . bootcampOptionPriceLabel(bootcampRowWithProgramDefaults($b)),
+            ];
+        }
+        if ($options !== []) {
+            $groups[] = ['label' => 'Bootcamps', 'options' => $options];
+        }
+    }
+
+    $programOptions = [];
+    foreach (enquireEnrollProgramTracks() as $key => $track) {
+        $programOptions[] = [
+            'value' => 'program:' . $key,
+            'label' => $track['label'] . ' — ' . $track['price'],
+        ];
+    }
+    $groups[] = ['label' => 'Program Tracks', 'options' => $programOptions];
+
+    return $groups;
+}
+
+/** @return list<string> */
+function enquireEnrollCourseOptionValues(): array
+{
+    $values = ['general'];
+    foreach (enquireEnrollCourseOptionGroups() as $group) {
+        foreach ($group['options'] as $opt) {
+            $values[] = $opt['value'];
+        }
+    }
+    return $values;
+}
+
+function enquireEnrollResolveCourseLabel(string $selection): string
+{
+    $selection = trim($selection);
+    if ($selection === '' || $selection === 'general') {
+        return 'General enquiry — please advise';
+    }
+
+    $parts = explode(':', $selection, 2);
+    $type = $parts[0] ?? '';
+    $slug = $parts[1] ?? '';
+
+    if ($type === 'program') {
+        $tracks = enquireEnrollProgramTracks();
+        if (isset($tracks[$slug])) {
+            return $tracks[$slug]['label'] . ' (' . $tracks[$slug]['price'] . ')';
+        }
+    }
+
+    require_once __DIR__ . '/public-catalog.php';
+
+    if ($type === 'webinar') {
+        foreach (publicFetchWebinars() as $w) {
+            if (($w['slug'] ?? '') === $slug) {
+                $when = !empty($w['scheduled_at']) ? date('d M Y', strtotime((string) $w['scheduled_at'])) : 'TBA';
+                return (string) ($w['title'] ?? $slug) . ' — ' . $when;
+            }
+        }
+    }
+
+    if ($type === 'bootcamp') {
+        require_once __DIR__ . '/program-pricing.php';
+        foreach (publicFetchDisplayBootcamps() as $b) {
+            if (($b['slug'] ?? '') === $slug) {
+                require_once __DIR__ . '/program-pricing.php';
+
+                return (string) ($b['title'] ?? $slug) . ' — ' . bootcampOptionPriceLabel(bootcampRowWithProgramDefaults($b));
+            }
+        }
+    }
+
+    return $selection;
+}
+
+function enquireEnrollDefaultCourseSelection(): string
+{
+    $posted = trim((string) ($_POST['course_selection'] ?? ''));
+    if ($posted !== '' && in_array($posted, enquireEnrollCourseOptionValues(), true)) {
+        return $posted;
+    }
+
+    $webinar = trim((string) ($_GET['webinar'] ?? ''));
+    if ($webinar !== '') {
+        $candidate = 'webinar:' . $webinar;
+        if (in_array($candidate, enquireEnrollCourseOptionValues(), true)) {
+            return $candidate;
+        }
+    }
+
+    $bootcamp = trim((string) ($_GET['bootcamp'] ?? ''));
+    if ($bootcamp !== '') {
+        $candidate = 'bootcamp:' . $bootcamp;
+        if (in_array($candidate, enquireEnrollCourseOptionValues(), true)) {
+            return $candidate;
+        }
+    }
+
+    $program = trim((string) ($_GET['program'] ?? ''));
+    if (($_GET['plan'] ?? '') === 'pro-trial') {
+        $program = 'pro-trial';
+    }
+    if ($program !== '') {
+        $candidate = 'program:' . $program;
+        if (in_array($candidate, enquireEnrollCourseOptionValues(), true)) {
+            return $candidate;
+        }
+    }
+
+    return 'general';
+}
+
+/**
+ * @param array<string, string> $contactMethods
+ */
+function enquireEnrollValidatePostRequest(array $contactMethods): void
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        return;
+    }
+
+    if (!verifyCSRF($_POST['csrf_token'] ?? '')) {
+        return;
+    }
+
+    $redirect = 'enquire-enroll.php';
+    $course = trim((string) ($_POST['course_selection'] ?? ''));
+    if ($course === '' || !in_array($course, enquireEnrollCourseOptionValues(), true)) {
+        redirectWith($redirect, 'error', 'Please select a course, webinar, or bootcamp.');
+    }
+
+    $contact = trim((string) ($_POST['preferred_contact'] ?? ''));
+    if (!isset($contactMethods[$contact])) {
+        redirectWith($redirect, 'error', 'Please choose your preferred contact method.');
+    }
+
+    $phoneDigits = preg_replace('/\D+/', '', (string) ($_POST['phone'] ?? ''));
+    if (strlen($phoneDigits) < 8) {
+        redirectWith($redirect, 'error', 'Please enter a valid phone number.');
+    }
+
+    $message = trim(sanitize($_POST['message'] ?? ''));
+    if (strlen($message) < 10) {
+        redirectWith($redirect, 'error', 'Please describe your requirements (at least 10 characters).');
+    }
 }
 
 /**
@@ -106,7 +336,15 @@ function handlePublicEnquiryPost(string $redirectPath, string $fixedSubject, arr
     }
 
     try {
-        insertContactMessage($name, $email, $phone, $fixedSubject, $message);
+        insertContactMessage(
+            $name,
+            $email,
+            $phone,
+            $fixedSubject,
+            $message,
+            $redirectPath,
+            formSubmissionKeyFromPath($redirectPath)
+        );
         redirectWith($redirectPath, 'success', 'Thank you! Our team will contact you within 24 hours.');
     } catch (Throwable $e) {
         redirectWith($redirectPath, 'error', 'Could not submit your request. Please try again later.');

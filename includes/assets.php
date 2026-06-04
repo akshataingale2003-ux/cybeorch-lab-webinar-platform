@@ -33,7 +33,7 @@ function renderIconStyles(): void
 
     echo '<style id="cybeorch-icons">'
         . ':root{--icon-muted:var(--cyber-muted,#7a8fa6);--icon-accent:var(--cyber-accent,#00d4ff);}'
-        . '.webinar-meta i,.webinar-meta .fa,.bootcamp-header i,.feature-list i,.pricing-features i{color:var(--icon-accent);}'
+        . '.webinar-meta i,.webinar-meta .fa,.bootcamp-header i,.feature-list i{color:var(--icon-accent);}'
         . '.webinar-meta i,.webinar-meta .fa{min-width:1em;text-align:center;}'
         . '.sidebar-link i,.about-card i,.career-card>i,.icon-wrap i{color:var(--icon-accent);}'
         . '.navbar-toggler-icon-custom i{font-size:1.25rem;color:var(--icon-accent);}'

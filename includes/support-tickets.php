@@ -161,15 +161,31 @@ function createSupportTicket(array $d): int
     if (!isset(supportTicketPriorities()[$prio])) {
         $prio = 'medium';
     }
+    $ticketNo = generateTicketNo();
     $tid = db()->insert(
         'INSERT INTO support_tickets (ticket_no,user_id,name,email,phone,category_id,subject,message,priority,assigned_team_id) VALUES (?,?,?,?,?,?,?,?,?,?)',
-        [generateTicketNo(), $d['user_id'] ?? null, $d['name'], $d['email'], $d['phone'] ?? null, $d['category_id'], $d['subject'], $d['message'], $prio, defaultTeamForCategory((int) $d['category_id'])]
+        [$ticketNo, $d['user_id'] ?? null, $d['name'], $d['email'], $d['phone'] ?? null, $d['category_id'], $d['subject'], $d['message'], $prio, defaultTeamForCategory((int) $d['category_id'])]
     );
     db()->insert('INSERT INTO support_ticket_replies (ticket_id,sender_type,sender_user_id,message) VALUES (?,?,?,?)', [$tid, 'user', $d['user_id'] ?? null, $d['message']]);
     if (!empty($d['user_id'])) {
         require_once __DIR__ . '/helpers.php';
         sendNotification((int) $d['user_id'], 'support', 'Ticket created', 'Your support ticket was submitted.', $tid, 'support_ticket');
     }
+
+    require_once __DIR__ . '/form-submissions.php';
+    recordFormSubmission([
+        'form_key'          => 'support-ticket',
+        'form_label'        => 'Support desk ticket',
+        'source_page'       => 'supportdesk.php',
+        'full_name'         => $d['name'],
+        'email'             => $d['email'],
+        'phone'             => $d['phone'] ?? null,
+        'summary'           => ($d['subject'] ?? '') . ' — ' . $ticketNo,
+        'payload'           => $d,
+        'storage_table'     => 'support_tickets',
+        'storage_record_id' => $tid,
+    ]);
+
     return $tid;
 }
 

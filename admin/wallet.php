@@ -71,14 +71,14 @@ renderAdminPageStart('NxL Wallet', 'wallet', 'fa-coins');
         </div>
         <div class="col-12 d-flex gap-2">
           <button type="submit" class="btn-submit"><i class="fas fa-plus me-1"></i>Credit Tokens</button>
-          <a href="<?= url('admin/wallet.php') ?>" class="btn-cancel">Cancel</a>
+          <a href="<?= adminUrl('wallet.php') ?>" class="btn-cancel">Cancel</a>
         </div>
       </div>
     </form>
   </div>
 </div>
 <?php else: ?>
-<p class="mb-3"><a href="<?= url('admin/wallet.php?action=credit') ?>" class="btn-primary-cyber"><i class="fas fa-plus"></i>Credit NxL</a></p>
+<p class="mb-3"><a href="<?= adminUrl('wallet.php?action=credit') ?>" class="btn-primary-cyber"><i class="fas fa-plus"></i>Credit NxL</a></p>
 <?php endif; ?>
 
 <div class="row g-3 mb-4">

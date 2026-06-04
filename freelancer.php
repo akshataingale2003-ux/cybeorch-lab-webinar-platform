@@ -170,7 +170,7 @@ $skillTags = [
 <meta charset="utf-8">
 <?php renderStandardViewport(); ?>
 <title>Freelancers – CYBEORCH</title>
-<meta name="description" content="Join the CYBEORCH freelancer network. Explore categories, skills, portfolio work, availability, and register for project assignments.">
+<meta name="description" content="Join the CYBEORCH freelancer network. Explore categories, skills, portfolio work, availability, and register for hands-on projects.">
 <?php renderPublicPageHead(); ?>
 <style>
 :root{--cyber-dark:#050b18;--cyber-navy:#0a1628;--cyber-accent:#00d4ff;--cyber-green:#00ff88;--cyber-text:#e0e8f0;--cyber-muted:#7a8fa6;--cyber-border:rgba(0,212,255,0.2);--cyber-orange:#ff6b35;--cyber-card:rgba(10,22,40,0.95);}
@@ -221,7 +221,7 @@ a{text-decoration:none}
 <header class="section text-center pb-0">
   <div class="container">
     <h1 class="hero-title"><span class="accent">Freelancer</span> Network</h1>
-    <p class="hero-copy">Connect with CYBEORCH for client projects, product builds, cybersecurity assignments, and startup support. Browse categories, explore the network, and apply to join.</p>
+    <p class="hero-copy">Connect with CYBEORCH for client projects, product builds, cybersecurity hands-on projects, and startup support. Browse categories, explore the network, and apply to join.</p>
     <div class="mt-3">
       <a href="<?= htmlspecialchars($registerUrl) ?>" class="btn-primary-cyber"><i class="fas fa-user-plus me-2"></i>Register as a Freelancer</a>
     </div>
@@ -240,7 +240,7 @@ a{text-decoration:none}
   <section class="section pt-4" id="categories">
     <div class="container">
       <h2 class="section-title text-center">Freelancer <span class="accent">Categories</span></h2>
-      <p class="section-subtitle text-center mx-auto mb-5">Choose the discipline that best matches your expertise. We route assignments by role and skill fit.</p>
+      <p class="section-subtitle text-center mx-auto mb-5">Choose the discipline that best matches your expertise. We route hands-on projects by role and skill fit.</p>
       <div class="row g-4">
         <?php foreach ($roleLabels as $key => $label):
             $meta = $categoryMeta[$key] ?? ['icon' => 'fa-user', 'desc' => ''];
@@ -349,7 +349,7 @@ a{text-decoration:none}
         <div class="col-lg-6 fade-in">
           <div class="f-card">
             <h3>What we look for</h3>
-            <p class="mb-3">Clear skill lists, honest experience levels, and examples of real work help us place you on the right assignments faster.</p>
+            <p class="mb-3">Clear skill lists, honest experience levels, and examples of real work help us place you on the right hands-on projects faster.</p>
             <div class="exp-tier">
               <?php foreach ($experienceLabels as $code => $label): ?>
               <span><?= htmlspecialchars($label) ?></span>

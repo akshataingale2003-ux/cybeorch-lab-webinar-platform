@@ -81,15 +81,15 @@ $solutionAreas = [
         'desc'  => 'LMS features, cohort learning, assessments, and content delivery aligned with how institutions and creators teach online.',
         'bullets' => [
             'Courses, modules, & progress',
-            'Live cohorts & assignments',
+            'Live cohorts & hands-on projects',
             'Certificates & outcomes',
             'B2B institution & B2C learner flows',
         ],
     ],
     [
-        'title' => 'Eva1 Solution',
+        'title' => 'Eva One Solution',
         'icon'  => 'fa-wand-magic-sparkles',
-        'desc'  => 'Eva! brings guided assistance, smart automation, and conversational experiences into your product—designed with security, clarity, and your brand voice in mind. Coming soon.',
+        'desc'  => 'Eva One brings guided assistance, smart automation, and conversational experiences into your product—designed with security, clarity, and your brand voice in mind. Coming soon.',
         'upcoming' => true,
         'bullets' => [
             'Guided onboarding & contextual help',
@@ -117,7 +117,7 @@ $solutionAreas = [
 <meta charset="utf-8">
 <?php renderStandardViewport(); ?>
 <title>CYBEORCH Solutions</title>
-<meta name="description" content="CYBEORCH builds event platforms, EV ecosystems, FinTech, healthcare systems, e-commerce, SaaS, EdTech, Eva! Solution, and startup MVPs.">
+<meta name="description" content="CYBEORCH builds event platforms, EV ecosystems, FinTech, healthcare systems, e-commerce, SaaS, EdTech, Eva One Solution, and startup MVPs.">
 <?php renderPublicPageHead(); ?>
 <style>
 :root{--cyber-dark:#050b18;--cyber-navy:#0a1628;--cyber-accent:#00d4ff;--cyber-green:#00ff88;--cyber-yellow:#ffd166;--cyber-text:#e0e8f0;--cyber-muted:#7a8fa6;--cyber-border:rgba(0,212,255,0.2);--cyber-orange:#ff6b35;--cyber-card:rgba(10,22,40,0.95);}

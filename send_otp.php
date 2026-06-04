@@ -7,6 +7,8 @@ ob_start();
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/popup-registration.php';
 
+rejectWhenPublicAuthDisabled(true);
+
 startSession();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -36,14 +38,23 @@ try {
     if (!empty($r['expires_at'])) {
         $out['expires_at'] = (int) $r['expires_at'];
     }
-    if (!empty($r['dev_otp'])) {
-        $out['dev_otp'] = $r['dev_otp'];
-    }
-    if ($r['success']) {
-        $out['otp_sent'] = true;
+    if (!empty($r['email_sent'])) {
+        $out['email_sent'] = true;
+        $out['otp_sent']   = true;
     }
 
     otpJsonResponse($out);
 } catch (Throwable $e) {
-    otpJsonResponse(['success' => false, 'message' => 'Server error. Try again.'], 500);
+    if (function_exists('mailLog')) {
+        mailLog('error', 'send_otp', $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ]);
+    }
+    error_log('OTP Error: ' . $e->getMessage());
+    $msg = 'Server error. Try again.';
+    if (function_exists('cybeorchIsLocalDev') && cybeorchIsLocalDev()) {
+        $msg .= ' (' . $e->getMessage() . ')';
+    }
+    otpJsonResponse(['success' => false, 'message' => $msg], 500);
 }

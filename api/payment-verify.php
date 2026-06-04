@@ -44,10 +44,7 @@ if ($result['success']) {
                 "INSERT INTO webinar_registrations (user_id, webinar_id, registration_no, payment_id, payment_status) VALUES (?,?,?,?,'paid')",
                 [$_SESSION['user_id'], $payment['reference_id'], $regNo, $payment['id']]
             );
-            db()->execute(
-                "UPDATE webinars SET registered_seats = registered_seats + 1 WHERE id = ?",
-                [$payment['reference_id']]
-            );
+            // Seats booked must be derived from webinar_registrations (no caching).
         }
         header('Location: ' . url('payment-success.php?type=webinar&ref=' . urlencode($rzpPaymentId)));
     } else {

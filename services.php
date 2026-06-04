@@ -3,7 +3,41 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/public-footer.php';
+require_once __DIR__ . '/includes/training-public.php';
 startSession();
+
+$serviceOfferings = [
+    [
+        'title' => 'Cybersecurity',
+        'image' => 'assets/images/Cybersecurity.png',
+        'desc'  => 'Protecting what matters most with threat detection, data protection, network security, and secure access.',
+    ],
+    [
+        'title' => 'Web Development',
+        'image' => 'assets/images/Web Development.png',
+        'desc'  => 'Building responsive, fast, and SEO-friendly websites with clean code and modern frameworks.',
+    ],
+    [
+        'title' => 'Cloud Solutions',
+        'image' => 'assets/images/Cloud Solutions.png',
+        'desc'  => 'Scalable, secure, and reliable cloud consulting, migration, and managed services.',
+    ],
+    [
+        'title' => 'AI Automation',
+        'image' => 'assets/images/AI Automation.png',
+        'desc'  => 'Intelligent automation and AI-powered workflows to boost productivity and business growth.',
+    ],
+    [
+        'title' => 'Training & Internship',
+        'image' => 'assets/images/Training & Internship.png',
+        'desc'  => 'Learn, practice, and grow with expert-led training, real projects, and internship opportunities.',
+    ],
+    [
+        'title' => 'Blockchain Solutions',
+        'image' => 'assets/images/Blockchain Solutions.png',
+        'desc'  => 'Secure, transparent, and scalable blockchain solutions that build trust and deliver value.',
+    ],
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,8 +74,14 @@ a{text-decoration:none}
 .btn-primary{background:var(--cyber-accent);border:none;box-shadow:0 12px 40px rgba(0,212,255,0.18)}
 .fade-in{opacity:0;transform:translateY(20px);transition:all .6s ease}
 .fade-in.visible{opacity:1;transform:translateY(0)}
-@media(max-width:767px){.section{padding:3rem 0}}
+.section-title{font-family:'Rajdhani',sans-serif;font-size:clamp(2rem,4vw,2.8rem);font-weight:700;margin-bottom:.5rem;color:var(--cyber-text)}
+.section-title .accent{color:var(--cyber-accent)}
+.section-subtitle{color:var(--cyber-muted);font-size:1rem;margin-bottom:2.5rem;line-height:1.7}
+.divider{width:60px;height:3px;background:linear-gradient(90deg,var(--cyber-accent),var(--cyber-green));margin:.75rem auto 1rem;border-radius:2px}
+.section-our-services{padding-top:0;padding-bottom:4rem}
+@media(max-width:767px){.section{padding:3rem 0}.section-our-services{padding-bottom:3rem}}
 </style>
+<?php renderCatalogImageCardStyles(); ?>
 </head>
 <body>
 <?php $navActive = $navActive ?? 'services'; require __DIR__ . '/includes/public-navbar.php'; ?>
@@ -52,6 +92,7 @@ a{text-decoration:none}
   </div>
 </header>
 <main>
+
   <section class="section" id="services-list">
     <div class="container">
       <div class="row g-4">
@@ -73,12 +114,12 @@ a{text-decoration:none}
         <div class="col-md-6 col-lg-3">
           <div class="service-card h-100">
             <h3><span class="brand-cybeorch">CYBEORCH</span> <span class="brand-academy">ACADEMY</span></h3>
-            <p>Live bootcamps, internships, and training programs designed to build industry-ready talent.</p>
+            <p>Live bootcamps, internships, and software development company programs designed to build industry-ready talent.</p>
             <ul class="service-list">
               <li>30-Day Bootcamps</li>
               <li>Engineering Projects</li>
               <li>Live Internship Programs</li>
-              <li>Corporate Training</li>
+              <li>Corporate Software Development Company</li>
               <li>Client-Side Experience</li>
             </ul>
           </div>
@@ -114,12 +155,43 @@ a{text-decoration:none}
       </div>
     </div>
   </section>
+
+  <section class="section section-our-services" id="our-services">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">Our <span class="accent">Services</span></h2>
+        <div class="divider mx-auto"></div>
+        <p class="section-subtitle mb-0">Empowering businesses with cutting-edge technology solutions and digital transformation services</p>
+      </div>
+      <div class="row g-4">
+        <?php foreach ($serviceOfferings as $service): ?>
+        <div class="col-12 col-md-6 col-lg-4 fade-in">
+          <article class="service-image-card h-100">
+            <div class="service-image-wrap">
+              <img
+                src="<?= catalogImageUrl($service['image']) ?>"
+                alt="<?= htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8') ?> — CYBEORCH"
+                class="service-image-media"
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+            <div class="service-image-body">
+              <h3 class="service-image-title"><?= htmlspecialchars($service['title']) ?></h3>
+              <p class="service-image-desc"><?= htmlspecialchars($service['desc']) ?></p>
+            </div>
+          </article>
+        </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  </section>
   <section class="section" id="contact">
     <div class="container">
       <div class="row g-4 align-items-center">
         <div class="col-lg-5">
           <h2>Start Your Project</h2>
-          <p style="color:var(--cyber-muted);">Tell us about your requirements and weâ€™ll connect you with the right team for development, training, or consulting.</p>
+          <p style="color:var(--cyber-muted);">Tell us about your requirements and weâ€™ll connect you with the right team for development, software development company, or consulting.</p>
           <p style="color:var(--cyber-muted);"><i class="fas fa-envelope me-2"></i>info@CYBEORCH.com</p>
         </div>
         <div class="col-lg-7">

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // ============================================
 // CYBEORCH LAB - Configuration File
 // ============================================
@@ -23,15 +23,17 @@ define('BASE_PATH', $basePath === '' ? '' : $basePath);
 define('CYBEORCH_APP_ROOT', $appRoot);
 
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$host   = (string) ($_SERVER['HTTP_HOST'] ?? ($_SERVER['SERVER_NAME'] ?? ''));
 define('SITE_URL', $scheme . '://' . $host . BASE_PATH);
 
 if (PHP_SAPI !== 'cli' && !headers_sent() && !defined('CYBEORCH_JSON_API')) {
     header('Content-Type: text/html; charset=UTF-8');
 }
 
-// Database Configuration (XAMPP defaults)
-define('DB_HOST', '127.0.0.1');          // Use 127.0.0.1 on Windows/XAMPP (more reliable than "localhost")
+// Database Configuration
+// DB_HOST is intentionally empty by default so production/live hosts can be set via env/config.local.php.
+// When DB_HOST is empty, the PDO DSN builder omits host entirely (PDO uses its own default host behavior).
+define('DB_HOST', 'localhost');
 define('DB_PORT', 3306);
 define('DB_USER', 'root');               // XAMPP default; change for production
 define('DB_PASS', '');                   // XAMPP default; change for production
@@ -41,6 +43,9 @@ define('DB_CHARSET', 'utf8mb4');
 // Site Configuration
 define('SITE_NAME', 'CYBEORCH LAB');
 define('SITE_EMAIL', 'info@cybeorch.com');
+define('SITE_PHONE_E164', '+919764096069');
+define('SITE_PHONE_DISPLAY', '+91 97640 96069');
+define('SITE_WHATSAPP', '919764096069');
 define('ADMIN_EMAIL', 'admin@cybeorch.com');
 define('SITE_TWITTER_HANDLE', 'cybeorch');
 define('SITE_TWITTER_URL', 'https://x.com/cybeorch');
@@ -51,11 +56,27 @@ define('RAZORPAY_KEY_ID', 'rzp_test_XXXXXXXXXXXXXXX');      // Replace with your
 define('RAZORPAY_KEY_SECRET', 'XXXXXXXXXXXXXXXXXXXXXXXX');   // Replace with your Key Secret
 define('RAZORPAY_CURRENCY', 'INR');
 
+// Manual UPI / bank (secure-payment.php) — override in config.local.php
+define('PAYMENT_ACCOUNT_NAME', 'CYBEORCH LAB');
+define('PAYMENT_BANK_NAME', 'HDFC Bank');
+define('PAYMENT_ACCOUNT_NUMBER', '50200012345678');
+define('PAYMENT_IFSC', 'HDFC0001234');
+define('PAYMENT_ACCOUNT_TYPE', 'Current');
+define('PAYMENT_BRANCH', 'Mumbai, India');
+define('PAYMENT_UPI_ID', 'cybeorch@hdfcbank');
+
+// Gateway placeholders (connect live keys in production)
+define('PHONEPE_MERCHANT_ID', '');
+define('PHONEPE_SALT_KEY', '');
+
 // NxL Wallet Configuration
 define('NXL_SIGNUP_BONUS', 25);
 define('NXL_REFERRAL_BONUS', 50);
 define('NXL_WEBINAR_REWARD', 15);
 define('NXL_BOOTCAMP_REWARD', 100);
+define('NXL_INR_VALUE', 1);
+/** Max share of available wallet balance usable in one payment (e.g. 50 = half of balance). */
+define('NXL_MAX_WALLET_BALANCE_PERCENT', 50);
 
 // Session Configuration
 define('SESSION_LIFETIME', 86400); // 24 hours
@@ -72,6 +93,12 @@ if (is_file(cybeorchEnvPath())) {
     if (is_file($localConfig)) {
         require_once $localConfig;
     }
+}
+
+/** Admin panel base URL (e.g. https://admin.cybeorch.com). Override via .env ADMIN_URL or config.local.php (use '' for local XAMPP). */
+if (!defined('ADMIN_URL')) {
+    $adminUrlFromEnv = trim((string) (getenv('ADMIN_URL') ?: ($_ENV['ADMIN_URL'] ?? '')));
+    define('ADMIN_URL', $adminUrlFromEnv !== '' ? rtrim($adminUrlFromEnv, '/') : 'https://admin.cybeorch.com');
 }
 
 $cybeorchSmtpPreset = cybeorchSmtpPreset();
@@ -106,17 +133,6 @@ define('OTP_MAX_VERIFY_ATTEMPTS', 5);
 define('OTP_MAX_SENDS_PER_HOUR', 5);
 define('OTP_DUPLICATE_ENQUIRY_HOURS', 24);
 
-if (!defined('CYBEORCH_OTP_DEV_MODE')) {
-    $otpHost = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
-    define(
-        'CYBEORCH_OTP_DEV_MODE',
-        $otpHost === 'localhost'
-            || $otpHost === '127.0.0.1'
-            || str_starts_with($otpHost, 'localhost:')
-            || str_starts_with($otpHost, '127.0.0.1:')
-    );
-}
-
 // File Upload Limits
 define('MAX_UPLOAD_SIZE', 5 * 1024 * 1024); // 5MB
 define('UPLOAD_PATH', __DIR__ . '/../uploads/');
@@ -136,6 +152,13 @@ define('GOOGLE_OAUTH_CLIENT_SECRET', '');
 // Timezone
 date_default_timezone_set('Asia/Kolkata');
 
+/**
+ * Public website authentication (login, register popup, protected pages).
+ * Set to true when re-enabling trainee accounts and route protection.
+ */
+define('PUBLIC_AUTH_ENABLED', true);
+
+require_once __DIR__ . '/auth-feature.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/assets.php';
 require_once __DIR__ . '/public-footer.php';
@@ -155,8 +178,10 @@ if (PHP_SAPI !== 'cli' && !defined('CYBEORCH_DB_PINGED')) {
     }, null);
 }
 
-enforceWebsiteRegistration();
-enforcePublicSiteAuth();
+if (!defined('CYBEORCH_JSON_API') && isPublicAuthEnabled()) {
+    enforceWebsiteRegistration();
+    enforcePublicSiteAuth();
+}
 
 // Error Reporting (set to 0 in production)
 error_reporting(E_ALL);

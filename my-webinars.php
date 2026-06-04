@@ -3,6 +3,7 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/training-public.php';
+require_once __DIR__ . '/includes/webinar-register-helpers.php';
 require_once __DIR__ . '/includes/student-layout.php';
 
 $ctx = studentContext();
@@ -33,9 +34,12 @@ renderStudentSidebar('webinars', $ctx);
             &middot; <?= (int) $w['duration_mins'] ?> min
           </p>
         </div>
-        <a href="<?= trainingDetailUrl('webinar', $w) ?>" class="btn-cyber">
-          <?= !empty($w['is_free']) ? 'Register Free' : 'Register &ndash; ' . formatRupee((float) $w['fee']) ?>
-        </a>
+        <div class="text-end">
+          <?php renderWebinarFeeNotice($w); ?>
+          <a href="<?= trainingDetailUrl('webinar', $w) ?>" class="btn-cyber">
+            <?= !empty($w['is_free']) ? 'Register Free' : 'Register Now' ?>
+          </a>
+        </div>
       </div>
     </div>
     <?php endforeach; endif; ?>

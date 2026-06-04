@@ -4,27 +4,75 @@ declare(strict_types=1);
 use PHPMailer\PHPMailer\Exception as MailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 
-function mailerAutoload(): void
+function mailerAutoload(): bool
 {
     static $ok = false;
     if ($ok) {
-        return;
+        return true;
     }
     $autoload = dirname(__DIR__) . '/vendor/autoload.php';
     if (!is_file($autoload)) {
-        throw new RuntimeException('Run: composer install (PHPMailer required).');
+        return false;
     }
     require_once $autoload;
     $ok = true;
+    return true;
 }
 
 function cybeorchIsLocalDev(): bool
 {
     $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
-    return $host === 'localhost'
-        || $host === '127.0.0.1'
-        || str_starts_with($host, 'localhost:')
-        || str_starts_with($host, '127.0.0.1:');
+    $host = preg_replace('/:\d+$/', '', $host) ?? '';
+
+    // Treat loopback addresses as local dev (no hardcoded loopback host literals).
+    // 127.0.0.0/8 in integer form is 0x7F000000/0xFF000000.
+    $isLoopbackV4 = static function (string $ip): bool {
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return false;
+        }
+        $long = ip2long($ip);
+        return $long !== false && (($long & 0xFF000000) === 0x7F000000);
+    };
+
+    if ($host === '') {
+        return false;
+    }
+
+    // If host is already an IP, validate directly.
+    if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+        return $isLoopbackV4($host);
+    }
+
+    // Otherwise resolve hostname and check any returned A records.
+    $resolved = gethostbynamel($host);
+    if (!$resolved) {
+        return false;
+    }
+    foreach ($resolved as $ip) {
+        if ($isLoopbackV4((string) $ip)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function mailLogPath(): string
+{
+    return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'mail.log';
+}
+
+function mailLog(string $level, string $context, string $message, array $extra = []): void
+{
+    $dir = dirname(mailLogPath());
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0755, true);
+    }
+    $line = date('Y-m-d H:i:s') . ' [' . strtoupper($level) . '] ' . $context . ' — ' . $message;
+    if ($extra !== []) {
+        unset($extra['password'], $extra['EMAIL_PASS'], $extra['SMTP_PASS']);
+        $line .= ' ' . json_encode($extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+    @file_put_contents(mailLogPath(), $line . PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 
 function smtpIsConfigured(): bool
@@ -56,7 +104,9 @@ function smtpEncryptionMode(): string
 /** @return array{ok: bool, error?: string} */
 function sendSmtpTestEmail(string $toEmail, ?string $subject = null): array
 {
-    mailerAutoload();
+    if (!mailerAutoload()) {
+        return ['ok' => false, 'error' => 'PHPMailer not installed. Run: composer install'];
+    }
 
     if (!smtpIsConfigured()) {
         return ['ok' => false, 'error' => 'SMTP not configured.'];
@@ -87,7 +137,9 @@ function sendSmtpTestEmail(string $toEmail, ?string $subject = null): array
 /** @return array{ok: bool, error?: string} */
 function sendRegistrationOtpEmail(string $toEmail, string $toName, string $otpCode): array
 {
-    mailerAutoload();
+    if (!mailerAutoload()) {
+        return ['ok' => false, 'error' => 'PHPMailer not installed. Run: composer install'];
+    }
 
     if (!smtpIsConfigured()) {
         return ['ok' => false, 'error' => 'SMTP not configured. Create .env (EMAIL_USER, EMAIL_PASS) or open ' . url('setup-smtp.php')];
@@ -121,6 +173,83 @@ function sendRegistrationOtpEmail(string $toEmail, string $toName, string $otpCo
         $mail->Subject = $subject;
         $mail->Body    = $html;
         $mail->AltBody = $text;
+        $mail->send();
+        return ['ok' => true];
+    } catch (MailerException $e) {
+        return ['ok' => false, 'error' => $e->getMessage()];
+    }
+}
+
+/** @return array{ok: bool, error?: string} */
+function sendAdminNotificationEmail(string $subject, string $html, string $text, ?string $toEmail = null): array
+{
+    if (!mailerAutoload()) {
+        return ['ok' => false, 'error' => 'PHPMailer not installed. Run: composer install'];
+    }
+
+    if (!smtpIsConfigured()) {
+        return ['ok' => false, 'error' => 'SMTP not configured.'];
+    }
+
+    $toEmail = $toEmail ?: (defined('ADMIN_EMAIL') ? (string) ADMIN_EMAIL : '');
+    if ($toEmail === '') {
+        return ['ok' => false, 'error' => 'Admin email not configured.'];
+    }
+
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->Port       = (int) SMTP_PORT;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
+        $mail->SMTPSecure = smtpEncryptionMode();
+        $mail->CharSet    = 'UTF-8';
+        $mail->setFrom(SMTP_USER, SMTP_FROM_NAME);
+        $mail->addAddress($toEmail, 'Admin');
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $html;
+        $mail->AltBody = $text;
+        $mail->send();
+        return ['ok' => true];
+    } catch (MailerException $e) {
+        return ['ok' => false, 'error' => $e->getMessage()];
+    }
+}
+
+/** @return array{ok: bool, error?: string} */
+function sendWebinarRegistrationConfirmationEmail(string $toEmail, string $toName, array $webinar, string $registrationNo): array
+{
+    if (!mailerAutoload()) {
+        return ['ok' => false, 'error' => 'PHPMailer not installed.'];
+    }
+    if (!smtpIsConfigured()) {
+        return ['ok' => false, 'error' => 'SMTP not configured.'];
+    }
+    $title = htmlspecialchars((string) ($webinar['title'] ?? 'Webinar'), ENT_QUOTES, 'UTF-8');
+    $when = !empty($webinar['scheduled_at']) ? date('d M Y, h:i A', strtotime((string) $webinar['scheduled_at'])) : 'To be announced';
+    $html = '<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;">'
+        . '<p>Hello ' . htmlspecialchars($toName, ENT_QUOTES, 'UTF-8') . ',</p>'
+        . '<p>Your registration for <strong>' . $title . '</strong> is confirmed.</p>'
+        . '<p><strong>Registration #:</strong> ' . htmlspecialchars($registrationNo, ENT_QUOTES, 'UTF-8')
+        . '<br><strong>When:</strong> ' . htmlspecialchars($when, ENT_QUOTES, 'UTF-8') . '</p></div>';
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->Port = (int) SMTP_PORT;
+        $mail->SMTPAuth = true;
+        $mail->Username = SMTP_USER;
+        $mail->Password = SMTP_PASS;
+        $mail->SMTPSecure = smtpEncryptionMode();
+        $mail->CharSet = 'UTF-8';
+        $mail->setFrom(SMTP_USER, SMTP_FROM_NAME);
+        $mail->addAddress($toEmail, $toName);
+        $mail->isHTML(true);
+        $mail->Subject = 'CYBEORCH — Webinar registration confirmed';
+        $mail->Body = $html;
         $mail->send();
         return ['ok' => true];
     } catch (MailerException $e) {

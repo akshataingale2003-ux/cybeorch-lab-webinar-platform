@@ -79,6 +79,8 @@ CREATE TABLE bootcamps (
     enrolled_seats INT DEFAULT 0,
     original_fee DECIMAL(10,2) DEFAULT 0.00,
     discounted_fee DECIMAL(10,2) DEFAULT 0.00,
+    fee_usd DECIMAL(10,2) DEFAULT NULL,
+    duration_label VARCHAR(80) DEFAULT NULL,
     curriculum TEXT,
     outcomes TEXT,
     prerequisites TEXT,
@@ -158,12 +160,28 @@ CREATE TABLE wallet_transactions (
     user_id INT NOT NULL,
     type ENUM('credit','debit') NOT NULL,
     amount DECIMAL(10,2) NOT NULL,
-    reason ENUM('webinar_reward','referral_bonus','bootcamp_reward','admin_credit','redemption','cashback','signup_bonus') NOT NULL,
+    reason ENUM('webinar_reward','referral_bonus','bootcamp_reward','admin_credit','redemption','cashback','signup_bonus','special_reward') NOT NULL,
     reference_id INT DEFAULT NULL,
     description VARCHAR(255),
     balance_after DECIMAL(10,2),
+    reward_type VARCHAR(50) DEFAULT NULL,
+    remarks VARCHAR(500) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE admin_notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    type VARCHAR(50) NOT NULL DEFAULT 'wallet',
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    user_id INT DEFAULT NULL,
+    amount DECIMAL(10,2) DEFAULT NULL,
+    reward_type VARCHAR(50) DEFAULT NULL,
+    reference_id INT DEFAULT NULL,
+    is_read TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_admin_notif_read (is_read, created_at)
 );
 
 -- Referrals
@@ -270,6 +288,97 @@ CREATE TABLE contact_messages (
     INDEX idx_cm_subject (subject(100))
 );
 
+-- Product demo requests (products.php → api/demo-request.php)
+CREATE TABLE demo_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    source_page VARCHAR(80) DEFAULT NULL,
+    product_name VARCHAR(255) DEFAULT NULL,
+    project_name VARCHAR(255) DEFAULT NULL,
+    interested_technology VARCHAR(180) DEFAULT NULL,
+    preferred_date DATE DEFAULT NULL,
+    preferred_time TIME DEFAULT NULL,
+    message TEXT DEFAULT NULL,
+    full_name VARCHAR(120) NOT NULL,
+    email VARCHAR(180) NOT NULL,
+    phone VARCHAR(24) DEFAULT NULL,
+    org_name VARCHAR(180) DEFAULT NULL,
+    ip_address VARCHAR(64) DEFAULT NULL,
+    user_agent VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_dr_created (created_at),
+    INDEX idx_dr_email (email(120))
+);
+
+-- Live project collaboration (collaborate-project.php)
+CREATE TABLE collaboration_inquiries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    project_slug VARCHAR(255) DEFAULT NULL,
+    project_title VARCHAR(255) DEFAULT NULL,
+    project_category VARCHAR(120) DEFAULT NULL,
+    collaboration_type VARCHAR(80) DEFAULT NULL,
+    budget_range VARCHAR(120) DEFAULT NULL,
+    timeline VARCHAR(120) DEFAULT NULL,
+    company VARCHAR(180) DEFAULT NULL,
+    full_name VARCHAR(120) NOT NULL,
+    email VARCHAR(180) NOT NULL,
+    phone VARCHAR(24) DEFAULT NULL,
+    description TEXT NOT NULL,
+    requirement_file VARCHAR(255) DEFAULT NULL,
+    requirement_file_original VARCHAR(255) DEFAULT NULL,
+    ip_address VARCHAR(64) DEFAULT NULL,
+    user_agent VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_ci_created (created_at),
+    INDEX idx_ci_project (project_slug(120))
+);
+
+-- Get Started inquiries (get-started.php)
+CREATE TABLE get_started_inquiries (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(120) NOT NULL,
+    email VARCHAR(180) NOT NULL,
+    phone VARCHAR(24) NOT NULL,
+    company VARCHAR(180) DEFAULT NULL,
+    service_interested VARCHAR(120) NOT NULL,
+    project_type VARCHAR(120) DEFAULT NULL,
+    budget_range VARCHAR(120) DEFAULT NULL,
+    message TEXT NOT NULL,
+    preferred_contact ENUM('email','phone') NOT NULL DEFAULT 'email',
+    inquiry_status ENUM('new','contacted','closed') NOT NULL DEFAULT 'new',
+    source_page VARCHAR(80) DEFAULT NULL,
+    ip_address VARCHAR(64) DEFAULT NULL,
+    user_agent VARCHAR(255) DEFAULT NULL,
+    admin_notes TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at DATETIME DEFAULT NULL,
+    INDEX idx_gsi_created (created_at),
+    INDEX idx_gsi_status (inquiry_status),
+    INDEX idx_gsi_email (email(120))
+);
+
+-- Universal form submission log (all public forms — see includes/form-submissions.php)
+CREATE TABLE form_submissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    form_key VARCHAR(80) NOT NULL,
+    form_label VARCHAR(255) NOT NULL,
+    source_page VARCHAR(120) DEFAULT NULL,
+    full_name VARCHAR(120) DEFAULT NULL,
+    email VARCHAR(180) DEFAULT NULL,
+    phone VARCHAR(24) DEFAULT NULL,
+    summary TEXT DEFAULT NULL,
+    payload_json JSON DEFAULT NULL,
+    storage_table VARCHAR(64) DEFAULT NULL,
+    storage_record_id INT DEFAULT NULL,
+    ip_address VARCHAR(64) DEFAULT NULL,
+    user_agent VARCHAR(255) DEFAULT NULL,
+    is_read TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_fs_form_key (form_key),
+    INDEX idx_fs_created (created_at),
+    INDEX idx_fs_read (is_read)
+);
+
 -- Support Desk (also auto-created by includes/support-tickets.php on first visit)
 CREATE TABLE support_ticket_categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -322,6 +431,78 @@ CREATE TABLE support_ticket_replies (
     INDEX idx_reply_ticket (ticket_id)
 );
 
+-- Live Projects, Hands-on Projects, Freelance Projects (admin-managed catalog)
+CREATE TABLE live_projects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    short_desc VARCHAR(500) DEFAULT NULL,
+    description TEXT,
+    category VARCHAR(100) DEFAULT NULL,
+    icon_class VARCHAR(80) NULL DEFAULT 'fa-code-branch',
+    card_theme VARCHAR(32) NULL DEFAULT 'theme-default',
+    image_path VARCHAR(255) NULL DEFAULT NULL,
+    features_json TEXT NULL,
+    stack VARCHAR(255) DEFAULT NULL,
+    duration VARCHAR(64) DEFAULT NULL,
+    team_size VARCHAR(64) DEFAULT NULL,
+    status VARCHAR(64) NOT NULL DEFAULT 'Open for Collaboration',
+    sort_order INT NOT NULL DEFAULT 0,
+    deleted_at DATETIME NULL DEFAULT NULL,
+    is_blocked TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_live_projects_slug (slug)
+);
+
+CREATE TABLE IF NOT EXISTS catalog_revisions (
+    revision_key VARCHAR(64) PRIMARY KEY,
+    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE assignments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    short_desc VARCHAR(500) DEFAULT NULL,
+    description TEXT,
+    category VARCHAR(100) DEFAULT NULL,
+    type VARCHAR(64) NOT NULL DEFAULT 'Project',
+    skills VARCHAR(500) DEFAULT NULL,
+    duration VARCHAR(64) DEFAULT NULL,
+    mode VARCHAR(64) DEFAULT NULL,
+    status VARCHAR(64) NOT NULL DEFAULT 'Open',
+    apply_route VARCHAR(255) DEFAULT NULL,
+    sort_order INT NOT NULL DEFAULT 0,
+    deleted_at DATETIME NULL DEFAULT NULL,
+    is_blocked TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_assignments_slug (slug)
+);
+
+CREATE TABLE freelance_projects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    short_desc VARCHAR(500) DEFAULT NULL,
+    description TEXT,
+    category VARCHAR(100) DEFAULT NULL,
+    skills VARCHAR(500) DEFAULT NULL,
+    duration VARCHAR(64) DEFAULT NULL,
+    mode VARCHAR(64) DEFAULT NULL,
+    budget_label VARCHAR(120) DEFAULT NULL,
+    client_name VARCHAR(120) DEFAULT NULL,
+    status VARCHAR(64) NOT NULL DEFAULT 'Open',
+    apply_route VARCHAR(255) DEFAULT 'register-freelancer.php',
+    sort_order INT NOT NULL DEFAULT 0,
+    deleted_at DATETIME NULL DEFAULT NULL,
+    is_blocked TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_freelance_projects_slug (slug)
+);
+
 -- ============================================
 -- DEFAULT DATA
 -- ============================================
@@ -338,12 +519,16 @@ INSERT INTO webinars (title, slug, description, short_desc, instructor, category
 
 -- Sample Bootcamps
 INSERT INTO bootcamps (title, slug, description, short_desc, instructor, category, start_date, end_date, duration_weeks, total_seats, original_fee, discounted_fee, certificate, status) VALUES
+('Cyber Security Bootcamp', 'cyber-security-bootcamp', 'Comprehensive cybersecurity software development company: network defense, ethical hacking fundamentals, SOC workflows, cloud security, and incident response with hands-on labs and CTF challenges.', '4-week cyber security bootcamp with live labs, mentorship, and certification prep.', 'Priya Nair', 'Cyber Security', DATE_ADD(CURDATE(), INTERVAL 14 DAY), DATE_ADD(CURDATE(), INTERVAL 42 DAY), 4, 32, 45499.00, 37909.19, 1, 'open'),
 ('Complete Ethical Hacking Bootcamp', 'ethical-hacking-bootcamp', 'A 4-week intensive bootcamp covering everything from network security to advanced exploitation techniques.', '4-week hands-on ethical hacking bootcamp with certification.', 'Rahul Sharma', 'Ethical Hacking', DATE_ADD(CURDATE(), INTERVAL 15 DAY), DATE_ADD(CURDATE(), INTERVAL 43 DAY), 4, 30, 24999.00, 18999.00, 1, 'open'),
-('Web Application Security Bootcamp', 'web-app-security-bootcamp', 'Learn to identify and exploit web vulnerabilities: OWASP Top 10, SQL injection, XSS, CSRF and more.', '3-week web security bootcamp with live practice labs.', 'Priya Nair', 'Web Security', DATE_ADD(CURDATE(), INTERVAL 20 DAY), DATE_ADD(CURDATE(), INTERVAL 41 DAY), 3, 25, 3999.00, 2499.00, 1, 'open'),
-('Blockchain Development', 'blockchain-development-bootcamp', 'Build decentralized applications with smart contracts, wallets, and Web3 integrations—from fundamentals to deployment on testnets.', 'Hands-on blockchain & smart contract bootcamp with real project labs.', 'Amit Verma', 'Blockchain', DATE_ADD(CURDATE(), INTERVAL 25 DAY), DATE_ADD(CURDATE(), INTERVAL 53 DAY), 4, 28, 5499.00, 3499.00, 1, 'open'),
-('Mobile Application Security Bootcamp', 'mobile-app-security-bootcamp', 'Secure Android and iOS apps: OWASP MASVS, reverse engineering basics, API hardening, and mobile pentesting workflows.', '4-week mobile app security bootcamp with device labs & assessments.', 'Priya Nair', 'Mobile Security', DATE_ADD(CURDATE(), INTERVAL 18 DAY), DATE_ADD(CURDATE(), INTERVAL 46 DAY), 4, 24, 4499.00, 2799.00, 1, 'open'),
-('Full Stack Development Bootcamp', 'full-stack-development-bootcamp', 'End-to-end web development: React/Next.js frontends, Node.js APIs, databases, auth, and deployment pipelines.', '6-week intensive full stack program with capstone project.', 'Rahul Sharma', 'Full Stack', DATE_ADD(CURDATE(), INTERVAL 30 DAY), DATE_ADD(CURDATE(), INTERVAL 72 DAY), 6, 35, 5999.00, 3999.00, 1, 'open'),
-('DevOps Bootcamp', 'devops-bootcamp', 'Master CI/CD pipelines, Docker, Kubernetes, infrastructure as code, and cloud deployment workflows with hands-on labs.', '4-week DevOps bootcamp covering Docker, K8s, and automation pipelines.', 'Amit Verma', 'DevOps', DATE_ADD(CURDATE(), INTERVAL 22 DAY), DATE_ADD(CURDATE(), INTERVAL 50 DAY), 4, 30, 4999.00, 3299.00, 1, 'open');
+('Web Application Security Bootcamp', 'web-app-security-bootcamp', 'Learn to identify and exploit web vulnerabilities: OWASP Top 10, SQL injection, XSS, CSRF and more.', '3-week web security bootcamp with live practice labs.', 'Priya Nair', 'Web Security', DATE_ADD(CURDATE(), INTERVAL 20 DAY), DATE_ADD(CURDATE(), INTERVAL 41 DAY), 3, 25, 45499.00, 37909.19, 1, 'open'),
+('Blockchain Development', 'blockchain-development-bootcamp', 'Build decentralized applications with smart contracts, wallets, and Web3 integrations—from fundamentals to deployment on testnets.', 'Hands-on blockchain & smart contract bootcamp with real project labs.', 'Amit Verma', 'Blockchain', DATE_ADD(CURDATE(), INTERVAL 25 DAY), DATE_ADD(CURDATE(), INTERVAL 53 DAY), 4, 28, 45499.00, 37909.19, 1, 'open'),
+('Mobile Application Security Bootcamp', 'mobile-app-security-bootcamp', 'Secure Android and iOS apps: OWASP MASVS, reverse engineering basics, API hardening, and mobile pentesting workflows.', '4-week mobile app security bootcamp with device labs & assessments.', 'Priya Nair', 'Mobile Security', DATE_ADD(CURDATE(), INTERVAL 18 DAY), DATE_ADD(CURDATE(), INTERVAL 46 DAY), 4, 24, 45499.00, 37909.19, 1, 'open'),
+('Full Stack Development Bootcamp', 'full-stack-development-bootcamp', 'End-to-end web development: React/Next.js frontends, Node.js APIs, databases, auth, and deployment pipelines.', '6-week intensive full stack program with capstone project.', 'Rahul Sharma', 'Full Stack', DATE_ADD(CURDATE(), INTERVAL 30 DAY), DATE_ADD(CURDATE(), INTERVAL 72 DAY), 6, 35, 56999.00, 47410.24, 1, 'open'),
+('DevOps Bootcamp', 'devops-bootcamp', 'Master CI/CD pipelines, Docker, Kubernetes, infrastructure as code, and cloud deployment workflows with hands-on labs.', '4-week DevOps bootcamp covering Docker, K8s, and automation pipelines.', 'Amit Verma', 'DevOps', DATE_ADD(CURDATE(), INTERVAL 22 DAY), DATE_ADD(CURDATE(), INTERVAL 50 DAY), 4, 30, 45499.00, 37909.19, 1, 'open'),
+('30-Day Bootcamp', '30-day-bootcamp', 'Fast-track foundation with live labs, mentorship, and certificate — ideal first step into cybersecurity.', 'CYBEORCH LAB entry funnel — 30-day intensive bootcamp.', 'Priya Nair', 'Program Path', DATE_ADD(CURDATE(), INTERVAL 7 DAY), DATE_ADD(CURDATE(), INTERVAL 36 DAY), 4, 40, 45499.00, 37909.19, 1, 'open'),
+('45–60 Day Advanced Bootcamp', '90-day-bootcamp', 'Deeper specialization, capstone projects, and career placement support for graduates ready to level up.', 'CYBEORCH LAB advanced track — 45–60 day industry bootcamp.', 'Rahul Sharma', 'Program Path', DATE_ADD(CURDATE(), INTERVAL 14 DAY), DATE_ADD(CURDATE(), INTERVAL 65 DAY), 8, 30, 56999.00, 47410.24, 1, 'open'),
+('Corporate Training Program', 'premium-industry-lab', 'Elite lab access, enterprise mentors, and real-world industry projects — built for serious professionals and teams.', 'CYBEORCH LAB corporate track — enterprise training program.', 'Amit Verma', 'Program Path', DATE_ADD(CURDATE(), INTERVAL 21 DAY), DATE_ADD(CURDATE(), INTERVAL 50 DAY), 4, 20, 79999.00, 66412.34, 1, 'open');
 
 -- Extra webinars
 INSERT INTO webinars (title, slug, description, short_desc, instructor, category, scheduled_at, duration_mins, max_seats, fee, is_free, status) VALUES

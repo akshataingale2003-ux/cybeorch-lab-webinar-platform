@@ -40,7 +40,7 @@ renderAdminPageStart('Ticket ' . $ticket['ticket_no'], 'tickets', 'fa-headset');
 echo showFlash();
 ?>
 
-<p class="mb-3"><a href="<?= url('admin/tickets.php') ?>" class="btn-sm-link"><i class="fas fa-arrow-left me-1"></i>Back to tickets</a></p>
+<p class="mb-3"><a href="<?= adminUrl('tickets.php') ?>" class="btn-sm-link"><i class="fas fa-arrow-left me-1"></i>Back to tickets</a></p>
 
 <div class="row g-4">
   <div class="col-lg-4">

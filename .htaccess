@@ -26,6 +26,8 @@ DirectoryIndex index.php
     RewriteEngine On
     RewriteRule ^includes/ - [F,L]
     RewriteRule ^uploads/.*\.(php|php5|phtml|cgi|pl|py|rb|sh)$ - [F,L]
+    RewriteRule ^assignment\.php$ hands-on-projects.php [R=301,L,NC]
+    RewriteRule ^assignments\.php$ hands-on-projects.php [R=301,L,NC]
 </IfModule>
 
 # PHP Settings
