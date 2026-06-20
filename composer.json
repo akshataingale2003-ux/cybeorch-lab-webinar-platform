@@ -1,8 +1,10 @@
 {
   "name": "cybeorch/lab-platform",
-  "description": "CYBEORCH LAB platform",
+  "description": "CYBEORCH LABS platform",
   "require": {
     "php": ">=8.1",
+    "chillerlan/php-qrcode": "^5.0",
+    "dompdf/dompdf": "^3.0",
     "phpmailer/phpmailer": "^6.9"
   },
   "config": {

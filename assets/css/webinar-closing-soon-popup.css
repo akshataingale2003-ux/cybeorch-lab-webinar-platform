@@ -1,0 +1,177 @@
+.wcs-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  visibility: visible;
+  opacity: 1;
+}
+
+.wcs-modal.is-open {
+  display: flex !important;
+}
+
+.wcs-modal[hidden]:not(.is-open) {
+  display: none !important;
+}
+
+.wcs-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 14, 0.88);
+  backdrop-filter: blur(6px);
+  animation: wcsFadeIn 0.22s ease-out;
+}
+
+.wcs-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 440px);
+  background: linear-gradient(160deg, rgba(15, 52, 96, 0.98), rgba(5, 11, 24, 0.98));
+  border: 1px solid rgba(0, 212, 255, 0.35);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem 1.5rem;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 212, 255, 0.08);
+  text-align: center;
+  animation: wcsSlideUp 0.28s ease-out;
+}
+
+.wcs-modal__close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  color: #e0e8f0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.wcs-modal__close:hover {
+  border-color: #00d4ff;
+  color: #00d4ff;
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.wcs-modal__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-bottom: 1rem;
+}
+
+.wcs-modal__brand-mark {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #00d4ff;
+}
+
+.wcs-modal__brand-tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a8fa6;
+}
+
+.wcs-modal__icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  color: #fff;
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.35);
+}
+
+.wcs-modal__title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.65rem;
+  line-height: 1.25;
+}
+
+.wcs-modal__webinar {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #00d4ff;
+  margin: 0 0 0.75rem;
+  line-height: 1.35;
+}
+
+.wcs-modal__message {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #e0e8f0;
+  margin: 0 0 0.75rem;
+}
+
+.wcs-modal__deadline {
+  font-size: 0.8rem;
+  color: #facc15;
+  margin: 0 0 1rem;
+  font-weight: 600;
+}
+
+.wcs-modal__actions {
+  margin-top: 0.25rem;
+}
+
+.wcs-modal__cta {
+  display: inline-block;
+  width: 100%;
+  max-width: 100%;
+  padding: 0.85rem 1.25rem !important;
+  font-size: 1rem !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+}
+
+body.wcs-modal-open {
+  overflow: hidden;
+}
+
+@keyframes wcsFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes wcsSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .wcs-modal {
+    padding: 0.75rem;
+    align-items: flex-end;
+  }
+
+  .wcs-modal__panel {
+    border-radius: 16px 16px 12px 12px;
+    padding: 1.5rem 1.15rem 1.25rem;
+  }
+}

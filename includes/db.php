@@ -1,6 +1,6 @@
 <?php
 // ============================================
-// CYBEORCH LAB - PDO Database wrapper
+// CYBEORCH LABS - PDO Database wrapper
 // ============================================
 
 require_once __DIR__ . '/config.php';
@@ -11,13 +11,13 @@ class Database {
     private PDO $pdo;
 
     private function __construct() {
-        $dsn = sprintf(
-            'mysql:host=%s;port=%d;dbname=%s;charset=%s',
-            DB_HOST,
-            (int) DB_PORT,
-            DB_NAME,
-            DB_CHARSET
-        );
+        $host = (string) DB_HOST;
+        $port = (int) DB_PORT;
+        // IMPORTANT: if DB_HOST is empty, omit it from DSN so PDO defaults to its own host behavior.
+        // This removes hardcoded loopback/IP literals from the code while keeping local dev workable.
+        $dsn = $host !== ''
+            ? sprintf('mysql:host=%s;port=%d;dbname=%s;charset=%s', $host, $port, DB_NAME, DB_CHARSET)
+            : sprintf('mysql:port=%d;dbname=%s;charset=%s', $port, DB_NAME, DB_CHARSET);
 
         try {
             $this->pdo = new PDO($dsn, DB_USER, DB_PASS, [
@@ -37,7 +37,7 @@ class Database {
             }
             if (str_contains($msg, '1049') || str_contains($msg, 'Unknown database')) {
                 throw new RuntimeException(
-                    'Database "' . DB_NAME . '" not found. Import CYBEORCH/database.sql in phpMyAdmin (http://localhost/phpmyadmin).',
+                    'Database "' . DB_NAME . '" not found. Import CYBEORCH/database.sql in your phpMyAdmin UI.',
                     0,
                     $e
                 );
@@ -77,6 +77,24 @@ class Database {
         $stmt->execute($params);
         return (int) $this->pdo->lastInsertId();
     }
+
+    public function lastInsertId(): int {
+        return (int) $this->pdo->lastInsertId();
+    }
+
+    public function beginTransaction(): void {
+        $this->pdo->beginTransaction();
+    }
+
+    public function commit(): void {
+        $this->pdo->commit();
+    }
+
+    public function rollBack(): void {
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+    }
 }
 
 function db(): Database {
@@ -94,7 +112,7 @@ function dbTry(callable $fn, mixed $default = null): mixed {
         return $default;
     } catch (PDOException $e) {
         if (!defined('DB_ERROR_MESSAGE')) {
-            define('DB_ERROR_MESSAGE', 'Database error. Please try again later.');
+            define('DB_ERROR_MESSAGE', $e->getMessage());
         }
         return $default;
     }

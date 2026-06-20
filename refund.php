@@ -6,7 +6,7 @@ require_once __DIR__ . '/includes/legal-public.php';
 startSession();
 
 $pageTitle = 'Refund Policy';
-renderLegalPublicPageStart($pageTitle, 'CYBEORCH LAB refund policy for webinars, bootcamps, and paid programs.');
+renderLegalPublicPageStart($pageTitle, 'CYBEORCH LABS refund policy for webinars, bootcamps, and paid programs.');
 ?>
 
 <header class="page-hero">
@@ -22,7 +22,7 @@ renderLegalPublicPageStart($pageTitle, 'CYBEORCH LAB refund policy for webinars,
       <p class="legal-updated">Last updated: <?= date('F j, Y') ?></p>
 
       <h2>1. Overview</h2>
-      <p>CYBEORCH LAB aims to deliver high-quality cybersecurity education. This policy explains when refunds may be issued for paid webinars, bootcamps, and related services purchased on our platform.</p>
+      <p>CYBEORCH LABS aims to deliver high-quality cybersecurity education. This policy explains when refunds may be issued for paid webinars, bootcamps, and related services purchased on our platform.</p>
 
       <h2>2. Eligibility</h2>
       <ul>
@@ -47,7 +47,7 @@ renderLegalPublicPageStart($pageTitle, 'CYBEORCH LAB refund policy for webinars,
       <p>Approved refunds are initiated within 7&ndash;10 business days. Depending on your bank or payment provider, funds may take additional time to appear in your account.</p>
 
       <h2>6. Wallet credit</h2>
-      <p>At our discretion, we may offer platform wallet credit instead of a cash refund. Wallet credit can be applied to future enrollments on CYBEORCH LAB.</p>
+      <p>At our discretion, we may offer platform wallet credit instead of a cash refund. Wallet credit can be applied to future enrollments on CYBEORCH LABS.</p>
 
       <h2>7. Contact</h2>
       <p>Questions about this policy? <a href="<?= url('contact.php') ?>" style="color:var(--cyber-accent)">Contact Us</a>.</p>

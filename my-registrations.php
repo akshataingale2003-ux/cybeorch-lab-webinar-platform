@@ -23,7 +23,7 @@ renderStudentHead('My Registrations');
 renderStudentSidebar('registrations', $ctx);
 ?>
 <main class="main">
-  <div class="topbar"><div class="page-title">My Registrations</div></div>
+  <?php renderPortalTopbar('My Registrations'); ?>
   <div class="content">
     <h4 style="font-family:'Rajdhani',sans-serif;margin-bottom:1rem">Webinars</h4>
     <?php if (empty($regs)): ?><div class="card-panel" style="color:var(--cyber-muted)">No webinar registrations.</div>

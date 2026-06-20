@@ -1,6 +1,12 @@
 <?php
+require_once __DIR__ . '/includes/auth_check.php';
 require_once __DIR__ . '/../includes/admin-init.php';
+require_once __DIR__ . '/../includes/invoice-amc.php';
 requireAdminLogin();
+
+ensureInvoiceAmcSchema();
+invoiceAmcProcessRenewalReminders();
+$invoiceStats = invoiceAmcDashboardStats();
 
 $totalUsers      = (int) dbTry(fn () => db()->fetchOne('SELECT COUNT(*) as c FROM users WHERE ' . adminSqlActive())['c'] ?? 0, 0);
 $totalWebinars   = (int) dbTry(fn () => db()->fetchOne('SELECT COUNT(*) as c FROM webinars WHERE ' . adminSqlActive())['c'] ?? 0, 0);
@@ -13,8 +19,8 @@ $todayRevenue    = (float) dbTry(fn () => db()->fetchOne("SELECT COALESCE(SUM(am
 $totalWallet     = (float) dbTry(fn () => db()->fetchOne('SELECT COALESCE(SUM(balance),0) as s FROM wallet WHERE ' . adminSqlActive())['s'] ?? 0, 0);
 $totalMessages   = (int) dbTry(fn () => getUnreadContactMessageCount(), 0);
 $blockedUsers    = (int) dbTry(fn () => adminBlockedUsersCount(), 0);
-$trashCount      = (int) dbTry(fn () => adminTrashCount(), 0);
-$trashRecent     = dbTry(fn () => adminListTrashedItems(6), []);
+$dashSort        = adminParseListSortParam();
+$dashOrder       = adminSortSqlDirection($dashSort);
 
 $recentRegis = dbTry(
     fn () => db()->fetchAll(
@@ -23,7 +29,7 @@ $recentRegis = dbTry(
          JOIN users u ON u.id=wr.user_id
          JOIN webinars w ON w.id=wr.webinar_id
          WHERE " . adminSqlActive('wr') . "
-         ORDER BY wr.registered_at DESC LIMIT 8"
+         ORDER BY wr.registered_at {$dashOrder} LIMIT 8"
     ),
     []
 );
@@ -31,7 +37,17 @@ $recentRegis = dbTry(
 $recentPayments = dbTry(
     fn () => db()->fetchAll(
         'SELECT p.*, u.full_name, u.email FROM payments p JOIN users u ON u.id=p.user_id
-         WHERE ' . adminSqlActive('p') . ' ORDER BY p.created_at DESC LIMIT 6'
+         WHERE ' . adminSqlActive('p') . " ORDER BY p.created_at {$dashOrder} LIMIT 6"
+    ),
+    []
+);
+
+$recentInvoices = dbTry(
+    fn () => db()->fetchAll(
+        "SELECT i.*, c.name AS client_name FROM invoices i
+         JOIN clients c ON c.id = i.client_id
+         WHERE " . adminSqlActive('i') . "
+         ORDER BY i.created_at {$dashOrder} LIMIT 6"
     ),
     []
 );
@@ -40,6 +56,7 @@ $monthlyRevenue = dbTry(
     fn () => db()->fetchAll(
         "SELECT DATE_FORMAT(paid_at,'%b') as month, SUM(amount) as revenue, COUNT(*) as count
          FROM payments WHERE status='paid' AND paid_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+         AND " . adminSqlActive() . "
          GROUP BY DATE_FORMAT(paid_at,'%Y-%m'), DATE_FORMAT(paid_at,'%b')
          ORDER BY MIN(paid_at) ASC"
     ),
@@ -140,7 +157,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <!-- Quick Actions -->
     <div class="row g-3 mb-4">
       <div class="col-6 col-md-3">
-        <a href="<?= url('admin/webinars.php?action=add') ?>" class="quick-action">
+        <a href="<?= adminUrl('webinars.php?action=add') ?>" class="quick-action">
           <i class="fas fa-plus-circle" style="color:var(--cyber-accent)"></i>
           <span>Add Webinar</span>
         </a>
@@ -152,7 +169,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="<?= url('admin/wallet.php?action=credit') ?>" class="quick-action">
+        <a href="<?= adminUrl('wallet.php?action=credit') ?>" class="quick-action">
           <i class="fas fa-coins" style="color:var(--cyber-orange)"></i>
           <span>Credit NxL</span>
         </a>
@@ -163,12 +180,18 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <span>Broadcast</span>
         </a>
       </div>
-     <!-- <div class="col-6 col-md-3">
-        <a href="<?= adminUrl('admin/trash.php') ?>" class="quick-action">
-          <i class="fas fa-trash-restore" style="color:var(--cyber-red)"></i>
-          <span>Trash<?= $trashCount > 0 ? ' (' . $trashCount . ')' : '' ?></span>
+      <div class="col-6 col-md-3">
+        <a href="<?= adminUrl('invoices.php?action=create') ?>" class="quick-action">
+          <i class="fas fa-file-invoice-dollar" style="color:var(--cyber-accent)"></i>
+          <span>Create Invoice</span>
         </a>
-      </div> -->
+      </div>
+      <div class="col-6 col-md-3">
+        <a href="<?= adminUrl('amc.php?action=create') ?>" class="quick-action">
+          <i class="fas fa-file-contract" style="color:var(--cyber-green)"></i>
+          <span>Create AMC</span>
+        </a>
+      </div>
     </div>
 
     <!-- Stat Cards -->
@@ -215,27 +238,40 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
     </div>
 
-    <?php if ($trashRecent): ?>
-    <div class="section-card mb-4">
-      <div class="section-card-header">
-        <div class="section-card-title"><i class="fas fa-trash-restore" style="color:var(--cyber-orange)"></i>Trash</div>
-        <a href="<?= adminUrl('admin/trash.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
+    <div class="row g-3 mb-4" id="invoice-amc-stats">
+      <div class="col-6 col-lg-3">
+        <div class="stat-card blue">
+          <div class="stat-icon" style="background:rgba(0,212,255,0.1);color:var(--cyber-accent)"><i class="fas fa-users"></i></div>
+          <div class="stat-value"><?= (int) $invoiceStats['total_clients'] ?></div>
+          <div class="stat-label">Invoice Clients</div>
+          <div class="stat-sub"><a href="<?= adminUrl('invoices.php') ?>" style="color:var(--cyber-accent);text-decoration:none">Invoice Management →</a></div>
+        </div>
       </div>
-      <table class="data-table">
-        <thead><tr><th>Deleted</th><th>Type</th><th>Item</th><th>Actions</th></tr></thead>
-        <tbody>
-          <?php foreach ($trashRecent as $item): ?>
-          <tr data-admin-row="1" data-admin-entity="<?= htmlspecialchars($item['entity']) ?>" data-admin-id="<?= (int) $item['id'] ?>" data-admin-trash="1">
-            <td style="font-size:0.8rem;white-space:nowrap"><?= date('d M Y, h:i A', strtotime($item['deleted_at'])) ?></td>
-            <td><span class="badge-status badge-pending"><?= htmlspecialchars($item['type_label']) ?></span></td>
-            <td><?= htmlspecialchars($item['title']) ?></td>
-            <td><?php renderAdminRecordActions($item['entity'], (int) $item['id'], false, true); ?></td>
-          </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card green">
+          <div class="stat-icon" style="background:rgba(0,255,136,0.1);color:var(--cyber-green)"><i class="fas fa-file-invoice-dollar"></i></div>
+          <div class="stat-value"><?= (int) $invoiceStats['paid_invoices'] ?>/<?= (int) $invoiceStats['total_invoices'] ?></div>
+          <div class="stat-label">Paid / Total Invoices</div>
+          <div class="stat-sub" style="color:var(--cyber-orange)"><?= (int) $invoiceStats['pending_invoices'] ?> pending</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card orange">
+          <div class="stat-icon" style="background:rgba(255,107,53,0.1);color:var(--cyber-orange)"><i class="fas fa-file-contract"></i></div>
+          <div class="stat-value"><?= (int) $invoiceStats['active_amc'] ?></div>
+          <div class="stat-label">Active AMC</div>
+          <div class="stat-sub" style="color:var(--cyber-orange)"><?= (int) $invoiceStats['expiring_amc'] ?> expiring soon</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-card red">
+          <div class="stat-icon" style="background:rgba(255,68,68,0.1);color:var(--cyber-red)"><i class="fas fa-exclamation-triangle"></i></div>
+          <div class="stat-value"><?= (int) $invoiceStats['expired_amc'] ?></div>
+          <div class="stat-label">Expired AMC</div>
+          <div class="stat-sub"><a href="<?= adminUrl('amc.php') ?>" style="color:var(--cyber-accent);text-decoration:none">AMC Management →</a></div>
+        </div>
+      </div>
     </div>
-    <?php endif; ?>
 
     <div class="row g-4 dashboard-recent-row">
       <div class="col-12 col-xl-3 dashboard-chart-col">
@@ -263,21 +299,20 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
       <div class="col-12 col-xl-9">
         <div class="dashboard-recent-panel">
+          <?php renderAdminSortBar('admin/dashboard.php', $dashSort); ?>
           <div class="section-card">
             <div class="section-card-header">
               <div class="section-card-title"><i class="fas fa-ticket-alt" style="color:var(--cyber-orange)"></i>Recent Registrations</div>
-              <a href="<?= url('admin/registrations.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
+              <a href="<?= adminUrl('registrations.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
             </div>
             <div class="table-scroll">
               <table class="data-table">
                 <thead><tr>
-                  <th>User Registration</th><th>Webinar</th><th>Date</th><th>Status</th><th>Attended</th><th>Actions</th>
+                  <th>User Registration</th><th>Webinar</th><th>Date</th><th>Status</th><th>Attended</th><th></th>
                 </tr></thead>
                 <tbody>
-                <?php foreach ($recentRegis as $r):
-                  $regBlocked = adminRecordIsBlocked($r);
-                ?>
-                <tr<?= renderAdminRecordRowAttrs('webinar_registration', (int) $r['id'], $regBlocked) ?>>
+                <?php foreach ($recentRegis as $r): ?>
+                <tr>
                   <td>
                     <div style="font-size:0.85rem;font-weight:500"><?= htmlspecialchars($r['full_name']) ?></div>
                     <div style="font-size:0.72rem;color:var(--cyber-muted)"><?= htmlspecialchars($r['email']) ?></div>
@@ -292,7 +327,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
                       <span style="color:var(--cyber-muted);font-size:0.8rem"><i class="fas fa-times-circle"></i></span>
                     <?php endif; ?>
                   </td>
-                  <td><?php renderAdminRecordActions('webinar_registration', (int) $r['id'], $regBlocked); ?></td>
+                  <td><a href="<?= adminUrl('admin/registrations.php?tab=webinar') ?>" class="btn-sm-link">Open</a></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($recentRegis)): ?>
@@ -306,18 +341,16 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <div class="section-card">
             <div class="section-card-header">
               <div class="section-card-title"><i class="fas fa-credit-card" style="color:var(--cyber-green)"></i>Recent Payments</div>
-              <a href="<?= url('admin/payments.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
+              <a href="<?= adminUrl('payments.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
             </div>
             <div class="table-scroll">
               <table class="data-table">
                 <thead><tr>
-                  <th>User Registration</th><th>Amount</th><th>For</th><th>Invoice</th><th>Status</th><th>Actions</th>
+                  <th>User Registration</th><th>Amount</th><th>For</th><th>Invoice</th><th>Status</th><th></th>
                 </tr></thead>
                 <tbody>
-                <?php foreach ($recentPayments as $p):
-                  $payBlocked = adminRecordIsBlocked($p);
-                ?>
-                <tr<?= renderAdminRecordRowAttrs('payment', (int) $p['id'], $payBlocked) ?>>
+                <?php foreach ($recentPayments as $p): ?>
+                <tr>
                   <td>
                     <div style="font-size:0.85rem;font-weight:500"><?= htmlspecialchars($p['full_name']) ?></div>
                     <div style="font-size:0.72rem;color:var(--cyber-muted)"><?= date('d M, h:i A', strtotime($p['created_at'])) ?></div>
@@ -326,7 +359,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
                   <td style="font-size:0.8rem;text-transform:capitalize"><?= str_replace('_',' ',$p['payment_for']) ?></td>
                   <td style="font-size:0.75rem;color:var(--cyber-muted)"><?= htmlspecialchars($p['invoice_no'] ?? '–') ?></td>
                   <td><span class="badge-status badge-<?= $p['status'] === 'paid' ? 'paid' : 'pending' ?>"><?= strtoupper($p['status']) ?></span></td>
-                  <td><?php renderAdminRecordActions('payment', (int) $p['id'], $payBlocked); ?></td>
+                  <td><a href="<?= adminUrl('admin/payments.php?view=' . (int) $p['id']) ?>" class="btn-sm-link">View</a></td>
                 </tr>
                 <?php endforeach; ?>
                 <?php if (empty($recentPayments)): ?>
@@ -336,8 +369,44 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
               </table>
             </div>
           </div>
+
+          <div class="section-card">
+            <div class="section-card-header">
+              <div class="section-card-title"><i class="fas fa-file-invoice-dollar" style="color:var(--cyber-accent)"></i>Recent Invoices</div>
+              <a href="<?= adminUrl('invoices.php') ?>" style="font-size:0.78rem;color:var(--cyber-accent);text-decoration:none">View all →</a>
+            </div>
+            <div class="table-scroll">
+              <table class="data-table">
+                <thead><tr>
+                  <th>Invoice</th><th>Client</th><th>Amount</th><th>Status</th><th></th>
+                </tr></thead>
+                <tbody>
+                <?php foreach ($recentInvoices as $inv): ?>
+                <tr>
+                  <td>
+                    <div style="font-size:0.82rem;font-family:monospace"><?= htmlspecialchars($inv['invoice_no']) ?></div>
+                    <div style="font-size:0.72rem;color:var(--cyber-muted)"><?= date('d M Y', strtotime($inv['invoice_date'])) ?></div>
+                  </td>
+                  <td style="font-size:0.82rem"><?= htmlspecialchars($inv['client_name']) ?></td>
+                  <td style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--cyber-green);white-space:nowrap"><?= invoiceAmcFormatMoney((float) $inv['total_amount'], (string) $inv['currency']) ?></td>
+                  <td><span class="badge-status badge-<?= $inv['status'] === 'paid' ? 'paid' : 'pending' ?>"><?= strtoupper($inv['status']) ?></span></td>
+                  <td><a href="<?= adminUrl('invoices.php?view=' . (int) $inv['id']) ?>" class="btn-sm-link">View</a></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php if (empty($recentInvoices)): ?>
+                <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--cyber-muted)">No invoices yet. <a href="<?= adminUrl('invoices.php?action=create') ?>">Create Invoice</a></td></tr>
+                <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
+
+<script>
+setTimeout(function(){ location.reload(); }, 120000);
+</script>
 
 <?php renderAdminPageEnd(); ?>

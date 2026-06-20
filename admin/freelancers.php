@@ -1,5 +1,7 @@
 <?php
+require_once __DIR__ . '/includes/auth_check.php';
 require_once __DIR__ . '/../includes/admin-init.php';
+require_once __DIR__ . '/../includes/resume-upload.php';
 requireAdminLogin();
 
 $msg = '';
@@ -82,6 +84,7 @@ renderAdminPageStart('Freelancer Applications', 'freelancers', 'fa-user-tie');
           <div class="detail-item"><label>Availability</label><span><?= htmlspecialchars($availLabels[$viewFreelancer['availability']] ?? $viewFreelancer['availability']) ?></span></div>
           <div class="detail-item"><label>Location</label><span><?= htmlspecialchars($viewFreelancer['location'] ?: '—') ?></span></div>
           <div class="detail-item"><label>Applied</label><span><?= date('d M Y, h:i A', strtotime($viewFreelancer['created_at'])) ?></span></div>
+          <div class="detail-item"><label>Resume / CV</label><span><?php renderAdminResumeLink($viewFreelancer['resume_path'] ?? null, $viewFreelancer['resume_original_name'] ?? null); ?></span></div>
         </div>
         <p style="margin-bottom:0.75rem"><strong style="color:var(--cyber-muted);font-size:0.82rem">Skills:</strong><br><?= nl2br(htmlspecialchars($viewFreelancer['skills'])) ?></p>
         <p style="margin-bottom:1rem"><strong style="color:var(--cyber-muted);font-size:0.82rem">About:</strong><br><?= nl2br(htmlspecialchars($viewFreelancer['about'])) ?></p>
@@ -111,7 +114,7 @@ renderAdminPageStart('Freelancer Applications', 'freelancers', 'fa-user-tie');
             </div>
           </div>
           <button type="submit" class="btn-submit mt-3"><i class="fas fa-save me-1"></i>Save</button>
-          <a href="<?= url('admin/freelancers.php') ?>" style="margin-left:0.75rem;color:var(--cyber-muted);font-size:0.88rem">← Back to list</a>
+          <a href="<?= adminUrl('freelancers.php') ?>" style="margin-left:0.75rem;color:var(--cyber-muted);font-size:0.88rem">← Back to list</a>
         </form>
       </div>
     </div>
@@ -121,7 +124,7 @@ renderAdminPageStart('Freelancer Applications', 'freelancers', 'fa-user-tie');
       <div class="form-card-header">All Applications (<?= count($freelancers) ?>)</div>
       <div class="form-card-body">
         <div class="filter-bar">
-          <a href="<?= url('admin/freelancers.php') ?>" class="<?= $statusFilter === '' ? 'active' : '' ?>">All</a>
+          <a href="<?= adminUrl('freelancers.php') ?>" class="<?= $statusFilter === '' ? 'active' : '' ?>">All</a>
           <?php foreach (['pending','reviewed','shortlisted','active','rejected'] as $s): ?>
           <a href="?status=<?= $s ?>" class="<?= $statusFilter === $s ? 'active' : '' ?>"><?= ucfirst($s) ?></a>
           <?php endforeach; ?>
@@ -134,13 +137,14 @@ renderAdminPageStart('Freelancer Applications', 'freelancers', 'fa-user-tie');
                 <th>Role</th>
                 <th>Experience</th>
                 <th>Status</th>
+                <th>Resume / CV</th>
                 <th>Applied</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <?php if (empty($freelancers)): ?>
-              <tr><td colspan="6" style="color:var(--cyber-muted);text-align:center;padding:2rem">No freelancer applications yet.</td></tr>
+              <tr><td colspan="7" style="color:var(--cyber-muted);text-align:center;padding:2rem">No freelancer applications yet.</td></tr>
               <?php else: foreach ($freelancers as $f):
                 $blocked = adminRecordIsBlocked($f);
               ?>
@@ -152,6 +156,7 @@ renderAdminPageStart('Freelancer Applications', 'freelancers', 'fa-user-tie');
                 <td><?= htmlspecialchars($roleLabels[$f['primary_role']] ?? $f['primary_role']) ?></td>
                 <td><?= htmlspecialchars($expLabels[$f['experience_level']] ?? $f['experience_level']) ?></td>
                 <td><span class="badge-status badge-<?= htmlspecialchars($f['status']) ?>"><?= htmlspecialchars($f['status']) ?></span></td>
+                <td><?php renderAdminResumeLink($f['resume_path'] ?? null, $f['resume_original_name'] ?? null); ?></td>
                 <td style="white-space:nowrap;color:var(--cyber-muted);font-size:0.82rem"><?= date('d M Y', strtotime($f['created_at'])) ?></td>
                 <td>
                   <a href="?view=<?= (int) $f['id'] ?>" class="btn-sm-link">View</a>

@@ -10,7 +10,7 @@ requireLogin();
 <head>
 <meta charset="UTF-8">
 <?php renderStandardViewport(); ?>
-<title>Application Submitted – CYBEORCH LAB</title>
+<title>Application Submitted – CYBEORCH LABS</title>
 <?php renderAuthPageHead(); ?>
 <style>
 :root{--cyber-dark:#050b18;--cyber-accent:#00d4ff;--cyber-green:#00ff88;--cyber-muted:#7a8fa6;--cyber-text:#e0e8f0;--cyber-border:rgba(0,212,255,0.2);--cyber-card:rgba(15,52,96,0.3);}
@@ -30,7 +30,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <div class="success-card">
   <div class="success-icon"><i class="fas fa-check"></i></div>
   <h1>Application Submitted!</h1>
-  <p>Thank you for registering as a freelancer with CYBEORCH LAB. Our team will review your profile and contact you when suitable assignments are available.</p>
+  <p>Thank you for registering as a freelancer with CYBEORCH LABS. Our team will review your profile and contact you when suitable hands-on projects are available.</p>
   <div>
     <a href="<?= url('dashboard.php') ?>" class="btn-primary-cyber"><i class="fas fa-th-large me-2"></i>Go to Dashboard</a>
     <a href="<?= url('') ?>" class="btn-outline-cyber"><i class="fas fa-home me-2"></i>Back to Home</a>

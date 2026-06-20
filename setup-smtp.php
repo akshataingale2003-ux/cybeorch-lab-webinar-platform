@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/mailer.php';
+require_once __DIR__ . '/includes/responsive.php';
 
 startSession();
 
-$host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? ''));
-$local = $host === 'localhost' || $host === '127.0.0.1'
-    || str_starts_with($host, 'localhost:') || str_starts_with($host, '127.0.0.1:');
+$local = cybeorchIsLocalDev();
 if (!$local && smtpIsConfigured()) {
     http_response_code(403);
-    exit('SMTP setup is available on localhost or when SMTP is not configured.');
+    exit('SMTP setup is restricted to local development or when SMTP is not configured.');
 }
 
 $preset    = cybeorchSmtpPreset();
@@ -24,7 +23,7 @@ $envPort   = cybeorchEnv('SMTP_PORT', defined('SMTP_PORT') ? (string) SMTP_PORT 
 $envSecure = cybeorchEnv('SMTP_SECURE', defined('SMTP_SECURE') ? (string) SMTP_SECURE : $preset['secure']);
 $isGmail   = str_contains(strtolower($envHost), 'gmail');
 
-// Auto: sync config.local.php → .env on localhost when SMTP is ready but .env is missing
+// Auto: sync config.local.php → .env on local machine when SMTP is ready but .env is missing
 if (
     $_SERVER['REQUEST_METHOD'] === 'GET'
     && $local
@@ -74,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && verifyCSRF($_POST['csrf_token'] ?? 
     } else {
         $email  = strtolower(trim((string) ($_POST['smtp_user'] ?? '')));
         $pass   = trim((string) ($_POST['smtp_pass'] ?? ''));
-        $name   = trim((string) ($_POST['smtp_from_name'] ?? 'CYBEORCH LAB'));
+        $name   = trim((string) ($_POST['smtp_from_name'] ?? 'CYBEORCH LABS'));
         $hostIn = trim((string) ($_POST['smtp_host'] ?? ''));
         $portIn = (int) ($_POST['smtp_port'] ?? 0);
         $secIn  = trim((string) ($_POST['smtp_secure'] ?? ''));
@@ -122,7 +121,8 @@ body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:c
 .wrap{max-width:600px;width:100%}
 .card{padding:1.5rem;border-radius:16px;border:1px solid rgba(0,212,255,.35);background:rgba(5,11,24,.92);margin-bottom:1rem}
 label{display:block;font-size:.82rem;color:#7a8fa6;margin:.65rem 0 .25rem}
-input,select{width:100%;box-sizing:border-box;padding:.65rem .9rem;border-radius:8px;border:1px solid rgba(0,212,255,.25);background:rgba(255,255,255,.06);color:#fff}
+input{width:100%;box-sizing:border-box;padding:.65rem .9rem;border-radius:8px;border:1px solid rgba(0,212,255,.25);background:rgba(255,255,255,.06);color:#fff}
+select{width:100%;box-sizing:border-box;padding:.65rem .9rem;border-radius:8px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 button,.btn-link{width:100%;margin-top:1rem;padding:.8rem;border:0;border-radius:8px;background:linear-gradient(135deg,#00d4ff,#00ff88);font-weight:700;cursor:pointer;color:#050b18;text-align:center;text-decoration:none;display:block;box-sizing:border-box}
 .btn-secondary{background:rgba(0,212,255,.15);color:#00d4ff;border:1px solid rgba(0,212,255,.35)}
@@ -135,6 +135,7 @@ a{color:#00d4ff}
 code{color:#ffd166;font-size:.8rem}
 pre{background:rgba(0,0,0,.35);padding:.75rem;border-radius:8px;font-size:.75rem;overflow-x:auto;color:#a8d4ff}
 </style>
+<?php renderFormSelectStyles(); ?>
 </head>
 <body>
 <div class="wrap">
@@ -183,7 +184,7 @@ pre{background:rgba(0,0,0,.35);padding:.75rem;border-radius:8px;font-size:.75rem
       <input type="text" name="smtp_from_name" value="<?= htmlspecialchars(cybeorchEnv('SMTP_FROM_NAME', $preset['from_name'])) ?>">
       <label>Test email (optional)</label>
       <input type="email" name="test_email" placeholder="Same as EMAIL_USER">
-      <button type="submit">Save .env &amp; Send Test Email</button>
+      <button type="submit">Save .env & Send Test Email</button>
     </form>
     <p style="text-align:center;margin-top:1rem;font-size:.8rem"><a href="<?= htmlspecialchars($home) ?>">← Home</a></p>
   </div>
@@ -199,8 +200,20 @@ SMTP_PORT=<?= (int) $preset['port'] ?>
 
 SMTP_SECURE=<?= htmlspecialchars($preset['secure']) ?>
 
-SMTP_FROM_NAME=CYBEORCH LAB</pre>
-    <p style="margin:.75rem 0 0;font-size:.8rem;color:#5a6d82">Or copy <code>includes/config.local.php.example</code> to <code>config.local.php</code>, set <code>SMTP_PASS</code>, open this page on localhost — it auto-writes <code>.env</code>.</p>
+SMTP_FROM_NAME=CYBEORCH LABS</pre>
+  <p style="margin:.75rem 0 0;font-size:.8rem;color:#5a6d82">Or copy <code>includes/config.local.php.example</code> to <code>config.local.php</code>, set <code>SMTP_PASS</code>, open this page locally — it auto-writes <code>.env</code>.</p>
+  </div>
+
+  <div class="card">
+    <p style="margin:0 0 .5rem;color:#7a8fa6;font-size:.85rem"><strong>Stackmail (registration OTP)</strong></p>
+    <ol class="steps">
+      <li><strong>EMAIL_USER:</strong> <code>info@xyz.com</code> (full mailbox address)</li>
+      <li><strong>EMAIL_PASS:</strong> nexus@369 (same as webmail login)</li>
+      <li><strong>Outgoing:</strong> <code>smtp.stackmail.com</code>, port <code>465</code>, secure <code>ssl</code></li>
+      <li>Authentication required — leave SMTP auth enabled (handled automatically)</li>
+      <li>Incoming mail (IMAP) is not used by this app; only SMTP is needed for OTP</li>
+    </ol>
+    <p style="margin:.75rem 0 0;font-size:.78rem;color:#5a6d82">IMAP (optional): <code>imap.stackmail.com</code> port 993 SSL · POP3: port 995</p>
   </div>
 
   <div class="card">

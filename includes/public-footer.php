@@ -4,6 +4,10 @@ declare(strict_types=1);
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/helpers.php';
 
+if (!function_exists('renderPublicAuthRegistrationAssets')) {
+    require_once __DIR__ . '/auth-registration-popup.php';
+}
+
 function renderPublicFooterStyles(): void
 {
     static $done = false;
@@ -34,29 +38,40 @@ function renderPublicFooter(): void
     <div class="row g-5">
       <div class="col-lg-4">
         <a class="footer-logo" href="<?= url('index.php') ?>" aria-label="CYBEORCH home">
-          <img src="<?= url('assets/images/Footer_logo.jpeg') ?>" alt="CYBEORCH" style="display:block;max-width:220px;width:100%;height:auto;filter:drop-shadow(0 8px 22px rgba(0,0,0,.35))">
+          <img src="<?= url('assets/images/Footer_logo.jpeg') ?>" alt="CYBEORCH" width="220" height="58" style="display:block;max-width:220px;width:100%;height:auto;filter:drop-shadow(0 8px 22px rgba(0,0,0,.35))">
         </a>
         <p style="color:var(--cyber-muted);font-size:.88rem;margin:1rem 0 1.5rem;line-height:1.7">We provide internship opportunities and real-world exposure within our company. Based on performance, we offer placement opportunities to deserving candidates and help them build a successful career.</p>
         <div>
           <a href="<?= htmlspecialchars(SITE_TWITTER_URL) ?>" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X @<?= htmlspecialchars(SITE_TWITTER_HANDLE) ?>" title="@<?= htmlspecialchars(SITE_TWITTER_HANDLE) ?>"><i class="fab fa-x-twitter"></i></a>
           <a href="#" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
           <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-          <a href="#" class="social-link" aria-label="Discord"><i class="fab fa-discord"></i></a>
         </div>
       </div>
       <div class="col-lg-2 col-6 footer-links">
         <h6>Platform</h6>
         <a href="<?= url('webinars.php') ?>">Webinars</a>
         <a href="<?= url('bootcamps.php') ?>">Bootcamps</a>
-        <a href="<?= url('index.php') ?>#pricing">Pricing</a>
         <a href="<?= url('dashboard.php') ?>">Dashboard</a>
       </div>
       <div class="col-lg-2 col-6 footer-links">
         <h6>Company</h6>
         <a href="<?= url('about.php') ?>">About Us</a>
+        <a href="<?= url('corporate-services.php') ?>">Corporate Services</a>
+        <a href="<?= url('portfolio.php') ?>">Portfolio</a>
+        <a href="<?= url('case-studies.php') ?>">Case Studies</a>
+        <?php
+        if (!function_exists('companyProfileDownloadUrl')) {
+            require_once __DIR__ . '/company-content.php';
+        }
+        ?>
+        <a href="<?= htmlspecialchars(companyProfileDownloadUrl(), ENT_QUOTES, 'UTF-8') ?>">Company Profile (PDF)</a>
         <a href="<?= url('contact.php') ?>">Contact</a>
+      </div>
+      <div class="col-lg-2 col-6 footer-links">
+        <h6>Community</h6>
         <a href="<?= url('freelancer.php') ?>">Freelancers</a>
+        <a href="<?= url('webinars.php') ?>">Webinars</a>
+        <a href="<?= url('bootcamps.php') ?>">Bootcamps</a>
       </div>
       <div class="col-lg-2 col-6 footer-links">
         <h6>Support</h6>
@@ -78,4 +93,17 @@ function renderPublicFooter(): void
   </div>
 </footer>
     <?php
+    if (!function_exists('renderWebinarClosingSoonPopupAssets')) {
+        require_once __DIR__ . '/webinar-closing-soon.php';
+    }
+    renderWebinarClosingSoonPopupAssets();
+    renderPublicAuthRegistrationAssets();
+    if (function_exists('renderWebinarClosingSoonPopupBootScript')) {
+        renderWebinarClosingSoonPopupBootScript();
+    }
+    // Global chatbot — also loaded via renderSiteScripts() on pages that use it
+    if (!function_exists('renderChatbotWidgetAssets')) {
+        require_once __DIR__ . '/chatbot-widget.php';
+    }
+    renderChatbotWidgetAssets();
 }

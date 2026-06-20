@@ -59,33 +59,86 @@ function cybeorchEnv(string $key, string $default = ''): string
     return trim((string) $v);
 }
 
-/** Stackmail / CYBEORCH outgoing SMTP (see hosting panel: smtp.stackmail.com). */
+function cybeorchDefineEnvConstant(string $name, string $envKey, string $default = ''): void
+{
+    if (defined($name)) {
+        return;
+    }
+    define($name, cybeorchEnv($envKey, $default));
+}
+
+function cybeorchDefineEnvIntConstant(string $name, string $envKey, int $default): void
+{
+    if (defined($name)) {
+        return;
+    }
+    $raw = cybeorchEnv($envKey, (string) $default);
+    define($name, $raw !== '' ? (int) $raw : $default);
+}
+
+/** Map .env secrets into PHP constants (DB, payments, OAuth, SMTP). */
+function cybeorchApplyAppConfigFromEnv(): void
+{
+    cybeorchDefineEnvConstant('DB_HOST', 'DB_HOST', 'localhost');
+    cybeorchDefineEnvIntConstant('DB_PORT', 'DB_PORT', 3306);
+    cybeorchDefineEnvConstant('DB_USER', 'DB_USER', 'root');
+    cybeorchDefineEnvConstant('DB_PASS', 'DB_PASS', '');
+    cybeorchDefineEnvConstant('DB_NAME', 'DB_NAME', 'cybeorch_db');
+    cybeorchDefineEnvConstant('DB_CHARSET', 'DB_CHARSET', 'utf8mb4');
+
+    cybeorchDefineEnvConstant('RAZORPAY_KEY_ID', 'RAZORPAY_KEY_ID', '');
+    cybeorchDefineEnvConstant('RAZORPAY_KEY_SECRET', 'RAZORPAY_KEY_SECRET', '');
+    cybeorchDefineEnvConstant('RAZORPAY_CURRENCY', 'RAZORPAY_CURRENCY', 'INR');
+
+    cybeorchDefineEnvConstant('PAYMENT_ACCOUNT_NAME', 'PAYMENT_ACCOUNT_NAME', 'CYBEORCH LABS');
+    cybeorchDefineEnvConstant('PAYMENT_BANK_NAME', 'PAYMENT_BANK_NAME', '');
+    cybeorchDefineEnvConstant('PAYMENT_ACCOUNT_NUMBER', 'PAYMENT_ACCOUNT_NUMBER', '');
+    cybeorchDefineEnvConstant('PAYMENT_IFSC', 'PAYMENT_IFSC', '');
+    cybeorchDefineEnvConstant('PAYMENT_ACCOUNT_TYPE', 'PAYMENT_ACCOUNT_TYPE', 'Current');
+    cybeorchDefineEnvConstant('PAYMENT_BRANCH', 'PAYMENT_BRANCH', '');
+    cybeorchDefineEnvConstant('PAYMENT_UPI_ID', 'PAYMENT_UPI_ID', '');
+
+    cybeorchDefineEnvConstant('PHONEPE_MERCHANT_ID', 'PHONEPE_MERCHANT_ID', '');
+    cybeorchDefineEnvConstant('PHONEPE_SALT_KEY', 'PHONEPE_SALT_KEY', '');
+
+    cybeorchDefineEnvConstant('GOOGLE_OAUTH_CLIENT_ID', 'GOOGLE_OAUTH_CLIENT_ID', '');
+    cybeorchDefineEnvConstant('GOOGLE_OAUTH_CLIENT_SECRET', 'GOOGLE_OAUTH_CLIENT_SECRET', '');
+
+    cybeorchDefineEnvConstant('ADMIN_EMAIL', 'ADMIN_EMAIL', 'akshataingale2003@gmail.com');
+    cybeorchDefineEnvConstant('ADMIN_RESET_EMAIL_USER', 'ADMIN_RESET_EMAIL_USER', '');
+    cybeorchDefineEnvConstant('ADMIN_RESET_EMAIL_PASS', 'ADMIN_RESET_EMAIL_PASS', '');
+    cybeorchDefineEnvConstant('CYBEORCH_SITE_URL', 'CYBEORCH_SITE_URL', '');
+    cybeorchDefineEnvConstant('REGISTER_COMPANY_EMAIL_DOMAINS', 'REGISTER_COMPANY_EMAIL_DOMAINS', 'cybeorch.com');
+
+    cybeorchApplySmtpFromEnv();
+}
+
+/** Stackmail outgoing SMTP (hosting panel: smtp.stackmail.com, port 465 SSL). */
 function cybeorchSmtpPreset(): array
 {
     return [
         'host'      => 'smtp.stackmail.com',
         'port'      => 465,
         'secure'    => 'ssl',
-        'user'      => 'info@cybeorch.com',
-        'from_name' => 'CYBEORCH LAB',
+        'user'      => 'info@xyz.com',
+        'from_name' => 'CYBEORCH LABS',
     ];
 }
 
-/** Infer SMTP host/port/secure from the mailbox domain when not set explicitly. */
+/** Infer SMTP host/port/secure from the mailbox when not set explicitly. */
 function cybeorchSmtpSettingsForEmail(string $email, ?string $host = null, ?int $port = null, ?string $secure = null): array
 {
     $preset = cybeorchSmtpPreset();
     $email  = strtolower(trim($email));
-    $domain = '';
-    if (str_contains($email, '@')) {
-        $domain = substr($email, (int) strrpos($email, '@') + 1);
-    }
 
     if ($host === null || $host === '') {
-        if ($domain === 'cybeorch.com' || str_ends_with($domain, '.cybeorch.com')) {
-            $host = $preset['host'];
-        } else {
+        if (
+            str_ends_with($email, '@gmail.com')
+            || str_ends_with($email, '@googlemail.com')
+        ) {
             $host = 'smtp.gmail.com';
+        } else {
+            $host = $preset['host'];
         }
     }
     if ($port === null || $port <= 0) {
@@ -114,8 +167,13 @@ function cybeorchApplySmtpFromEnv(): void
     if ($pass !== '' && !defined('SMTP_PASS')) {
         define('SMTP_PASS', $pass);
     }
-    if ($user !== '' && !defined('SMTP_FROM_EMAIL')) {
-        define('SMTP_FROM_EMAIL', strtolower($user));
+    if (!defined('SMTP_FROM_EMAIL')) {
+        $fromEmail = cybeorchEnv('SMTP_FROM_EMAIL');
+        if ($fromEmail !== '') {
+            define('SMTP_FROM_EMAIL', strtolower($fromEmail));
+        } elseif ($user !== '') {
+            define('SMTP_FROM_EMAIL', strtolower($user));
+        }
     }
     if (!defined('SMTP_HOST') && ($h = cybeorchEnv('SMTP_HOST')) !== '') {
         define('SMTP_HOST', $h);
@@ -135,7 +193,7 @@ function cybeorchApplySmtpFromEnv(): void
 function cybeorchWriteDotEnv(
     string $email,
     string $appPassword,
-    string $fromName = 'CYBEORCH LAB',
+    string $fromName = 'CYBEORCH LABS',
     ?string $smtpHost = null,
     ?int $smtpPort = null,
     ?string $smtpSecure = null
@@ -160,7 +218,7 @@ function cybeorchWriteDotEnv(
         return ['ok' => false, 'message' => 'EMAIL_PASS is too short for custom SMTP.'];
     }
 
-    $fromName = $fromName !== '' ? $fromName : 'CYBEORCH LAB';
+    $fromName = $fromName !== '' ? $fromName : 'CYBEORCH LABS';
     $content  = "# CYBEORCH SMTP — do not commit to git\n"
         . "EMAIL_USER={$email}\n"
         . "EMAIL_PASS={$pass}\n"
@@ -196,7 +254,7 @@ function cybeorchWriteDotEnvFromConstants(): array
     return cybeorchWriteDotEnv(
         SMTP_USER,
         SMTP_PASS,
-        defined('SMTP_FROM_NAME') ? (string) SMTP_FROM_NAME : 'CYBEORCH LAB',
+        defined('SMTP_FROM_NAME') ? (string) SMTP_FROM_NAME : 'CYBEORCH LABS',
         defined('SMTP_HOST') ? (string) SMTP_HOST : null,
         defined('SMTP_PORT') ? (int) SMTP_PORT : null,
         defined('SMTP_SECURE') ? (string) SMTP_SECURE : null

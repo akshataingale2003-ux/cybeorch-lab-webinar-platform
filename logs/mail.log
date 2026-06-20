@@ -1,0 +1,1185 @@
+2026-06-03 11:47:16 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:47:22 [ERROR] registration_otp — SMTP Error: Could not authenticate. {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:52:14 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:52:22 [ERROR] registration_otp — SMTP Error: Could not authenticate. {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:52:48 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-03 11:52:52 [ERROR] registration_otp — SMTP Error: Could not authenticate. {"to":"akshataingale2003@gmail.com"}
+2026-06-03 12:04:58 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-03 12:05:07 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-04 01:22:45 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-04 01:22:55 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-04 02:05:59 [INFO] registration_otp — Sending OTP email {"to":"akshataingale29@gmail.com"}
+2026-06-04 02:06:06 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale29@gmail.com"}
+2026-06-04 02:06:06 [INFO] registration_otp — Sending OTP email {"to":"akshataingale29@gmail.com"}
+2026-06-04 02:06:09 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale29@gmail.com"}
+2026-06-05 18:29:22 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-05 18:29:29 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-05 18:30:07 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-05 18:30:10 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-06 13:05:24 [INFO] registration_otp — Sending OTP email {"to":"agase804@gmail.com"}
+2026-06-06 13:06:13 [INFO] registration_otp — OTP email delivered and stored {"to":"agase804@gmail.com"}
+2026-06-06 13:18:44 [INFO] registration_otp — Sending OTP email {"to":"akshuingale13@gmail.com"}
+2026-06-06 13:18:50 [INFO] registration_otp — OTP email delivered and stored {"to":"akshuingale13@gmail.com"}
+2026-06-06 18:30:46 [INFO] registration_otp — Sending OTP email {"to":"abhijitkarale22@gmail.com"}
+2026-06-06 18:30:53 [INFO] registration_otp — OTP email delivered and stored {"to":"abhijitkarale22@gmail.com"}
+2026-06-06 18:55:00 [INFO] password_reset — Reset email sent {"user_id":7,"email":"abhijitkarale22@gmail.com"}
+2026-06-06 18:56:59 [INFO] password_reset — Password updated via reset token {"user_id":7}
+2026-06-09 00:50:18 [INFO] registration_otp — Sending OTP email {"to":"yogeshwaripolytechnic@gmail.com"}
+2026-06-09 00:50:18 [INFO] registration_otp — OTP email delivered and stored {"to":"yogeshwaripolytechnic@gmail.com"}
+2026-06-09 01:17:41 [INFO] registration_otp — Sending OTP email {"to":"rushikeshchoudhari0374@gmail.com"}
+2026-06-09 01:17:41 [INFO] registration_otp — OTP email delivered and stored {"to":"rushikeshchoudhari0374@gmail.com"}
+2026-06-09 08:58:31 [INFO] registration_otp — Sending OTP email {"to":"agase804@gmail.com"}
+2026-06-09 08:58:32 [INFO] registration_otp — OTP email delivered and stored {"to":"agase804@gmail.com"}
+2026-06-09 12:28:50 [INFO] registration_otp — Sending OTP email {"to":"monalipatil20801@gmail.com"}
+2026-06-09 12:28:51 [INFO] registration_otp — OTP email delivered and stored {"to":"monalipatil20801@gmail.com"}
+2026-06-10 00:37:21 [INFO] registration_otp — Sending OTP email {"to":"akshuingale13@gmail.com"}
+2026-06-10 00:37:35 [INFO] registration_otp — OTP email delivered and stored {"to":"akshuingale13@gmail.com"}
+2026-06-11 18:22:32 [INFO] admin_password_reset — Reset requested for unknown admin email {"email":"akshataingale2003@gmail.com"}
+2026-06-11 18:23:33 [INFO] admin_password_reset — Reset requested for unknown admin email {"email":"admin@gmail.com"}
+2026-06-11 18:25:20 [INFO] admin_password_reset — Reset requested for unknown admin email {"email":"akshataingale2003@gmail.com"}
+2026-06-11 18:33:09 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com"}
+2026-06-11 18:33:46 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com"}
+2026-06-11 18:36:22 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com"}
+2026-06-11 18:38:37 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Admin SMTP diagnostic test","to":["akshataingale2003@gmail.com"]}
+2026-06-11 18:39:01 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp2.lhr.stackcp.net ESMTP Thu, 11 Jun 2026 14:09:01 +0100 {"level":2}
+2026-06-11 18:39:01 [DEBUG] smtp — CLIENT -> SERVER: EHLO Abhijit {"level":1}
+2026-06-11 18:39:01 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp2.lhr.stackcp.net Hello Abhijit [152.59.7.47]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-11 18:39:01 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-11 18:39:02 [DEBUG] smtp — SERVER -> CLIENT: 334 PDE2NzczOTM4OTc5NDU0ODUuMTc4MTE4MzM0MkBtYWlsYXV0aDQubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-11 18:39:02 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-11 18:39:02 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-11 18:39:02 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-11 18:39:02 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-11 18:39:02 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:39:02 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-11 18:39:02 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Date: Thu, 11 Jun 2026 18:39:00 +0530 {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <JhaJ3lez7Qs5lzR1rWBIi1HVeQv1EC0TJCbly5v24c@Abhijit> {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_JhaJ3lez7Qs5lzR1rWBIi1HVeQv1EC0TJCbly5v24c" {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: --b1=_JhaJ3lez7Qs5lzR1rWBIi1HVeQv1EC0TJCbly5v24c {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=a5acfa2726c79847fb0313abc0c856fd6298defa236473d1cb99e100564be51c {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: --b1=_JhaJ3lez7Qs5lzR1rWBIi1HVeQv1EC0TJCbly5v24c {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3Da5acfa2726c7= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: 9847fb0313abc0c856fd6298defa236473d1cb99e100564be51c" style=3D"display:inli= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: ?token=3Da5acfa2726c79847fb0313abc0c856fd6298defa236473d1cb99e100564be51c" = {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3Da5acfa2726c79847fb0313abc0c856fd6298defa236473d1cb99= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: e100564be51c</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: --b1=_JhaJ3lez7Qs5lzR1rWBIi1HVeQv1EC0TJCbly5v24c-- {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:39:03 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-11 18:39:04 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wXf9b-00000003zSK-0cqE {"level":2}
+2026-06-11 18:39:04 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-11 18:39:04 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp2.lhr.stackcp.net closing connection {"level":2}
+2026-06-11 18:39:04 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-11 18:39:04 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-11 18:39:04 [INFO] admin_password_reset — Admin password updated via reset token {"admin_id":1}
+2026-06-11 18:41:13 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Thu, 11 Jun 2026 14:11:13 +0100 {"level":2}
+2026-06-11 18:41:13 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-11 18:41:13 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.47]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-11 18:41:13 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-11 18:41:13 [DEBUG] smtp — SERVER -> CLIENT: 334 PDE4OTc1MTg0ODY2NTQwNzEuMTc4MTE4MzQ3M0BtYWlsYXV0aDQubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-11 18:41:13 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-11 18:41:13 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-11 18:41:13 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Date: Thu, 11 Jun 2026 18:41:10 +0530 {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <rLuXjQgQ8kqjGWBkBLpd3OKtD1pCeLa2lQq60ZRwn58@localhost> {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_rLuXjQgQ8kqjGWBkBLpd3OKtD1pCeLa2lQq60ZRwn58" {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: --b1=_rLuXjQgQ8kqjGWBkBLpd3OKtD1pCeLa2lQq60ZRwn58 {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=214aa6ce8fae6fed65a8df22ca1cc8f43f1feaaf0c6bb6727bb7cf64c825ab82 {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: --b1=_rLuXjQgQ8kqjGWBkBLpd3OKtD1pCeLa2lQq60ZRwn58 {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3D214aa6ce8fae= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: 6fed65a8df22ca1cc8f43f1feaaf0c6bb6727bb7cf64c825ab82" style=3D"display:inli= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: ?token=3D214aa6ce8fae6fed65a8df22ca1cc8f43f1feaaf0c6bb6727bb7cf64c825ab82" = {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3D214aa6ce8fae6fed65a8df22ca1cc8f43f1feaaf0c6bb6727bb7= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: cf64c825ab82</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: --b1=_rLuXjQgQ8kqjGWBkBLpd3OKtD1pCeLa2lQq60ZRwn58-- {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:41:14 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-11 18:41:16 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wXfBi-00000003Qi8-2lLJ {"level":2}
+2026-06-11 18:41:16 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-11 18:41:17 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-11 18:41:17 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-11 18:41:17 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-11 18:46:24 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Admin SMTP diagnostic test","to":["akshataingale2003@gmail.com"]}
+2026-06-11 18:47:06 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp2.lhr.stackcp.net ESMTP Thu, 11 Jun 2026 14:17:06 +0100 {"level":2}
+2026-06-11 18:47:06 [DEBUG] smtp — CLIENT -> SERVER: EHLO Abhijit {"level":1}
+2026-06-11 18:47:07 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp2.lhr.stackcp.net Hello Abhijit [152.59.7.47]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-11 18:47:07 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-11 18:47:07 [DEBUG] smtp — SERVER -> CLIENT: 334 PDA5ODkwOTI3ODkyOTgxNDMuMTc4MTE4MzgyN0BtYWlsYXV0aDQubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-11 18:47:07 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-11 18:47:07 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-11 18:47:07 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Date: Thu, 11 Jun 2026 18:47:05 +0530 {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Reply-To: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <jeVvhVavBKrSdHilN85PADirqqFdPLdlTQI9EAFhaY@Abhijit> {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: X-Priority: 1 {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_jeVvhVavBKrSdHilN85PADirqqFdPLdlTQI9EAFhaY" {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: --b1=_jeVvhVavBKrSdHilN85PADirqqFdPLdlTQI9EAFhaY {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=58680ac03b2a7c6dac2ebbf7d25ea0b663048ab562b7aba6389542ce705a72b7 {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: --b1=_jeVvhVavBKrSdHilN85PADirqqFdPLdlTQI9EAFhaY {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3D58680ac03b2a= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: 7c6dac2ebbf7d25ea0b663048ab562b7aba6389542ce705a72b7" style=3D"display:inli= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: ?token=3D58680ac03b2a7c6dac2ebbf7d25ea0b663048ab562b7aba6389542ce705a72b7" = {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3D58680ac03b2a7c6dac2ebbf7d25ea0b663048ab562b7aba63895= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: 42ce705a72b7</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: --b1=_jeVvhVavBKrSdHilN85PADirqqFdPLdlTQI9EAFhaY-- {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:47:08 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-11 18:47:09 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wXfHQ-00000004eyI-2jib {"level":2}
+2026-06-11 18:47:09 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-11 18:47:09 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp2.lhr.stackcp.net closing connection {"level":2}
+2026-06-11 18:47:09 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-11 18:47:09 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-11 18:48:05 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Thu, 11 Jun 2026 14:18:05 +0100 {"level":2}
+2026-06-11 18:48:05 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-11 18:48:06 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.47]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-11 18:48:06 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-11 18:48:06 [DEBUG] smtp — SERVER -> CLIENT: 334 PDgxNDA0NTQ0NTMxMTA2ODMuMTc4MTE4Mzg4NkBtYWlsYXV0aDIubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-11 18:48:06 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-11 18:48:06 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-11 18:48:06 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-11 18:48:06 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-11 18:48:06 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Date: Thu, 11 Jun 2026 18:48:03 +0530 {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Reply-To: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <tIPgTmTylCEEJY2n1F8kPHT4RUTXVdQvbQH5CXwHe1U@localhost> {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: X-Priority: 1 {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_tIPgTmTylCEEJY2n1F8kPHT4RUTXVdQvbQH5CXwHe1U" {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: --b1=_tIPgTmTylCEEJY2n1F8kPHT4RUTXVdQvbQH5CXwHe1U {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=ba01761f9b816b4eebf7f09a674dcf8a30beb734aea2151e3fee203efd3c925f {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: --b1=_tIPgTmTylCEEJY2n1F8kPHT4RUTXVdQvbQH5CXwHe1U {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3Dba01761f9b81= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: 6b4eebf7f09a674dcf8a30beb734aea2151e3fee203efd3c925f" style=3D"display:inli= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: ?token=3Dba01761f9b816b4eebf7f09a674dcf8a30beb734aea2151e3fee203efd3c925f" = {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3Dba01761f9b816b4eebf7f09a674dcf8a30beb734aea2151e3fee= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: 203efd3c925f</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: --b1=_tIPgTmTylCEEJY2n1F8kPHT4RUTXVdQvbQH5CXwHe1U-- {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:48:07 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-11 18:48:09 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wXfIN-00000003zpJ-1DGs {"level":2}
+2026-06-11 18:48:09 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-11 18:48:09 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-11 18:48:09 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-11 18:48:09 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-11 18:50:00 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Thu, 11 Jun 2026 14:20:00 +0100 {"level":2}
+2026-06-11 18:50:00 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-11 18:50:01 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.47]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-11 18:50:01 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-11 18:50:01 [DEBUG] smtp — SERVER -> CLIENT: 334 PDIxMzMyNDExNzE0ODYzNDUuMTc4MTE4NDAwMUBtYWlsYXV0aDIubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-11 18:50:01 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-11 18:50:01 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-11 18:50:01 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Date: Thu, 11 Jun 2026 18:49:58 +0530 {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Reply-To: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <JZ8Ej2DrLiRleb42CLNaXHVINnhqb9ua1LSL18EuR8c@localhost> {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: X-Priority: 1 {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_JZ8Ej2DrLiRleb42CLNaXHVINnhqb9ua1LSL18EuR8c" {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: --b1=_JZ8Ej2DrLiRleb42CLNaXHVINnhqb9ua1LSL18EuR8c {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=37dcacc2e8e1995daadb264ff5ff7cf32dfc474047069e77965705d75443baa2 {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: --b1=_JZ8Ej2DrLiRleb42CLNaXHVINnhqb9ua1LSL18EuR8c {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3D37dcacc2e8e1= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: 995daadb264ff5ff7cf32dfc474047069e77965705d75443baa2" style=3D"display:inli= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: ?token=3D37dcacc2e8e1995daadb264ff5ff7cf32dfc474047069e77965705d75443baa2" = {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3D37dcacc2e8e1995daadb264ff5ff7cf32dfc474047069e779657= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: 05d75443baa2</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: --b1=_JZ8Ej2DrLiRleb42CLNaXHVINnhqb9ua1LSL18EuR8c-- {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-11 18:50:02 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-11 18:50:04 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wXfKE-000000049l1-2ted {"level":2}
+2026-06-11 18:50:04 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-11 18:50:04 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-11 18:50:04 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-11 18:50:04 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-13 11:52:49 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp2.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 07:22:51 +0100 {"level":2}
+2026-06-13 11:52:49 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 11:52:49 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp2.lhr.stackcp.net Hello localhost [152.59.6.49]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 11:52:49 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — SERVER -> CLIENT: 334 PDIwMzE3NDM2NDc1NTU2OTguMTc4MTMzMTc3MUBtYWlsYXV0aDMubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Date: Sat, 13 Jun 2026 11:52:47 +0530 {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Reply-To: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <PH8ql0H0x0MXqBdTIWb75axMNlyprMTnN8pPXCo@localhost> {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: X-Priority: 1 {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_PH8ql0H0x0MXqBdTIWb75axMNlyprMTnN8pPXCo" {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: --b1=_PH8ql0H0x0MXqBdTIWb75axMNlyprMTnN8pPXCo {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=007b75ba6946662ca5945bce60509934287494f6bb902a404f3c5c57edc7dac9 {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: --b1=_PH8ql0H0x0MXqBdTIWb75axMNlyprMTnN8pPXCo {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3D007b75ba6946= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: 662ca5945bce60509934287494f6bb902a404f3c5c57edc7dac9" style=3D"display:inli= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: ?token=3D007b75ba6946662ca5945bce60509934287494f6bb902a404f3c5c57edc7dac9" = {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3D007b75ba6946662ca5945bce60509934287494f6bb902a404f3c= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: 5c57edc7dac9</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: --b1=_PH8ql0H0x0MXqBdTIWb75axMNlyprMTnN8pPXCo-- {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 11:52:50 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-13 11:52:52 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wYHlc-0000000GB98-1o3v {"level":2}
+2026-06-13 11:52:52 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 11:52:52 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp2.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 11:52:52 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-13 11:52:52 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-13 11:53:53 [INFO] admin_password_reset — Admin password updated via reset token {"admin_id":1}
+2026-06-13 17:27:58 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-13 17:28:12 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale2003@gmail.com"]}
+2026-06-13 17:28:12 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-13 17:47:22 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 13:17:25 +0100 {"level":2}
+2026-06-13 17:47:22 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 17:47:22 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.244]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 17:47:22 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 17:47:23 [DEBUG] smtp — SERVER -> CLIENT: 334 PDQwMzgzMTk1OTY4ODgyNTEuMTc4MTM1MzA0NkBtYWlsYXV0aDIubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 17:47:23 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 17:47:25 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 17:47:25 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 17:47:25 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 17:47:25 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 17:47:25 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 17:47:25 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 17:47:25 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 17:47:25 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 18:26:18 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 18:26:18 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 18:41:40 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 14:11:43 +0100 {"level":2}
+2026-06-13 18:41:40 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 18:41:40 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.244]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 18:41:40 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 18:41:41 [DEBUG] smtp — SERVER -> CLIENT: 334 PDY5MzMzMTQxNTMyMDA4NjYuMTc4MTM1NjMwNEBtYWlsYXV0aDIubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 18:41:41 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 18:41:43 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 18:41:43 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 18:41:43 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 18:41:43 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 18:41:43 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 18:41:43 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 18:41:43 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 18:41:43 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 18:41:43 [INFO] admin_password_reset — Opening reset page directly (SMTP unavailable or send failed) {"admin_id":1,"email":"akshataingale2003@gmail.com"}
+2026-06-13 18:46:32 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 18:46:32 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 18:46:32 [INFO] admin_password_reset — Opening reset page directly (SMTP unavailable or send failed) {"admin_id":1,"email":"akshataingale2003@gmail.com"}
+2026-06-13 18:47:25 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 14:17:28 +0100 {"level":2}
+2026-06-13 18:47:25 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 18:47:25 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.244]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 18:47:25 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 18:47:25 [DEBUG] smtp — SERVER -> CLIENT: 334 PDQxOTgxMTM0NTQyMzgwMDUuMTc4MTM1NjY0OEBtYWlsYXV0aDQubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 18:47:25 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 18:47:27 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 18:47:27 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 18:47:27 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 18:47:27 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 18:47:27 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 18:47:27 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 18:47:27 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 18:47:27 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 18:47:27 [INFO] admin_password_reset — Opening reset page directly (SMTP unavailable or send failed) {"admin_id":1,"email":"akshataingale2003@gmail.com"}
+2026-06-13 18:58:47 [WARNING] admin_password_reset — ADMIN_RESET_EMAIL_PASS must be a 16-character Gmail App Password; using site SMTP instead
+2026-06-13 18:58:54 [WARNING] admin_password_reset — ADMIN_RESET_EMAIL_PASS must be a 16-character Gmail App Password; using site SMTP instead
+2026-06-13 19:00:40 [WARNING] admin_password_reset — ADMIN_RESET_EMAIL_PASS must be a 16-character Gmail App Password; using site SMTP instead
+2026-06-13 19:23:35 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 14:53:38 +0100 {"level":2}
+2026-06-13 19:23:35 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 19:23:35 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.244]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 19:23:35 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 19:23:35 [DEBUG] smtp — SERVER -> CLIENT: 334 PDU4NjE5OTcxMjk5OTYxMTQuMTc4MTM1ODgxOEBtYWlsYXV0aDMubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 19:23:35 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 19:23:37 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 19:23:37 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 19:23:37 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:23:37 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 19:23:37 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 19:23:37 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:23:37 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 19:23:37 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 19:25:59 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp2.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 14:56:03 +0100 {"level":2}
+2026-06-13 19:25:59 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 19:26:00 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp2.lhr.stackcp.net Hello localhost [152.59.7.244]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 19:26:00 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 19:26:00 [DEBUG] smtp — SERVER -> CLIENT: 334 PDUxNjMxMTA4NDI4MjEyNzYuMTc4MTM1ODk2M0BtYWlsYXV0aDQubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 19:26:00 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 19:26:02 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 19:26:02 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 19:26:02 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:26:02 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 19:26:02 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp2.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 19:26:02 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:26:02 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 19:26:02 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 19:40:54 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 15:10:58 +0100 {"level":2}
+2026-06-13 19:40:54 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 19:40:55 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.220]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 19:40:55 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 19:40:55 [DEBUG] smtp — SERVER -> CLIENT: 334 PDA2NTcyMDQyNzA1NjExMTAuMTc4MTM1OTg1OEBtYWlsYXV0aDMubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 19:40:55 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 19:40:57 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 19:40:57 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 19:40:57 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:40:57 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 19:40:57 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 19:40:57 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:40:57 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 19:40:57 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 19:42:08 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp2.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 15:12:11 +0100 {"level":2}
+2026-06-13 19:42:08 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 19:42:08 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp2.lhr.stackcp.net Hello localhost [152.59.7.220]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 19:42:08 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 19:42:08 [DEBUG] smtp — SERVER -> CLIENT: 334 PDcxMjk1MjM2ODg3ODg1MTUuMTc4MTM1OTkzMkBtYWlsYXV0aDEubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 19:42:08 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 19:42:11 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 19:42:11 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 19:42:11 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:42:11 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 19:42:11 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp2.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 19:42:11 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:42:11 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 19:42:11 [ERROR] admin_password_reset — Failed to send admin reset email: SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","reset_host":"admin.cybeorch.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 19:45:31 [ERROR] admin_password_reset — SMTP not ready: SMTP password (EMAIL_PASS) is missing or still a placeholder. Use a 16-letter Gmail App Password — not your normal Gmail password. {"host":"smtp.gmail.com","port":587,"secure":"tls","user":"akshataingale2003@gmail.com","from":"akshataingale2003@gmail.com","encryption":"STARTTLS (TLS)","auth_method":"SMTP AUTH (LOGIN) over STARTTLS — Gmail App Password","configured":false,"issue":"SMTP password (EMAIL_PASS) is missing or still a placeholder. Use a 16-letter Gmail App Password — not your normal Gmail password."}
+2026-06-13 19:45:57 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 15:16:00 +0100 {"level":2}
+2026-06-13 19:45:57 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 19:45:57 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.220]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 19:45:57 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 19:45:57 [DEBUG] smtp — SERVER -> CLIENT: 334 PDYxMzE2MTE1MDIyMTQ0MTMuMTc4MTM2MDE2MEBtYWlsYXV0aDQubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 19:45:57 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 19:45:59 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 19:45:59 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 19:45:59 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:45:59 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 19:45:59 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 19:45:59 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:45:59 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}
+2026-06-13 19:45:59 [ERROR] admin_password_reset — SMTP Error: Could not authenticate. {"admin_id":1,"email":"akshataingale2003@gmail.com","smtp":{"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@yourdomain.com","from":"info@yourdomain.com","configured":true}}
+2026-06-13 19:53:47 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 15:23:50 +0100 {"level":2}
+2026-06-13 19:53:47 [DEBUG] smtp — CLIENT -> SERVER: EHLO Abhijit {"level":1}
+2026-06-13 19:53:47 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello Abhijit [152.59.7.220]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 19:53:47 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 19:53:47 [DEBUG] smtp — SERVER -> CLIENT: 334 PDQ1MTczMTMyNzE3MjQxMjMuMTc4MTM2MDYzMEBtYWlsYXV0aDIubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 19:53:47 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 19:53:48 [DEBUG] smtp — SERVER -> CLIENT: 535 Incorrect authentication data {"level":2}
+2026-06-13 19:53:48 [DEBUG] smtp — SMTP ERROR: Username command failed: 535 Incorrect authentication data {"level":1}
+2026-06-13 19:53:48 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:53:48 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 19:53:49 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 19:53:49 [DEBUG] smtp — SMTP Error: Could not authenticate. {"level":2}
+2026-06-13 19:53:49 [ERROR] smtp — SMTP Error: Could not authenticate. {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@cybeorch.com","from":"info@cybeorch.com","encryption":"SMTPS (SSL)","auth_method":"SMTP AUTH (CRAM-MD5 / LOGIN) over SSL","configured":true,"issue":null,"friendly_error":"SMTP authentication failed (535 Incorrect authentication data). Verify info@cybeorch.com mailbox password in cPanel/webmail matches EMAIL_PASS in .env.","smtp_response":"SMTP Error: Could not authenticate."}
+2026-06-13 20:03:50 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp2.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 15:33:53 +0100 {"level":2}
+2026-06-13 20:03:50 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 20:03:50 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp2.lhr.stackcp.net Hello localhost [152.59.7.220]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 20:03:50 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 20:03:51 [DEBUG] smtp — SERVER -> CLIENT: 334 PDcyMjI5MjkzNjM5NzQxNjMuMTc4MTM2MTIzNEBtYWlsYXV0aDEubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 20:03:51 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 20:03:51 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-13 20:03:51 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-13 20:03:51 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-13 20:03:51 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-13 20:03:51 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-13 20:03:51 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Date: Sat, 13 Jun 2026 20:03:48 +0530 {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Reply-To: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <43uGOTUIMBWLHuzvPtruEFsoH8VUG9deErDM7iov4LU@localhost> {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: X-Priority: 1 {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_43uGOTUIMBWLHuzvPtruEFsoH8VUG9deErDM7iov4LU" {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: --b1=_43uGOTUIMBWLHuzvPtruEFsoH8VUG9deErDM7iov4LU {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=94123f65c9f98fef87e4a746ef8ccdbef9d6af072ef11562e660e3ca3d3f3cba {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: --b1=_43uGOTUIMBWLHuzvPtruEFsoH8VUG9deErDM7iov4LU {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3D94123f65c9f9= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: 8fef87e4a746ef8ccdbef9d6af072ef11562e660e3ca3d3f3cba" style=3D"display:inli= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: ?token=3D94123f65c9f98fef87e4a746ef8ccdbef9d6af072ef11562e660e3ca3d3f3cba" = {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3D94123f65c9f98fef87e4a746ef8ccdbef9d6af072ef11562e660= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: e3ca3d3f3cba</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: --b1=_43uGOTUIMBWLHuzvPtruEFsoH8VUG9deErDM7iov4LU-- {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:03:52 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-13 20:03:53 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wYPQp-0000000GuPn-0dm6 {"level":2}
+2026-06-13 20:03:53 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 20:03:54 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp2.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 20:03:54 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-13 20:03:54 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-13 20:08:10 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp2.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 15:38:13 +0100 {"level":2}
+2026-06-13 20:08:10 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 20:08:11 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp2.lhr.stackcp.net Hello localhost [152.59.7.220]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 20:08:11 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 20:08:11 [DEBUG] smtp — SERVER -> CLIENT: 334 PDYxMTM2NDQzODgzNTk5NTkuMTc4MTM2MTQ5NEBtYWlsYXV0aDMubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 20:08:11 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 20:08:11 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-13 20:08:11 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Date: Sat, 13 Jun 2026 20:08:08 +0530 {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Reply-To: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <e4tlznnsmawE2dRdfCfROWhIcz4SsFZILzvbWkmk@localhost> {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: X-Priority: 1 {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_e4tlznnsmawE2dRdfCfROWhIcz4SsFZILzvbWkmk" {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: --b1=_e4tlznnsmawE2dRdfCfROWhIcz4SsFZILzvbWkmk {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=acf887bb1f3ab961e1aeb0cf19a48188458d3850275c52a0bc95b90ce85fe550 {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: --b1=_e4tlznnsmawE2dRdfCfROWhIcz4SsFZILzvbWkmk {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3Dacf887bb1f3a= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: b961e1aeb0cf19a48188458d3850275c52a0bc95b90ce85fe550" style=3D"display:inli= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: ?token=3Dacf887bb1f3ab961e1aeb0cf19a48188458d3850275c52a0bc95b90ce85fe550" = {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3Dacf887bb1f3ab961e1aeb0cf19a48188458d3850275c52a0bc95= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: b90ce85fe550</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: --b1=_e4tlznnsmawE2dRdfCfROWhIcz4SsFZILzvbWkmk-- {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 20:08:12 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-13 20:08:14 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wYPV1-0000000H4gL-3Ka2 {"level":2}
+2026-06-13 20:08:14 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 20:08:15 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp2.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 20:08:15 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-13 20:08:15 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-13 22:00:39 [DEBUG] smtp — SERVER -> CLIENT: 220 smtp1.lhr.stackcp.net ESMTP Sat, 13 Jun 2026 17:30:42 +0100 {"level":2}
+2026-06-13 22:00:39 [DEBUG] smtp — CLIENT -> SERVER: EHLO localhost {"level":1}
+2026-06-13 22:00:39 [DEBUG] smtp — SERVER -> CLIENT: 250-smtp1.lhr.stackcp.net Hello localhost [152.59.7.145]
+250-SIZE 52428800
+250-LIMITS MAILMAX=1000 RCPTMAX=100
+250-8BITMIME
+250-PIPELINING
+250-PIPECONNECT
+250-AUTH PLAIN LOGIN CRAM-MD5 PLAINMVPS
+250-CHUNKING
+250-STARTTLS
+250 HELP {"level":2}
+2026-06-13 22:00:39 [DEBUG] smtp — CLIENT -> SERVER: AUTH CRAM-MD5 {"level":1}
+2026-06-13 22:00:40 [DEBUG] smtp — SERVER -> CLIENT: 334 PDYxNzU3NjQzMzI3MTk4NDUuMTc4MTM2ODI0M0BtYWlsYXV0aDEubGhyLnN0YWNrY3AubmV0Pg== {"level":2}
+2026-06-13 22:00:40 [DEBUG] smtp — CLIENT -> SERVER: [credentials hidden] {"level":1}
+2026-06-13 22:00:40 [DEBUG] smtp — SERVER -> CLIENT: 235 Authentication succeeded {"level":2}
+2026-06-13 22:00:40 [DEBUG] smtp — CLIENT -> SERVER: MAIL FROM:<info@cybeorch.com> {"level":1}
+2026-06-13 22:00:40 [DEBUG] smtp — SERVER -> CLIENT: 250 OK {"level":2}
+2026-06-13 22:00:40 [DEBUG] smtp — CLIENT -> SERVER: RCPT TO:<akshataingale2003@gmail.com> {"level":1}
+2026-06-13 22:00:40 [DEBUG] smtp — SERVER -> CLIENT: 250 Accepted {"level":2}
+2026-06-13 22:00:40 [DEBUG] smtp — CLIENT -> SERVER: DATA {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — SERVER -> CLIENT: 354 Enter message, ending with "." on a line by itself {"level":2}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Date: Sat, 13 Jun 2026 22:00:34 +0530 {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: To: CYBEORCH Admin <akshataingale2003@gmail.com> {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: From: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Reply-To: CYBEORCH LABS <info@cybeorch.com> {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Subject: CYBEORCH LABS - Admin Password Reset {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Message-ID: <aVG1aZZKFqJ6tVrc8juAnYa2XStJpi0IVUgs8TG1y0c@localhost> {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: X-Priority: 1 {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: X-Mailer: PHPMailer 6.12.0 (https://github.com/PHPMailer/PHPMailer) {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: MIME-Version: 1.0 {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: multipart/alternative; {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER:  boundary="b1=_aVG1aZZKFqJ6tVrc8juAnYa2XStJpi0IVUgs8TG1y0c" {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: 8bit {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: --b1=_aVG1aZZKFqJ6tVrc8juAnYa2XStJpi0IVUgs8TG1y0c {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Hello CYBEORCH Admin, {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Reset your CYBEORCH LABS admin password using this link (expires in 15 minutes): {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: http://localhost/cybeorch_final_project/admin/reset-password.php?token=a933a6d60b7cb7b96aefb7dacae0af7edbfda70ce247b238315bea68585b5c9f {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: If you did not request this, ignore this email. {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: --b1=_aVG1aZZKFqJ6tVrc8juAnYa2XStJpi0IVUgs8TG1y0c {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: <!DOCTYPE html><html><body style=3D"margin:0;padding:0;background:#eef2f7;"= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: ><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadding= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: =3D"0" style=3D"background:#eef2f7;padding:24px 12px;"><tr><td align=3D"cen= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: ter"><table role=3D"presentation" width=3D"100%" cellspacing=3D"0" cellpadd= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: ing=3D"0" style=3D"max-width:560px;background:#ffffff;border:1px solid #d0d= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: 7e2;border-radius:12px;overflow:hidden;"><tr><td style=3D"background:linear= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: -gradient(135deg,#0a1628 0%,#3d1a0a 100%);padding:22px 28px;text-align:cent= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: er;"><div style=3D"font-family:Rajdhani,Arial,sans-serif;font-size:26px;fon= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: t-weight:700;color:#ff6b35;letter-spacing:1px;">CYBEORCH LABS</div><div sty= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: le=3D"font-family:Arial,sans-serif;font-size:13px;color:#f0c4a8;margin-top:= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: 6px;">Admin Panel Password Reset</div></td></tr><tr><td style=3D"padding:28= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: px;font-family:Arial,sans-serif;color:#1a2332;font-size:15px;line-height:1.= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: 6;"><p style=3D"margin:0 0 16px;">Hello <strong>CYBEORCH Admin</strong>,</p= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: ><p style=3D"margin:0 0 20px;">We received a request to reset your <strong>= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: admin panel</strong> password. Click the button below to set a new password= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: .. This link expires in <strong>15 minutes</strong> and can only be used onc= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: e.</p><p style=3D"margin:0 0 24px;text-align:center;"><a href=3D"http://loc= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: alhost/cybeorch_final_project/admin/reset-password.php?token=3Da933a6d60b7c= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: b7b96aefb7dacae0af7edbfda70ce247b238315bea68585b5c9f" style=3D"display:inli= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: ne-block;background:#ff6b35;color:#ffffff;text-decoration:none;font-weight:= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: 700;padding:14px 28px;border-radius:8px;font-size:16px;">Reset Admin Passwo= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: rd</a></p><p style=3D"margin:0 0 12px;color:#5a6578;font-size:13px;">If the= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER:  button does not work, copy and paste this link into your browser:</p><p st= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: yle=3D"margin:0 0 20px;word-break:break-all;font-size:12px;color:#0f3460;">= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: <a href=3D"http://localhost/cybeorch_final_project/admin/reset-password.php= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: ?token=3Da933a6d60b7cb7b96aefb7dacae0af7edbfda70ce247b238315bea68585b5c9f" = {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: style=3D"color:#0f3460;">http://localhost/cybeorch_final_project/admin/rese= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: t-password.php?token=3Da933a6d60b7cb7b96aefb7dacae0af7edbfda70ce247b238315b= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: ea68585b5c9f</a></p><p style=3D"margin:0;color:#5a6578;font-size:13px;">If = {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: you did not request this reset, ignore this email. Your password will remai= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: n unchanged.</p></td></tr><tr><td style=3D"background:#f4f7fb;padding:16px = {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: 28px;text-align:center;font-family:Arial,sans-serif;font-size:12px;color:#7= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: a8fa6;">&copy; 2026 CYBEORCH LABS &mdash; Admin security notice</td></tr></= {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: table></td></tr></table></body></html> {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: --b1=_aVG1aZZKFqJ6tVrc8juAnYa2XStJpi0IVUgs8TG1y0c-- {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: {"level":1}
+2026-06-13 22:00:41 [DEBUG] smtp — CLIENT -> SERVER: . {"level":1}
+2026-06-13 22:00:43 [DEBUG] smtp — SERVER -> CLIENT: 250 OK id=1wYRFs-000000035vF-1Bxq {"level":2}
+2026-06-13 22:00:43 [DEBUG] smtp — CLIENT -> SERVER: QUIT {"level":1}
+2026-06-13 22:00:43 [DEBUG] smtp — SERVER -> CLIENT: 221 smtp1.lhr.stackcp.net closing connection {"level":2}
+2026-06-13 22:00:43 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH LABS - Admin Password Reset","to":["akshataingale2003@gmail.com"]}
+2026-06-13 22:00:43 [INFO] admin_password_reset — Admin reset email sent {"admin_id":1,"email":"akshataingale2003@gmail.com","to":"akshataingale2003@gmail.com"}
+2026-06-14 12:04:31 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["akshataingale2003@gmail.com"]}
+2026-06-14 15:38:28 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-14 15:38:36 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale2003@gmail.com"]}
+2026-06-14 15:38:36 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-14 15:49:03 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["akshataingale29@gmail.com"]}
+2026-06-14 21:06:21 [INFO] smtp — Message accepted by SMTP server {"subject":"Your Cybeorch Labs Certificate","to":["akshataingale2003@gmail.com"]}
+2026-06-14 21:37:33 [INFO] registration_otp — Sending OTP email {"to":"akshataingale29@gmail.com"}
+2026-06-14 21:37:41 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale29@gmail.com"]}
+2026-06-14 21:37:41 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale29@gmail.com"}
+2026-06-14 22:13:02 [INFO] registration_otp — Sending OTP email {"to":"akshataingale29@gmail.com"}
+2026-06-14 22:13:08 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale29@gmail.com"]}
+2026-06-14 22:13:08 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale29@gmail.com"}
+2026-06-14 22:19:47 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["akshataingale00@gmail.com"]}
+2026-06-14 22:37:05 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-14 22:37:13 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale2003@gmail.com"]}
+2026-06-14 22:37:13 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-14 22:40:05 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["akshataingale99@gmail.com"]}
+2026-06-15 10:36:17 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["akshataingale12@gmail.com"]}
+2026-06-15 10:37:57 [INFO] smtp — Message accepted by SMTP server {"subject":"Your Cybeorch Labs Certificate","to":["akshataingale12@gmail.com"]}
+2026-06-15 16:15:52 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["akshataingale2@gmail.com"]}
+2026-06-15 16:17:09 [INFO] smtp — Message accepted by SMTP server {"subject":"Your Cybeorch Labs Certificate","to":["akshataingale2@gmail.com"]}
+2026-06-15 17:23:58 [INFO] smtp — Message accepted by SMTP server {"subject":"Certificate from CYBEORCH LABS","to":["akshataingale0@gmail.com"]}
+2026-06-15 17:31:34 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["akshataingale290@gmail.com"]}
+2026-06-15 17:32:06 [INFO] smtp — Message accepted by SMTP server {"subject":"Certificate from CYBEORCH LABS","to":["akshataingale290@gmail.com"]}
+2026-06-15 17:57:35 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["bhimaagase700@gmail.com"]}
+2026-06-15 17:58:40 [INFO] smtp — Message accepted by SMTP server {"subject":"Certificate from CYBEORCH LABS","to":["bhimaagase700@gmail.com"]}
+2026-06-15 18:08:55 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-15 18:09:02 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale2003@gmail.com"]}
+2026-06-15 18:09:02 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-15 18:19:21 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-15 18:19:52 [ERROR] smtp — SMTP Error: Could not connect to SMTP host. Failed to connect to server SMTP server error: Failed to connect to server {"host":"smtp.stackmail.com","port":465,"secure":"ssl","user":"info@cybeorch.com","from":"info@cybeorch.com","configured":true}
+2026-06-15 18:19:52 [ERROR] registration_otp — SMTP Error: Could not connect to SMTP host. Failed to connect to server SMTP server error: Failed to connect to server {"to":"akshataingale2003@gmail.com"}
+2026-06-15 18:20:06 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-15 18:20:12 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale2003@gmail.com"]}
+2026-06-15 18:20:12 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-15 18:24:56 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-15 18:25:03 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale2003@gmail.com"]}
+2026-06-15 18:25:04 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-15 18:35:45 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Webinar registration confirmed","to":["akshataingale2003@gmail.com"]}
+2026-06-15 18:36:28 [INFO] smtp — Message accepted by SMTP server {"subject":"Certificate from CYBEORCH LABS","to":["akshataingale2003@gmail.com"]}
+2026-06-19 13:00:46 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-19 13:00:57 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale2003@gmail.com"]}
+2026-06-19 13:00:57 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-19 13:02:02 [INFO] registration_otp — Sending OTP email {"to":"akshataingale2003@gmail.com"}
+2026-06-19 13:02:08 [INFO] smtp — Message accepted by SMTP server {"subject":"CYBEORCH — Your verification code","to":["akshataingale2003@gmail.com"]}
+2026-06-19 13:02:08 [INFO] registration_otp — OTP email delivered and stored {"to":"akshataingale2003@gmail.com"}
+2026-06-19 15:27:47 [INFO] smtp — Message accepted by SMTP server {"subject":"Payment Received — Invoice CYB/INV/2026/0001","to":["akshataingale13@gmail.com"]}
+2026-06-19 15:29:46 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale13@gmail.com"]}
+2026-06-19 15:30:30 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale13@gmail.com"]}
+2026-06-19 15:33:21 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0002 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 15:34:34 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0002 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 15:34:39 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0002 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 15:34:50 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0002 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 15:35:26 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0002 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 15:41:38 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 15:50:20 [INFO] smtp — Message accepted by SMTP server {"subject":"AMC Contract CYB/AMC/2026/0002 from CYBEORCH","to":["akshataingale2003@gmail.com"]}
+2026-06-19 15:50:20 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"AMC Contract CYB/AMC/2026/0002 from CYBEORCH","attachment":"CYB/AMC/2026/0002.pdf","error":null}
+2026-06-19 15:51:15 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 15:51:15 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0001 from AMC Management","attachment":"CYB/INV/2026/0001.pdf","error":null}
+2026-06-19 16:08:05 [INFO] smtp — Message accepted by SMTP server {"subject":"AMC Contract CYB/AMC/2026/0001 from CYBEORCH","to":["akshataingale2003@gmail.com"]}
+2026-06-19 16:08:05 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"AMC Contract CYB/AMC/2026/0001 from CYBEORCH","attachment":"CYB/AMC/2026/0001.pdf","error":null}
+2026-06-19 16:08:26 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0003 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 16:08:26 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0003 from AMC Management","attachment":"CYB/INV/2026/0003.pdf","error":null}
+2026-06-19 16:18:06 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0004 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 16:18:06 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0004 from AMC Management","attachment":"CYB/INV/2026/0004.pdf","error":null}
+2026-06-19 16:21:33 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0005 from AMC Management","to":["akshataingale13@gmail.com"]}
+2026-06-19 16:21:33 [INFO] invoice_amc — Email sent {"to":"akshataingale13@gmail.com","subject":"Invoice CYB/INV/2026/0005 from AMC Management","attachment":"CYB/INV/2026/0005.pdf","error":null}
+2026-06-19 16:37:47 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0006 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 16:37:47 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0006 from AMC Management","attachment":"CYB/INV/2026/0006.pdf","error":null}
+2026-06-19 17:27:04 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0007 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 17:27:04 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0007 from AMC Management","attachment":"CYB/INV/2026/0007.pdf","error":null}
+2026-06-19 17:27:14 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0008 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 17:27:14 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0008 from AMC Management","attachment":"CYB/INV/2026/0008.pdf","error":null}
+2026-06-19 17:38:47 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0009 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 17:38:47 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0009 from AMC Management","attachment":"CYB/INV/2026/0009.pdf","error":null}
+2026-06-19 17:46:57 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0010 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 17:46:57 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0010 from AMC Management","attachment":"CYB/INV/2026/0010.pdf","error":null}
+2026-06-19 18:03:03 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0011 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 18:03:03 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0011 from AMC Management","attachment":"CYB/INV/2026/0011.pdf","error":null}
+2026-06-19 18:10:03 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0012 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 18:10:03 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0012 from AMC Management","attachment":"CYB/INV/2026/0012.pdf","error":null}
+2026-06-19 18:24:32 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0013 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 18:24:32 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0013 from AMC Management","attachment":"CYB/INV/2026/0013.pdf","error":null}
+2026-06-19 18:52:53 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 18:52:53 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0001 from AMC Management","attachment":"CYB/INV/2026/0001.pdf","error":null}
+2026-06-19 18:53:02 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0002 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 18:53:02 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0002 from AMC Management","attachment":"CYB/INV/2026/0002.pdf","error":null}
+2026-06-19 18:55:59 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 18:55:59 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0001 from AMC Management","attachment":"CYB/INV/2026/0001.pdf","error":null}
+2026-06-19 18:56:06 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 18:56:06 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0001 from AMC Management","attachment":"CYB/INV/2026/0001.pdf","error":null}
+2026-06-19 18:59:05 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 18:59:05 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0001 from AMC Management","attachment":"CYB/INV/2026/0001.pdf","error":null}
+2026-06-19 19:06:15 [INFO] smtp — Message accepted by SMTP server {"subject":"Invoice CYB/INV/2026/0001 from AMC Management","to":["akshataingale2003@gmail.com"]}
+2026-06-19 19:06:15 [INFO] invoice_amc — Email sent {"to":"akshataingale2003@gmail.com","subject":"Invoice CYB/INV/2026/0001 from AMC Management","attachment":"CYB/INV/2026/0001.pdf","error":null}

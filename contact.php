@@ -4,6 +4,7 @@ require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/public-footer.php';
 require_once __DIR__ . '/includes/contact-messages.php';
+require_once __DIR__ . '/includes/site-contact.php';
 
 startSession();
 
@@ -23,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        insertContactMessage($name, $email, $phone, $subject, $message);
+        insertContactMessage($name, $email, $phone, $subject, $message, 'contact.php', 'contact');
         redirectWith('contact.php', 'success', 'Thank you! We\'ll get back to you within 24 hours.');
     } catch (Throwable $e) {
         redirectWith('contact.php', 'error', 'Could not send your message. Please try again later.');
@@ -39,8 +40,8 @@ $pageTitle = 'Contact Us';
 <head>
 <meta charset="UTF-8">
 <?php renderStandardViewport(); ?>
-<title><?= htmlspecialchars($pageTitle) ?> â€“ CYBEORCH LAB</title>
-<meta name="description" content="Contact CYBEORCH LAB for webinars, bootcamps, consulting, and collaboration enquiries.">
+<title><?= htmlspecialchars($pageTitle) ?> â€“ CYBEORCH LABS</title>
+<meta name="description" content="Contact CYBEORCH LABS for webinars, bootcamps, consulting, and collaboration enquiries.">
 <?php renderPublicPageHead(); ?>
 <style>
 :root{--cyber-dark:#050b18;--cyber-navy:#0a1628;--cyber-accent:#00d4ff;--cyber-green:#00ff88;--cyber-orange:#ff6b35;--cyber-text:#e0e8f0;--cyber-muted:#7a8fa6;--cyber-border:rgba(0,212,255,0.2);--cyber-card:rgba(15,52,96,0.4);}
@@ -67,6 +68,7 @@ a{text-decoration:none}
 .btn-primary-cyber:hover{background:var(--cyber-green);transform:translateY(-2px)}
 @media(max-width:767px){.section{padding:3rem 0}}
 </style>
+<?php renderContactActionStyles(); ?>
 </head>
 <body>
 
@@ -84,27 +86,10 @@ a{text-decoration:none}
     <div class="row g-5 align-items-start">
       <div class="col-lg-5">
         <h2 class="section-title">Contact <span class="accent">Info</span></h2>
-        <div class="divider"></div>
-        <p style="color:var(--cyber-muted);line-height:1.8;margin-bottom:2rem">Reach out for program enquiries, partnerships, corporate training, or technical support.</p>
+        <p style="color:var(--cyber-muted);line-height:1.8;margin-bottom:2rem">Reach out for program enquiries, partnerships, corporate software development company, or technical support.</p>
 
-        <div class="contact-info-card d-flex align-items-center gap-3">
-          <div style="width:44px;height:44px;background:rgba(0,212,255,0.1);border:1px solid var(--cyber-border);border-radius:8px;display:flex;align-items:center;justify-content:center">
-            <i class="fas fa-envelope"></i>
-          </div>
-          <div>
-            <div style="font-size:.8rem;color:var(--cyber-muted)">Email</div>
-            <div><a href="mailto:<?= htmlspecialchars(SITE_EMAIL) ?>" style="color:var(--cyber-text)"><?= htmlspecialchars(SITE_EMAIL) ?></a></div>
-          </div>
-        </div>
-
-        <div class="contact-info-card d-flex align-items-center gap-3">
-          <div style="width:44px;height:44px;background:rgba(0,255,136,0.1);border:1px solid var(--cyber-border);border-radius:8px;display:flex;align-items:center;justify-content:center">
-            <i class="fab fa-whatsapp" style="color:var(--cyber-green)"></i>
-          </div>
-          <div>
-            <div style="font-size:.8rem;color:var(--cyber-muted)">WhatsApp</div>
-            <div>+91 97640 96069</div>
-          </div>
+        <div class="mb-4">
+          <?php renderContactActionGrid(); ?>
         </div>
 
         <div class="contact-info-card d-flex align-items-center gap-3">
@@ -138,7 +123,6 @@ a{text-decoration:none}
       <div class="col-lg-7">
         <div class="contact-form">
           <h2 class="section-title" style="font-size:1.5rem">Send a <span class="accent">Message</span></h2>
-          <div class="divider"></div>
           <?= showFlash() ?>
           <form method="POST" action="<?= url('contact.php') ?>">
             <input type="hidden" name="csrf_token" value="<?= generateCSRF() ?>">

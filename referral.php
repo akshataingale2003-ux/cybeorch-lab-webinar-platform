@@ -2,18 +2,19 @@
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
+require_once __DIR__ . '/includes/referral-helpers.php';
 require_once __DIR__ . '/includes/student-layout.php';
 
 $ctx = studentContext();
 $user = $ctx['user'];
-$refLink = url('index.php?register_required=1&ref=' . urlencode($user['referral_code']));
+$refLink = referralShareUrl((string) $user['referral_code']);
 $count = db()->fetchOne('SELECT COUNT(*) as c FROM referrals WHERE referrer_id = ?', [$ctx['userId']])['c'];
 
 renderStudentHead('Refer & Earn');
 renderStudentSidebar('referral', $ctx);
 ?>
 <main class="main">
-  <div class="topbar"><div class="page-title">Refer & Earn</div></div>
+  <?php renderPortalTopbar('Refer &amp; Earn'); ?>
   <div class="content">
     <div class="card-panel">
       <p style="color:var(--cyber-muted)">Share your code and earn <?= NXL_REFERRAL_BONUS ?> NxL when friends join.</p>

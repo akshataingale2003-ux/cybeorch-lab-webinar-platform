@@ -1,6 +1,6 @@
 <?php
 // ============================================
-// CYBEORCH LAB - Authentication Module
+// CYBEORCH LABS - Authentication Module
 // ============================================
 
 require_once __DIR__ . '/config.php';
@@ -32,46 +32,76 @@ class Auth {
         if ($existing)
             return ['success' => false, 'message' => 'This email is already registered. Please login.'];
 
-        // Check referral code
-        $referrerId = null;
-        if ($refCode) {
-            $referrer = db()->fetchOne("SELECT id FROM users WHERE referral_code = ?", [$refCode]);
-            if (!$referrer)
-                return ['success' => false, 'message' => 'Invalid referral code.'];
-            $referrerId = $referrer['id'];
+        // Optional referral code — credits referrer with NXL_REFERRAL_BONUS on successful signup
+        require_once __DIR__ . '/referral-helpers.php';
+        $refResolved = resolveReferrerFromCode($refCode, $email);
+        if (!$refResolved['ok']) {
+            return ['success' => false, 'message' => $refResolved['message']];
         }
+        $referrerId = $refResolved['referrer_id'];
+        $referredByCode = $refResolved['referral_code'];
 
         $hashedPass = password_hash($pass, PASSWORD_BCRYPT, ['cost' => HASH_COST]);
         $myRefCode = generateReferralCode($name);
         $verifyToken = generateToken();
 
-        $userId = db()->insert(
-            "INSERT INTO users (full_name, email, phone, password, referral_code, referred_by, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [$name, $email, $phone, $hashedPass, $myRefCode, $refCode ?: null, $verifyToken]
-        );
+        require_once __DIR__ . '/admin-users.php';
+        ensureAdminUsersSchema();
+        $hasPlainCol = function_exists('adminTableHasColumn') && adminTableHasColumn('users', 'password_plain');
+
+        if ($hasPlainCol) {
+            $userId = db()->insert(
+                'INSERT INTO users (full_name, email, phone, password, password_plain, referral_code, referred_by, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                [$name, $email, $phone, $hashedPass, $pass, $myRefCode, $referredByCode, $verifyToken]
+            );
+        } else {
+            $userId = db()->insert(
+                'INSERT INTO users (full_name, email, phone, password, referral_code, referred_by, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [$name, $email, $phone, $hashedPass, $myRefCode, $referredByCode, $verifyToken]
+            );
+        }
 
         // Create wallet
         db()->execute("INSERT INTO wallet (user_id, balance) VALUES (?, 0)", [$userId]);
 
-        // Signup bonus
-        creditWallet($userId, NXL_SIGNUP_BONUS, 'signup_bonus', null, 'Welcome bonus NxL tokens!');
+        require_once __DIR__ . '/nxl-wallet.php';
+        grantNxlReward($userId, 'signup_bonus', null, 'Welcome bonus NxL tokens!');
 
-        // Referral processing
         if ($referrerId) {
-            db()->execute("INSERT INTO referrals (referrer_id, referred_id) VALUES (?, ?)", [$referrerId, $userId]);
+            $existingReferral = db()->fetchOne(
+                'SELECT id FROM referrals WHERE referred_id = ? LIMIT 1',
+                [$userId]
+            );
+            if (!$existingReferral) {
+                db()->execute('INSERT INTO referrals (referrer_id, referred_id) VALUES (?, ?)', [$referrerId, $userId]);
+                processReferralRewardForReferredUser($userId, true);
+            }
         }
 
-        // Notification
-        sendNotification($userId, 'system', 'Welcome to CYBEORCH LAB! 🎉',
+        sendNotification($userId, 'system', 'Welcome to CYBEORCH LABS! 🎉',
             "Hi {$name}, your account is created. You've received " . NXL_SIGNUP_BONUS . " NxL tokens as a welcome bonus!");
 
-        return ['success' => true, 'message' => 'Account created successfully! Welcome to CYBEORCH LAB.', 'user_id' => $userId];
+        require_once __DIR__ . '/form-submissions.php';
+        recordFormSubmission([
+            'form_key'          => 'platform-signup',
+            'form_label'        => 'Platform signup',
+            'source_page'       => 'login.php',
+            'full_name'         => $name,
+            'email'             => $email,
+            'phone'             => $phone,
+            'summary'           => 'New user account — ' . $myRefCode,
+            'storage_table'     => 'users',
+            'storage_record_id' => $userId,
+        ]);
+
+        return ['success' => true, 'message' => 'Account created successfully! Welcome to CYBEORCH LABS.', 'user_id' => $userId];
     }
 
     // Register freelancer profile (creates user account if not logged in)
     public static function registerFreelancer(array $data, ?int $loggedInUserId = null): array {
-        $name     = sanitize($data['full_name'] ?? '');
-        $email    = strtolower(trim($data['email'] ?? ''));
+        require_once __DIR__ . '/admin-schema.php';
+        ensureFreelancerRegistrationsSchema();
+
         $phone    = trim($data['phone'] ?? '');
         $role     = sanitize($data['primary_role'] ?? '');
         $expLevel = $data['experience_level'] ?? '';
@@ -84,55 +114,71 @@ class Auth {
         $availability = $data['availability'] ?? '';
         $pass     = $data['password'] ?? '';
 
+        $userId = $loggedInUserId;
+        $name = '';
+        $email = '';
+
+        if ($userId) {
+            $user = db()->fetchOne('SELECT * FROM users WHERE id = ?', [$userId]);
+            if (!$user) {
+                return ['success' => false, 'message' => 'Session expired. Please log in again.'];
+            }
+            $name  = trim((string) ($user['full_name'] ?? ''));
+            $email = strtolower(trim((string) ($user['email'] ?? '')));
+            $phone = $phone !== '' ? $phone : trim((string) ($user['phone'] ?? ''));
+        } else {
+            $name  = sanitize($data['full_name'] ?? '');
+            $email = strtolower(trim($data['email'] ?? ''));
+        }
+
         $validRoles = ['developer', 'designer', 'cybersecurity', 'devops', 'qa', 'data', 'mobile', 'other'];
         $validExp   = ['fresher', '1-2', '3-5', '5+'];
         $validAvail = ['full_time', 'part_time', 'project_based'];
 
-        if (empty($name) || strlen($name) < 3)
+        if ($name === '' || strlen($name) < 3) {
             return ['success' => false, 'message' => 'Full name must be at least 3 characters.'];
-        if (!isValidEmail($email))
+        }
+        if (!isValidEmail($email)) {
             return ['success' => false, 'message' => 'Please enter a valid email address.'];
-        if ($phone && !isValidPhone($phone))
+        }
+        if ($phone !== '' && !isValidPhone($phone)) {
             return ['success' => false, 'message' => 'Please enter a valid 10-digit Indian phone number.'];
-        if (!in_array($role, $validRoles, true))
+        }
+        if (!in_array($role, $validRoles, true)) {
             return ['success' => false, 'message' => 'Please select your primary role.'];
-        if (!in_array($expLevel, $validExp, true))
+        }
+        if (!in_array($expLevel, $validExp, true)) {
             return ['success' => false, 'message' => 'Please select your experience level.'];
-        if (!in_array($availability, $validAvail, true))
+        }
+        if (!in_array($availability, $validAvail, true)) {
             return ['success' => false, 'message' => 'Please select your availability.'];
-        if (strlen($skills) < 10)
+        }
+        if (strlen($skills) < 10) {
             return ['success' => false, 'message' => 'Please list your skills (at least 10 characters).'];
-        if (strlen($about) < 20)
+        }
+        if (strlen($about) < 20) {
             return ['success' => false, 'message' => 'Please write a brief introduction (at least 20 characters).'];
-
-        foreach (['portfolio_url' => $portfolio, 'github_url' => $github, 'linkedin_url' => $linkedin] as $label => $url) {
-            if ($url !== '' && !filter_var($url, FILTER_VALIDATE_URL))
-                return ['success' => false, 'message' => 'Please enter a valid URL for ' . str_replace('_', ' ', $label) . '.'];
         }
 
-        $existingFreelancer = db()->fetchOne('SELECT id FROM freelancer_registrations WHERE email = ?', [$email]);
-        if ($existingFreelancer)
-            return ['success' => false, 'message' => 'A freelancer application with this email already exists.'];
+        foreach (['portfolio_url' => $portfolio, 'github_url' => $github, 'linkedin_url' => $linkedin] as $label => $url) {
+            if ($url !== '' && !filter_var($url, FILTER_VALIDATE_URL)) {
+                return ['success' => false, 'message' => 'Please enter a valid URL for ' . str_replace('_', ' ', $label) . '.'];
+            }
+        }
 
-        $userId = $loggedInUserId;
+        if (freelancerRoleAlreadyApplied($userId, $email, $role)) {
+            return ['success' => false, 'message' => 'You have already applied for this freelancer role.'];
+        }
 
-        if ($userId) {
-            $user = db()->fetchOne('SELECT * FROM users WHERE id = ?', [$userId]);
-            if (!$user)
-                return ['success' => false, 'message' => 'Session expired. Please log in again.'];
-            $existingByUser = db()->fetchOne('SELECT id FROM freelancer_registrations WHERE user_id = ?', [$userId]);
-            if ($existingByUser)
-                return ['success' => false, 'message' => 'You have already registered as a freelancer.'];
-            $email = $user['email'];
-            $name  = $user['full_name'];
-            $phone = $phone ?: ($user['phone'] ?? '');
-        } else {
-            if (strlen($pass) < 8 || !preg_match('/[A-Z]/', $pass) || !preg_match('/[0-9]/', $pass))
+        if (!$userId) {
+            if (strlen($pass) < 8 || !preg_match('/[A-Z]/', $pass) || !preg_match('/[0-9]/', $pass)) {
                 return ['success' => false, 'message' => 'Password must be 8+ chars with at least one uppercase and one number.'];
+            }
 
             $existingUser = db()->fetchOne('SELECT id FROM users WHERE email = ?', [$email]);
-            if ($existingUser)
-                return ['success' => false, 'message' => 'This email is already registered. Please log in and complete your freelancer profile.'];
+            if ($existingUser) {
+                return ['success' => false, 'message' => 'This email is already registered. Please log in to apply for additional freelancer roles.'];
+            }
 
             $account = self::register([
                 'full_name'        => $name,
@@ -142,13 +188,20 @@ class Auth {
                 'referral_code'    => $data['referral_code'] ?? '',
                 'agree_terms'      => $data['agree_terms'] ?? '',
             ]);
-            if (!$account['success'])
+            if (!$account['success']) {
                 return $account;
+            }
             $userId = (int) $account['user_id'];
         }
 
+        $resumePath = trim((string) ($data['resume_path'] ?? ''));
+        $resumeOriginalName = trim((string) ($data['resume_original_name'] ?? ''));
+        if ($resumePath === '') {
+            return ['success' => false, 'message' => 'Please attach your Resume or CV (PDF, DOC, or DOCX).'];
+        }
+
         $freelancerId = db()->insert(
-            'INSERT INTO freelancer_registrations (user_id, full_name, email, phone, primary_role, experience_level, skills, portfolio_url, github_url, linkedin_url, availability, location, about) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO freelancer_registrations (user_id, full_name, email, phone, primary_role, experience_level, skills, portfolio_url, github_url, linkedin_url, availability, location, about, resume_path, resume_original_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 $userId,
                 $name,
@@ -163,6 +216,8 @@ class Auth {
                 $availability,
                 $location ?: null,
                 $about,
+                $resumePath,
+                $resumeOriginalName ?: null,
             ]
         );
 
@@ -170,8 +225,29 @@ class Auth {
             $userId,
             'system',
             'Freelancer application received',
-            "Hi {$name}, we received your freelancer registration. Our team will review your profile and contact you for suitable assignments."
+            "Hi {$name}, we received your freelancer registration. Our team will review your profile and contact you for suitable hands-on projects."
         );
+
+        require_once __DIR__ . '/form-submissions.php';
+        recordFormSubmission([
+            'form_key'          => 'freelancer-registration',
+            'form_label'        => 'Freelancer registration',
+            'source_page'       => 'register-freelancer.php',
+            'full_name'         => $name,
+            'email'             => $email,
+            'phone'             => $phone ?: null,
+            'summary'           => ucfirst($role) . ' — ' . $expLevel,
+            'payload'           => [
+                'primary_role'          => $role,
+                'experience_level'      => $expLevel,
+                'availability'          => $availability,
+                'location'              => $location,
+                'resume_path'           => $resumePath,
+                'resume_original_name'  => $resumeOriginalName,
+            ],
+            'storage_table'     => 'freelancer_registrations',
+            'storage_record_id' => $freelancerId,
+        ]);
 
         return [
             'success'       => true,
@@ -184,10 +260,7 @@ class Auth {
     /** Secure user registration & trainee session (registration, OTP login, popup register). */
     public static function establishUserSession(int $userId): bool
     {
-        $user = db()->fetchOne(
-            'SELECT id, full_name, email, COALESCE(is_blocked, 0) AS is_blocked FROM users WHERE id = ? AND deleted_at IS NULL',
-            [$userId]
-        );
+        $user = fetchSessionUserById($userId);
         if (!$user) {
             return false;
         }
@@ -221,7 +294,10 @@ class Auth {
         if (empty($password))
             return ['success' => false, 'message' => 'Password is required.'];
 
-        $user = db()->fetchOne("SELECT * FROM users WHERE email = ? AND deleted_at IS NULL", [$email]);
+        $user = db()->fetchOne(
+            'SELECT * FROM users WHERE email = ? AND ' . userActiveSql(''),
+            [$email]
+        );
         if (!$user)
             return ['success' => false, 'message' => 'No account found with this email.'];
         if (!empty($user['is_blocked']))
@@ -265,38 +341,18 @@ class Auth {
         }
     }
 
-    // Forgot password - generate reset token
+    // Forgot password — generate reset token and email
     public static function forgotPassword(string $email): array {
-        $email = strtolower(trim($email));
-        $user = db()->fetchOne("SELECT id, full_name FROM users WHERE email = ?", [$email]);
-        if (!$user)
-            return ['success' => false, 'message' => 'No account found with this email.'];
-
-        $token = generateToken();
-        $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
-        db()->execute("UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?",
-            [$token, $expires, $user['id']]);
-
-        $resetLink = SITE_URL . "/reset-password.php?token={$token}";
-        // Email sending would go here (using PHPMailer/SMTP)
-        // sendEmail($email, 'Password Reset', "Click here: $resetLink");
-
-        return ['success' => true, 'message' => 'Password reset link sent to your email.', 'reset_link' => $resetLink];
+        require_once __DIR__ . '/password-reset.php';
+        return requestPasswordReset($email);
     }
 
-    // Reset password
-    public static function resetPassword(string $token, string $newPass): array {
-        if (strlen($newPass) < 8)
-            return ['success' => false, 'message' => 'Password must be at least 8 characters.'];
-
-        $user = db()->fetchOne("SELECT id FROM users WHERE reset_token = ? AND reset_expires > NOW()", [$token]);
-        if (!$user)
-            return ['success' => false, 'message' => 'Invalid or expired reset link.'];
-
-        $hashed = password_hash($newPass, PASSWORD_BCRYPT, ['cost' => HASH_COST]);
-        db()->execute("UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?",
-            [$hashed, $user['id']]);
-
-        return ['success' => true, 'message' => 'Password updated successfully. Please login.'];
+    // Reset password via token
+    public static function resetPassword(string $token, string $newPass, string $confirmPass = ''): array {
+        require_once __DIR__ . '/password-reset.php';
+        if ($confirmPass === '') {
+            $confirmPass = $newPass;
+        }
+        return completePasswordReset($token, $newPass, $confirmPass);
     }
 }

@@ -1,0 +1,2 @@
+-- Company navigation content: corporate services, portfolio, case studies, trust data
+-- Tables are also created at runtime via ensureCompanyContentSchema()

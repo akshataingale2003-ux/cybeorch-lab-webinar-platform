@@ -7,6 +7,8 @@ ob_start();
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/popup-registration.php';
 
+rejectWhenPublicAuthDisabled(true);
+
 startSession();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

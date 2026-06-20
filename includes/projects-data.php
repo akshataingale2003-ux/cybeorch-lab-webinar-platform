@@ -1,65 +1,13 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/catalog-content.php';
+require_once __DIR__ . '/public-catalog.php';
+
 /** Live project listings for the public Projects page */
 function getLiveProjects(): array
 {
-    return [
-        [
-            'title'       => 'Vulnerability Assessment Platform',
-            'category'    => 'Cybersecurity',
-            'description' => 'Web-based VA scanner for SMEs with automated reporting, CVE mapping, and remediation guidance.',
-            'stack'       => 'PHP, React, MySQL',
-            'duration'    => '8 weeks',
-            'team'        => '4 engineers',
-            'status'      => 'In Progress',
-        ],
-        [
-            'title'       => 'College Cyber Lab Portal',
-            'category'    => 'EdTech',
-            'description' => 'Hands-on lab environment for ethical hacking modules with instructor dashboards and user registration & trainee progress tracking.',
-            'stack'       => 'Laravel, Vue.js',
-            'duration'    => '12 weeks',
-            'team'        => '6 engineers',
-            'status'      => 'Open for Collaboration',
-        ],
-        [
-            'title'       => 'Secure E-Commerce MVP',
-            'category'    => 'FinTech',
-            'description' => 'Payment-integrated storefront with OWASP-hardened checkout, Razorpay, and admin analytics.',
-            'stack'       => 'PHP, Bootstrap, MySQL',
-            'duration'    => '6 weeks',
-            'team'        => '3 engineers',
-            'status'      => 'Completed',
-        ],
-        [
-            'title'       => 'SIEM Dashboard POC',
-            'category'    => 'Security Ops',
-            'description' => 'Real-time log ingestion dashboard with alert rules for web apps and cloud workloads.',
-            'stack'       => 'Python, Elastic, React',
-            'duration'    => '10 weeks',
-            'team'        => '5 engineers',
-            'status'      => 'In Progress',
-        ],
-        [
-            'title'       => 'API Security Gateway',
-            'category'    => 'DevSecOps',
-            'description' => 'Rate limiting, JWT validation, and threat logging layer for microservice APIs.',
-            'stack'       => 'Node.js, Redis, Docker',
-            'duration'    => '5 weeks',
-            'team'        => '3 engineers',
-            'status'      => 'Open for Collaboration',
-        ],
-        [
-            'title'       => 'IoT Device Pen-Test Toolkit',
-            'category'    => 'IoT Security',
-            'description' => 'Firmware analysis workflows and network fuzzing tools for connected device assessments.',
-            'stack'       => 'Python, Bash',
-            'duration'    => '7 weeks',
-            'team'        => '4 engineers',
-            'status'      => 'Planning',
-        ],
-    ];
+    return publicFetchLiveProjects();
 }
 
 /** CYBEORCH Studio product listings */
@@ -96,7 +44,7 @@ function getStudioProducts(): array
         ],
         [
             'title'       => 'Cyber Range Simulator',
-            'category'    => 'Security Training',
+            'category'    => 'Security Software Development Company',
             'description' => 'CTF-style lab scenarios for red-team and blue-team skill development.',
             'features'    => ['Scenario builder', 'Scoring engine', 'Team rooms', 'Progress analytics'],
             'status'      => 'Planning',
@@ -104,7 +52,7 @@ function getStudioProducts(): array
         [
             'title'       => 'HR & Internship Portal',
             'category'    => 'HR Tech',
-            'description' => 'Applicant tracking and internship project assignment for colleges and startups.',
+            'description' => 'Applicant tracking and internship project matching for colleges and startups.',
             'features'    => ['Application forms', 'Mentor matching', 'Project milestones', 'Certificates'],
             'status'      => 'Beta',
         ],
@@ -119,4 +67,35 @@ function projectStatusBadgeClass(string $status): string
         'open for collaboration' => 'badge-paid',
         default => 'badge-paid',
     };
+}
+
+function getLiveProjectBySlug(string $slug): ?array
+{
+    $slug = trim($slug);
+    if ($slug === '') {
+        return null;
+    }
+    return publicFetchLiveProjectBySlug($slug);
+}
+
+/** @param array<string, mixed> $project */
+function liveProjectDetailUrl(array $project): string
+{
+    $slug = (string) ($project['slug'] ?? '');
+    return $slug !== '' ? url('live-projects.php?slug=' . urlencode($slug)) : url('live-projects.php');
+}
+
+function liveProjectIconClasses(string $icon): string
+{
+    $icon = trim($icon);
+    if ($icon === '') {
+        return 'fas fa-code-branch';
+    }
+    if (str_contains($icon, 'fa-brands') || str_contains($icon, 'fab ') || str_contains($icon, 'fas ') || str_contains($icon, 'far ')) {
+        return $icon;
+    }
+    if (str_starts_with($icon, 'fa-')) {
+        return 'fas ' . $icon;
+    }
+    return 'fas fa-' . ltrim($icon, 'fa-');
 }

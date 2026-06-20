@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/mailer.php';
+require_once __DIR__ . '/referral-helpers.php';
 
 const REG_PENDING_KEY      = 'cybeorch_reg_pending';
 const REG_OTP_SENT_KEY     = 'cybeorch_reg_otp_sent';
@@ -9,6 +10,7 @@ const REG_OTP_EXPIRES_KEY  = 'cybeorch_reg_otp_expires';
 const REG_OTP_VERIFIED_KEY = 'cybeorch_otp_verified';
 
 const MSG_OTP_SENT      = 'OTP Sent Successfully';
+const MSG_OTP_FAILED    = 'Failed to send OTP email. Please try again.';
 const MSG_INVALID_OTP   = 'Invalid OTP';
 const MSG_OTP_VERIFIED  = 'OTP Verified Successfully';
 const MSG_REG_SUCCESS   = 'Registration Successful';
@@ -109,7 +111,7 @@ function generateOtpCode(): string
     return str_pad((string) random_int(0, (int) str_pad('9', $len, '9')), $len, '0', STR_PAD_LEFT);
 }
 
-/** @return array{success: bool, message: string, dev_otp?: string, expires_at?: int} */
+/** @return array{success: bool, message: string, expires_at?: int, email_sent?: bool} */
 function sendPopupRegistrationOtp(string $n, string $e, string $m, bool $resend = false): array
 {
     startSession();
@@ -143,12 +145,25 @@ function sendPopupRegistrationOtp(string $n, string $e, string $m, bool $resend 
         }
     }
 
-    $code = generateOtpCode();
-    $hash = password_hash($code, PASSWORD_DEFAULT);
+    $code  = generateOtpCode();
     $expTs = time() + (int) (defined('OTP_EXPIRE_SECONDS') ? OTP_EXPIRE_SECONDS : 300);
     $exp   = date('Y-m-d H:i:s', $expTs);
     $now   = date('Y-m-d H:i:s');
 
+    mailLog('info', 'registration_otp', 'Sending OTP email', ['to' => $e]);
+
+    $mail = sendRegistrationOtpEmail($e, $n, $code);
+    if (!$mail['ok']) {
+        $technical = (string) ($mail['error'] ?? 'Unknown SMTP error');
+        mailLog('error', 'registration_otp', $technical, ['to' => $e]);
+        $message = MSG_OTP_FAILED;
+        if (function_exists('cybeorchIsLocalDev') && cybeorchIsLocalDev()) {
+            $message .= ' ' . $technical;
+        }
+        return ['success' => false, 'message' => $message, 'email_sent' => false];
+    }
+
+    $hash = password_hash($code, PASSWORD_DEFAULT);
     if (db()->fetchOne('SELECT id FROM registration_pending_otps WHERE email = ?', [$e])) {
         db()->execute(
             'UPDATE registration_pending_otps SET full_name=?, mobile=?, otp_hash=?, otp_expiry=?, verify_attempts=0, last_sent_at=? WHERE email=?',
@@ -165,21 +180,14 @@ function sendPopupRegistrationOtp(string $n, string $e, string $m, bool $resend 
     $_SESSION[REG_OTP_SENT_KEY]    = time();
     $_SESSION[REG_OTP_EXPIRES_KEY] = $expTs;
 
-    $mail = sendRegistrationOtpEmail($e, $n, $code);
-    if ($mail['ok']) {
-        return ['success' => true, 'message' => MSG_OTP_SENT, 'expires_at' => $expTs];
-    }
+    mailLog('info', 'registration_otp', 'OTP email delivered and stored', ['to' => $e]);
 
-    if (defined('CYBEORCH_OTP_DEV_MODE') && CYBEORCH_OTP_DEV_MODE && cybeorchIsLocalDev()) {
-        return [
-            'success'    => true,
-            'message'    => MSG_OTP_SENT,
-            'dev_otp'    => $code,
-            'expires_at' => $expTs,
-        ];
-    }
-
-    return ['success' => false, 'message' => $mail['error'] ?? 'Could not send email.'];
+    return [
+        'success'    => true,
+        'message'    => MSG_OTP_SENT,
+        'expires_at' => $expTs,
+        'email_sent' => true,
+    ];
 }
 
 /** @return array{success: bool, message: string} */
@@ -253,7 +261,7 @@ function completeVerifiedRegistration(): array
         'phone'            => $pending['mobile'],
         'password'         => $password,
         'confirm_password' => $confirm,
-        'referral_code'    => trim((string) ($_POST['referral_code'] ?? '')),
+        'referral_code'    => normalizeReferralCodeInput(trim((string) ($_POST['referral_code'] ?? ''))),
         'agree_terms'      => '1',
     ]);
     if (!$platform['success'] || empty($platform['user_id'])) {
@@ -261,11 +269,9 @@ function completeVerifiedRegistration(): array
     }
 
     $result = registerWebsiteUser($pending['full_name'], $pending['email'], $pending['mobile']);
-    if (!$result['success'] || empty($result['user_id'])) {
-        Auth::establishUserSession((int) $platform['user_id']);
-    } else {
+    Auth::establishUserSession((int) $platform['user_id']);
+    if ($result['success'] && !empty($result['user_id'])) {
         establishWebsiteUserSession((int) $result['user_id'], $pending['full_name'], $pending['email']);
-        Auth::establishUserSession((int) $platform['user_id']);
     }
 
     db()->execute('DELETE FROM registration_pending_otps WHERE email = ?', [$pending['email']]);
@@ -274,10 +280,14 @@ function completeVerifiedRegistration(): array
 
     startSession();
     $_SESSION['website_register_success'] = MSG_REG_SUCCESS;
+    if (function_exists('flagClosingSoonPopupAfterRegistration')) {
+        require_once __DIR__ . '/closing-soon-settings.php';
+        flagClosingSoonPopupAfterRegistration();
+    }
 
     return [
         'success'  => true,
         'message'  => MSG_REG_SUCCESS,
-        'redirect' => absoluteUrl('index.php?registered=1'),
+        'redirect' => absoluteUrl(signupSuccessRedirectPath()),
     ];
 }

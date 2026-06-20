@@ -6,13 +6,13 @@ require_once __DIR__ . '/includes/legal-public.php';
 startSession();
 
 $pageTitle = 'Privacy Policy';
-renderLegalPublicPageStart($pageTitle, 'How CYBEORCH LAB collects, uses, and protects your personal data.');
+renderLegalPublicPageStart($pageTitle, 'How CYBEORCH LABS collects, uses, and protects your personal data.');
 ?>
 
 <header class="page-hero">
   <div class="container">
     <h1>Privacy <span class="accent">Policy</span></h1>
-    <p>How we handle your information when you use CYBEORCH LAB.</p>
+    <p>How we handle your information when you use CYBEORCH LABS.</p>
   </div>
 </header>
 

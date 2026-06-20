@@ -6,13 +6,13 @@ require_once __DIR__ . '/includes/legal-public.php';
 startSession();
 
 $pageTitle = 'Terms of Service';
-renderLegalPublicPageStart($pageTitle, 'Terms of Service for using the CYBEORCH LAB platform.');
+renderLegalPublicPageStart($pageTitle, 'Terms of Service for using the CYBEORCH LABS platform.');
 ?>
 
 <header class="page-hero">
   <div class="container">
     <h1>Terms of <span class="accent">Service</span></h1>
-    <p>Please read these terms before using CYBEORCH LAB.</p>
+    <p>Please read these terms before using CYBEORCH LABS.</p>
   </div>
 </header>
 
@@ -25,7 +25,7 @@ renderLegalPublicPageStart($pageTitle, 'Terms of Service for using the CYBEORCH 
       <p>By creating an account, enrolling in programs, or using this website, you agree to these Terms of Service and our <a href="<?= url('privacy.php') ?>" style="color:var(--cyber-accent)">Privacy Policy</a>.</p>
 
       <h2>2. Services</h2>
-      <p>CYBEORCH LAB provides online cybersecurity education including webinars, bootcamps, learning materials, and related user registration & trainee portal features. Content, schedules, and pricing may change with notice where practical.</p>
+      <p>CYBEORCH LABS provides online cybersecurity education including webinars, bootcamps, learning materials, and related user registration & trainee portal features. Content, schedules, and pricing may change with notice where practical.</p>
 
       <h2>3. Account responsibilities</h2>
       <ul>
@@ -48,7 +48,7 @@ renderLegalPublicPageStart($pageTitle, 'Terms of Service for using the CYBEORCH 
       <p>Educational content is provided for learning purposes. Completion of a program does not guarantee employment or certification from third-party bodies unless explicitly stated.</p>
 
       <h2>8. Limitation of liability</h2>
-      <p>To the fullest extent permitted by law, CYBEORCH LAB is not liable for indirect, incidental, or consequential damages arising from use of the platform. Our total liability for a claim is limited to the amount you paid for the specific program giving rise to the claim.</p>
+      <p>To the fullest extent permitted by law, CYBEORCH LABS is not liable for indirect, incidental, or consequential damages arising from use of the platform. Our total liability for a claim is limited to the amount you paid for the specific program giving rise to the claim.</p>
 
       <h2>9. Termination</h2>
       <p>We may suspend or terminate accounts that violate these terms or pose security risks. You may stop using the service at any time.</p>

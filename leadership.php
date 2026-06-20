@@ -77,12 +77,7 @@ renderStudentHead('Leadership');
 renderStudentSidebar('leadership', $ctx);
 ?>
 <main class="main">
-  <div class="topbar">
-    <div class="page-title"><i class="fas fa-trophy me-2" style="color:var(--cyber-accent)"></i>Leadership</div>
-    <div class="topbar-actions">
-      <a href="<?= url('wallet.php') ?>" class="topbar-link"><i class="fas fa-coins me-1"></i>My Wallet</a>
-    </div>
-  </div>
+  <?php renderPortalTopbar('<i class="fas fa-trophy me-2" style="color:var(--cyber-accent)"></i>Leadership', '<div class="topbar-actions"><a href="' . url('wallet.php') . '" class="topbar-link"><i class="fas fa-coins me-1"></i>My Wallet</a></div>'); ?>
 
   <div class="content">
     <div class="welcome-banner" style="margin-bottom:1.25rem">

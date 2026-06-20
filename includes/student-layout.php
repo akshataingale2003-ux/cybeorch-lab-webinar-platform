@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/referral-helpers.php';
+require_once __DIR__ . '/nxl-wallet.php';
+
 function studentContext(): array
 {
     startSession();
@@ -8,7 +11,13 @@ function studentContext(): array
     $userId = (int) $_SESSION['user_id'];
     $user   = db()->fetchOne('SELECT * FROM users WHERE id = ?', [$userId]);
     $wallet = db()->fetchOne('SELECT * FROM wallet WHERE user_id = ?', [$userId]);
-    $balance = $wallet ? (float) $wallet['balance'] : 0.0;
+    if (function_exists('getWalletSummaryForUser')) {
+        require_once __DIR__ . '/nxl-wallet.php';
+        $summary = getWalletSummaryForUser($userId);
+        $balance = $summary['balance'];
+    } else {
+        $balance = $wallet ? (float) $wallet['balance'] : 0.0;
+    }
     $unreadNotifs = (int) db()->fetchOne('SELECT COUNT(*) as c FROM notifications WHERE user_id = ? AND is_read = 0', [$userId])['c'];
     $initials = strtoupper(substr($user['full_name'], 0, 1));
     if (str_contains($user['full_name'], ' ')) {
@@ -40,6 +49,7 @@ function renderStudentSidebar(string $active, array $ctx): void
         'webinars'      => ['my-webinars.php', 'fa-video', 'Webinars'],
         'bootcamps'     => ['my-bootcamps.php', 'fa-graduation-cap', 'Bootcamps'],
         'registrations' => ['my-registrations.php', 'fa-ticket-alt', 'My Registrations'],
+        'certificates'  => ['my-certificates.php', 'fa-certificate', 'My Certificates'],
         'wallet'        => ['wallet.php', 'fa-coins', 'NxL Wallet'],
         'referral'      => ['referral.php', 'fa-users', 'Refer & Earn'],
         'leadership'    => ['leadership.php', 'fa-trophy', 'Leadership'],
@@ -68,12 +78,16 @@ function renderStudentSidebar(string $active, array $ctx): void
       <?php if ($key === 'notifications' && $unreadNotifs > 0): ?><span class="badge-count"><?= $unreadNotifs ?></span><?php endif; ?>
     </a>
     <?php endforeach; ?>
+    <a href="<?= url('my-courses.php') ?>" class="sidebar-link<?= $active === 'my-courses' ? ' active' : '' ?>">
+      <i class="fas fa-book-open"></i>My Courses
+    </a>
     <a href="<?= url('logout.php') ?>" class="sidebar-link" style="color:#ff8888"><i class="fas fa-sign-out-alt"></i>Logout</a>
   </nav>
   <div class="wallet-widget">
-    <div style="font-size:.75rem;color:var(--cyber-muted)"><i class="fas fa-coins me-1"></i>NxL Balance</div>
-    <div class="wallet-balance"><?= number_format($balance, 0) ?> <span style="font-size:.85rem;font-weight:400;color:var(--cyber-muted)">NxL</span></div>
-    <a href="<?= url('wallet.php') ?>" style="font-size:.78rem;color:var(--cyber-accent);text-decoration:none">View History →</a>
+    <div style="font-size:.75rem;color:var(--cyber-muted)"><i class="fas fa-coins me-1"></i><?= htmlspecialchars(nxlWalletDisplayName()) ?></div>
+    <div class="wallet-balance"><?= formatNxlCredits($balance) ?></div>
+    <div style="font-size:.72rem;color:var(--cyber-muted);margin-top:.2rem">INR: <strong style="color:var(--cyber-green)"><?= formatNxlInrEquivalent($balance) ?></strong></div>
+    <a href="<?= url('wallet.php') ?>" style="font-size:.78rem;color:var(--cyber-accent);text-decoration:none;display:inline-block;margin-top:.35rem">View History →</a>
   </div>
 </aside>
     <?php
@@ -81,7 +95,18 @@ function renderStudentSidebar(string $active, array $ctx): void
 
 function renderStudentLayoutEnd(): void
 {
+    if (function_exists('renderNxlRewardPopups')) {
+        require_once __DIR__ . '/nxl-wallet.php';
+        renderNxlRewardPopups();
+    }
+    if (!function_exists('renderWebinarClosingSoonPopupAssets')) {
+        require_once __DIR__ . '/webinar-closing-soon.php';
+    }
+    renderWebinarClosingSoonPopupAssets();
     renderStudentPortalNavScript();
     renderSiteScripts(false);
+    if (function_exists('renderWebinarClosingSoonPopupBootScript')) {
+        renderWebinarClosingSoonPopupBootScript();
+    }
     echo '</body></html>';
 }

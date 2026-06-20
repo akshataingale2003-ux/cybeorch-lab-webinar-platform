@@ -45,116 +45,84 @@ $experienceLabels = [
 ];
 
 $networkMembers = [];
-$portfolioItems = [];
 try {
     $networkMembers = db()->fetchAll(
         "SELECT full_name, primary_role, experience_level, skills, availability, location,
-                portfolio_url, github_url, linkedin_url, about, status
+                about, status
          FROM freelancer_registrations
          WHERE status IN ('active', 'shortlisted')
          ORDER BY updated_at DESC
          LIMIT 12"
     );
-    foreach ($networkMembers as $m) {
-        if (!empty($m['portfolio_url']) || !empty($m['github_url']) || !empty($m['linkedin_url'])) {
-            $portfolioItems[] = $m;
-        }
-    }
 } catch (Throwable $e) {
     $networkMembers = [];
 }
 
 $featuredNetwork = [
     [
-        'full_name'         => 'Arjun Mehta',
+        'full_name'         => 'Kalpesh Patil',
         'primary_role'      => 'developer',
         'experience_level'  => '3-5',
-        'availability'      => 'project_based',
+        'availability'      => 'full_time',
         'location'          => 'Mumbai, India',
         'skills'            => 'PHP, Laravel, React, REST APIs, MySQL',
         'about'             => 'Full-stack developer focused on secure web platforms and SaaS MVPs for startups and enterprise clients.',
-        'portfolio_url'     => '',
-        'github_url'        => 'https://github.com',
-        'linkedin_url'      => 'https://linkedin.com',
         'featured'          => true,
     ],
     [
-        'full_name'         => 'Priya Sharma',
+        'full_name'         => 'Vaibhav',
         'primary_role'      => 'cybersecurity',
         'experience_level'  => '1-2',
-        'availability'      => 'part_time',
+        'availability'      => 'full_time',
         'location'          => 'Remote',
         'skills'            => 'Penetration Testing, OWASP, VAPT, Network Security',
         'about'             => 'Cybersecurity specialist supporting assessments, hardening, and secure SDLC reviews for client engagements.',
-        'portfolio_url'     => '',
-        'github_url'        => '',
-        'linkedin_url'      => 'https://linkedin.com',
         'featured'          => true,
     ],
     [
-        'full_name'         => 'Rahul Desai',
+        'full_name'         => 'Kalyani',
         'primary_role'      => 'devops',
         'experience_level'  => '5+',
         'availability'      => 'full_time',
         'location'          => 'Pune, India',
         'skills'            => 'AWS, Docker, Kubernetes, CI/CD, Linux',
         'about'             => 'Cloud and DevOps engineer delivering scalable deployment pipelines and production observability.',
-        'portfolio_url'     => '',
-        'github_url'        => 'https://github.com',
-        'linkedin_url'      => '',
         'featured'          => true,
     ],
     [
-        'full_name'         => 'Sneha Iyer',
+        'full_name'         => 'Akshata Ingale',
         'primary_role'      => 'designer',
         'experience_level'  => '3-5',
-        'availability'      => 'project_based',
+        'availability'      => 'full_time',
         'location'          => 'Bangalore, India',
         'skills'            => 'Figma, UI/UX, Design Systems, Prototyping',
         'about'             => 'Product designer crafting intuitive dashboards, mobile flows, and brand-aligned design systems.',
-        'portfolio_url'     => 'https://example.com',
-        'github_url'        => '',
-        'linkedin_url'      => 'https://linkedin.com',
         'featured'          => true,
     ],
     [
-        'full_name'         => 'Vikram Patel',
+        'full_name'         => 'Kanchan',
         'primary_role'      => 'data',
         'experience_level'  => '3-5',
-        'availability'      => 'part_time',
+        'availability'      => 'full_time',
         'location'          => 'Ahmedabad, India',
         'skills'            => 'Python, Machine Learning, SQL, Power BI',
         'about'             => 'Data and AI contributor building analytics pipelines and ML-powered product features.',
-        'portfolio_url'     => '',
-        'github_url'        => 'https://github.com',
-        'linkedin_url'      => 'https://linkedin.com',
         'featured'          => true,
     ],
     [
-        'full_name'         => 'Ananya Reddy',
+        'full_name'         => 'Monali Patil',
         'primary_role'      => 'mobile',
         'experience_level'  => '1-2',
-        'availability'      => 'project_based',
+        'availability'      => 'full_time',
         'location'          => 'Hyderabad, India',
         'skills'            => 'Flutter, React Native, Android, Firebase',
         'about'             => 'Mobile developer shipping cross-platform apps with performance-focused architecture.',
-        'portfolio_url'     => '',
-        'github_url'        => 'https://github.com',
-        'linkedin_url'      => '',
         'featured'          => true,
     ],
 ];
 
 $displayNetwork = !empty($networkMembers) ? $networkMembers : $featuredNetwork;
 $networkIsFeatured = empty($networkMembers);
-
-if (empty($portfolioItems) && $networkIsFeatured) {
-    foreach ($featuredNetwork as $m) {
-        if (!empty($m['portfolio_url']) || !empty($m['github_url']) || !empty($m['linkedin_url'])) {
-            $portfolioItems[] = $m;
-        }
-    }
-}
 
 $skillTags = [
     'Development'   => ['Flutter', 'React', 'Next.js', 'Node.js', 'Python', 'Java', 'Spring Boot', 'Solidity', 'PHP', 'Laravel', 'REST APIs'],
@@ -170,7 +138,7 @@ $skillTags = [
 <meta charset="utf-8">
 <?php renderStandardViewport(); ?>
 <title>Freelancers – CYBEORCH</title>
-<meta name="description" content="Join the CYBEORCH freelancer network. Explore categories, skills, portfolio work, availability, and register for project assignments.">
+<meta name="description" content="Join the CYBEORCH freelancer network. Explore categories, skills, availability, and register for hands-on projects.">
 <?php renderPublicPageHead(); ?>
 <style>
 :root{--cyber-dark:#050b18;--cyber-navy:#0a1628;--cyber-accent:#00d4ff;--cyber-green:#00ff88;--cyber-text:#e0e8f0;--cyber-muted:#7a8fa6;--cyber-border:rgba(0,212,255,0.2);--cyber-orange:#ff6b35;--cyber-card:rgba(10,22,40,0.95);}
@@ -181,10 +149,12 @@ a{text-decoration:none}
 .section-title{font-family:'Rajdhani',sans-serif;font-size:clamp(1.75rem,4vw,2.5rem);font-weight:700;margin-bottom:.5rem}
 .section-title .accent{color:var(--cyber-accent)}
 .section-subtitle{color:var(--cyber-muted);max-width:640px;line-height:1.75}
+.network-register-text{color:#FFFFFF}
 .hero-title{font-family:'Rajdhani',sans-serif;font-size:clamp(2.5rem,6vw,4rem);font-weight:700;line-height:1.1;margin-bottom:1rem}
 .hero-title .accent{color:var(--cyber-accent)}
 .hero-copy{color:var(--cyber-muted);max-width:720px;margin:0 auto;font-size:1.05rem;line-height:1.8}
-.section-pill-nav{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:2rem}
+.section-pill-nav{display:flex;flex-wrap:nowrap;gap:.5rem;justify-content:center;margin-top:2rem;align-items:center;}
+.section-pill-nav a{white-space:nowrap;}
 .section-pill-nav a{display:inline-block;padding:.45rem .9rem;border:1px solid var(--cyber-border);border-radius:999px;color:var(--cyber-muted);font-size:.82rem;font-weight:500;transition:all .2s}
 .section-pill-nav a:hover,.section-pill-nav a:focus{color:var(--cyber-accent);border-color:var(--cyber-accent);background:rgba(0,212,255,.06)}
 .f-card{background:var(--cyber-card);border:1px solid var(--cyber-border);border-radius:1rem;padding:1.75rem;height:100%;transition:border-color .2s,transform .2s,box-shadow .2s}
@@ -202,8 +172,6 @@ a{text-decoration:none}
 .skill-tag{display:inline-block;padding:.35rem .75rem;margin:.25rem;border:1px solid var(--cyber-border);border-radius:999px;font-size:.8rem;color:var(--cyber-text);background:rgba(0,212,255,.05)}
 .exp-tier{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem}
 .exp-tier span{flex:1;min-width:140px;text-align:center;padding:1rem;border:1px solid var(--cyber-border);border-radius:.75rem;background:rgba(0,212,255,.04);font-family:'Rajdhani',sans-serif;font-weight:600}
-.portfolio-link{display:inline-flex;align-items:center;gap:.4rem;color:var(--cyber-accent);font-size:.88rem;margin-right:1rem;margin-top:.5rem}
-.portfolio-link:hover{color:var(--cyber-green)}
 .btn-primary-cyber{display:inline-block;background:var(--cyber-accent);color:#050b18;padding:.85rem 1.75rem;border-radius:8px;font-weight:700;border:none;transition:all .2s}
 .btn-primary-cyber:hover{background:var(--cyber-green);color:#050b18}
 .btn-outline-cyber{display:inline-block;background:transparent;border:1px solid var(--cyber-border);color:var(--cyber-accent);padding:.85rem 1.75rem;border-radius:8px;font-weight:600;margin-left:.75rem;transition:all .2s}
@@ -211,7 +179,7 @@ a{text-decoration:none}
 .empty-note{color:var(--cyber-muted);font-size:.95rem;text-align:center;padding:2rem;border:1px dashed var(--cyber-border);border-radius:1rem}
 .fade-in{opacity:0;transform:translateY(20px);transition:all .6s ease}
 .fade-in.visible{opacity:1;transform:translateY(0)}
-@media(max-width:767px){.section{padding:3rem 0}}
+@media(max-width:767px){.section{padding:3rem 0}.section-pill-nav{flex-wrap:wrap;}}
 </style>
 </head>
 <body>
@@ -221,7 +189,7 @@ a{text-decoration:none}
 <header class="section text-center pb-0">
   <div class="container">
     <h1 class="hero-title"><span class="accent">Freelancer</span> Network</h1>
-    <p class="hero-copy">Connect with CYBEORCH for client projects, product builds, cybersecurity assignments, and startup support. Browse categories, explore the network, and apply to join.</p>
+    <p class="hero-copy">Connect with CYBEORCH for client projects, product builds, cybersecurity hands-on projects, and startup support. Browse categories, explore the network, and apply to join.</p>
     <div class="mt-3">
       <a href="<?= htmlspecialchars($registerUrl) ?>" class="btn-primary-cyber"><i class="fas fa-user-plus me-2"></i>Register as a Freelancer</a>
     </div>
@@ -229,7 +197,6 @@ a{text-decoration:none}
       <a href="#categories">Categories</a>
       <a href="#network">Network</a>
       <a href="#skills">Skills &amp; Experience</a>
-      <a href="#portfolio">Portfolio</a>
       <a href="#availability">Availability</a>
     </nav>
   </div>
@@ -240,7 +207,7 @@ a{text-decoration:none}
   <section class="section pt-4" id="categories">
     <div class="container">
       <h2 class="section-title text-center">Freelancer <span class="accent">Categories</span></h2>
-      <p class="section-subtitle text-center mx-auto mb-5">Choose the discipline that best matches your expertise. We route assignments by role and skill fit.</p>
+      <p class="section-subtitle text-center mx-auto mb-5">Choose the discipline that best matches your expertise. We route hands-on projects by role and skill fit.</p>
       <div class="row g-4">
         <?php foreach ($roleLabels as $key => $label):
             $meta = $categoryMeta[$key] ?? ['icon' => 'fa-user', 'desc' => ''];
@@ -263,14 +230,11 @@ a{text-decoration:none}
       <h2 class="section-title text-center">Freelancer <span class="accent">Network</span></h2>
       <p class="section-subtitle text-center mx-auto mb-4">
         <?php if ($networkIsFeatured): ?>
-        Explore our talent network across development, security, cloud, design, and data. <a href="<?= htmlspecialchars($registerUrl) ?>" style="color:var(--cyber-accent)">Register</a> to join the live roster.
+        Explore our talent network across development, security, cloud, design, and data. <span class="network-register-text">Register</span> to join the live roster.
         <?php else: ?>
         Shortlisted and active contributors in our talent pool.
         <?php endif; ?>
       </p>
-      <?php if ($networkIsFeatured): ?>
-      <p class="text-center mb-4" style="font-size:.82rem;color:var(--cyber-muted)"><i class="fas fa-info-circle me-1" style="color:var(--cyber-orange)"></i>Sample network profiles shown until approved freelancers are added from registrations.</p>
-      <?php endif; ?>
       <div class="row g-4">
         <?php foreach ($displayNetwork as $m):
             $role = $roleLabels[$m['primary_role']] ?? ucfirst((string) $m['primary_role']);
@@ -316,27 +280,11 @@ a{text-decoration:none}
               <?php endforeach; ?>
             </div>
             <?php endif; ?>
-            <p class="mt-3 mb-2" style="font-size:.8rem;color:var(--cyber-green)"><i class="fas fa-clock me-1"></i><?= htmlspecialchars($avail) ?></p>
-            <?php if (!empty($m['github_url']) || !empty($m['linkedin_url']) || !empty($m['portfolio_url'])): ?>
-            <div class="mt-2">
-              <?php if (!empty($m['portfolio_url'])): ?>
-              <a class="portfolio-link" href="<?= htmlspecialchars($m['portfolio_url']) ?>" target="_blank" rel="noopener"><i class="fas fa-globe"></i></a>
-              <?php endif; ?>
-              <?php if (!empty($m['github_url'])): ?>
-              <a class="portfolio-link" href="<?= htmlspecialchars($m['github_url']) ?>" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
-              <?php endif; ?>
-              <?php if (!empty($m['linkedin_url'])): ?>
-              <a class="portfolio-link" href="<?= htmlspecialchars($m['linkedin_url']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i></a>
-              <?php endif; ?>
-            </div>
-            <?php endif; ?>
+            <p class="mt-3 mb-0" style="font-size:.8rem;color:var(--cyber-green)"><i class="fas fa-clock me-1"></i><?= htmlspecialchars($avail) ?></p>
           </div>
         </div>
         <?php endforeach; ?>
       </div>
-      <p class="text-center mt-4 mb-0 fade-in">
-        <a href="<?= htmlspecialchars($registerUrl) ?>" class="btn-primary-cyber"><i class="fas fa-user-plus me-2"></i>Join the Network</a>
-      </p>
     </div>
   </section>
 
@@ -349,7 +297,7 @@ a{text-decoration:none}
         <div class="col-lg-6 fade-in">
           <div class="f-card">
             <h3>What we look for</h3>
-            <p class="mb-3">Clear skill lists, honest experience levels, and examples of real work help us place you on the right assignments faster.</p>
+            <p class="mb-3">Clear skill lists, honest experience levels, and examples of real work help us place you on the right hands-on projects faster.</p>
             <div class="exp-tier">
               <?php foreach ($experienceLabels as $code => $label): ?>
               <span><?= htmlspecialchars($label) ?></span>
@@ -368,58 +316,6 @@ a{text-decoration:none}
             <?php endforeach; ?>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Portfolio Showcase -->
-  <section class="section" id="portfolio" style="background:rgba(10,22,40,.5)">
-    <div class="container">
-      <h2 class="section-title text-center">Portfolio <span class="accent">Showcase</span></h2>
-      <p class="section-subtitle text-center mx-auto mb-5">Approved freelancers with portfolio, GitHub, or LinkedIn links. Add yours when you register.</p>
-      <div class="row g-4">
-        <?php if (empty($portfolioItems)): ?>
-        <div class="col-md-4 fade-in">
-          <div class="f-card text-center">
-            <div class="icon-wrap mx-auto"><i class="fas fa-globe"></i></div>
-            <h4>Portfolio site</h4>
-            <p>Share your best case studies and project screenshots.</p>
-          </div>
-        </div>
-        <div class="col-md-4 fade-in">
-          <div class="f-card text-center">
-            <div class="icon-wrap mx-auto"><i class="fab fa-github"></i></div>
-            <h4>GitHub</h4>
-            <p>Open-source repos and code samples demonstrate capability.</p>
-          </div>
-        </div>
-        <div class="col-md-4 fade-in">
-          <div class="f-card text-center">
-            <div class="icon-wrap mx-auto"><i class="fab fa-linkedin"></i></div>
-            <h4>LinkedIn</h4>
-            <p>Professional history and endorsements from peers and clients.</p>
-          </div>
-        </div>
-        <?php else: foreach (array_slice($portfolioItems, 0, 6) as $p):
-            $role = $roleLabels[$p['primary_role']] ?? $p['primary_role'];
-        ?>
-        <div class="col-md-6 col-lg-4 fade-in">
-          <div class="f-card">
-            <span class="f-badge"><?= htmlspecialchars($role) ?></span>
-            <h4><?= htmlspecialchars($p['full_name']) ?></h4>
-            <p class="mb-2"><?= htmlspecialchars(mb_strimwidth($p['about'] ?? 'Contributor profile', 0, 100, '…')) ?></p>
-            <?php if (!empty($p['portfolio_url'])): ?>
-            <a class="portfolio-link" href="<?= htmlspecialchars($p['portfolio_url']) ?>" target="_blank" rel="noopener"><i class="fas fa-globe"></i> Portfolio</a>
-            <?php endif; ?>
-            <?php if (!empty($p['github_url'])): ?>
-            <a class="portfolio-link" href="<?= htmlspecialchars($p['github_url']) ?>" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
-            <?php endif; ?>
-            <?php if (!empty($p['linkedin_url'])): ?>
-            <a class="portfolio-link" href="<?= htmlspecialchars($p['linkedin_url']) ?>" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>
-            <?php endif; ?>
-          </div>
-        </div>
-        <?php endforeach; endif; ?>
       </div>
     </div>
   </section>

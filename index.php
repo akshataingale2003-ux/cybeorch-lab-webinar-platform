@@ -1,13 +1,20 @@
-﻿<?php
+<?php
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/public-footer.php';
 require_once __DIR__ . '/includes/website-registration.php';
+require_once __DIR__ . '/includes/site-contact.php';
+require_once __DIR__ . '/includes/public-catalog.php';
+require_once __DIR__ . '/includes/webinar-register-helpers.php';
+require_once __DIR__ . '/includes/training-public.php';
+require_once __DIR__ . '/includes/auth-registration-popup.php';
+require_once __DIR__ . '/includes/projects-public.php';
 
 startSession();
 
-$showRegistrationPopup = !hasWebsiteAccess();
+$refCode = sanitize($_GET['ref'] ?? '');
+$showRegistrationPopup = isPublicAuthEnabled() && !hasWebsiteAccess();
 $websiteRegError       = '';
 $websiteRegSuccess     = '';
 if (!empty($_SESSION['website_register_error'])) {
@@ -20,18 +27,9 @@ if (!empty($_GET['registered']) || !empty($_SESSION['website_register_success'])
     $showRegistrationPopup = false;
 }
 
-$webinars = dbTry(
-    fn () => db()->fetchAll(
-        "SELECT * FROM webinars WHERE status IN ('upcoming','live') ORDER BY scheduled_at ASC LIMIT 6"
-    ),
-    []
-);
-$bootcamps = dbTry(
-    fn () => db()->fetchAll(
-        "SELECT * FROM bootcamps WHERE status = 'open' ORDER BY start_date ASC LIMIT 4"
-    ),
-    []
-);
+// IMPORTANT: Webinar seat counts must always be computed from webinar_registrations rows (no caching).
+$upcomingWebinars = publicFetchUpcomingWebinars();
+$homepageProjects = publicFetchHomepageProjects(3);
 
 $interestPrefillName = $interestPrefillEmail = $interestPrefillPhone = '';
 if (isLoggedIn()) {
@@ -74,10 +72,15 @@ $workWithPartners = [
 <head>
 <meta charset="UTF-8">
 <?php renderStandardViewport(); ?>
-<title>CYBEORCH LAB &ndash; Cybersecurity Education &amp; Training</title>
-<meta name="description" content="Learn cybersecurity, ethical hacking, and web security through live webinars and intensive bootcamps. Join CYBEORCH LAB today.">
+<title>CYBEORCH LABS & Software Development Company</title>
+<meta name="description" content="Learn cybersecurity, ethical hacking, and web security through live webinars and intensive bootcamps. Join CYBEORCH LABS today.">
 <?php renderPublicPageHead(); ?>
 <link rel="stylesheet" href="<?= url('assets/style.css') ?>">
+<?php if ($showRegistrationPopup) {
+    renderAuthRegistrationPopupStyles();
+} else {
+    renderPublicAuthRegistrationAssets(false);
+} ?>
 <style>
 :root {
   --cyber-dark: #050b18;
@@ -89,6 +92,8 @@ $workWithPartners = [
   --cyber-red: #ff5f57;
   --cyber-light-blue: #7dd3fc;
   --cyber-orange: #ff6b35;
+  --cyber-gold: #ffc107;
+  --cyber-gold-dark: #b8860b;
   --cyber-text: #e0e8f0;
   --cyber-muted: #7a8fa6;
   --cyber-card: rgba(15,52,96,0.4);
@@ -138,14 +143,13 @@ body::before {
   position: relative;
   line-height: 0;
   background: var(--cyber-navy);
+  overflow: visible;
 }
 .hero-terminal .hero-img {
   width: 100%;
   max-width: 100%;
   height: auto;
   display: block;
-  object-fit: contain;
-  object-position: center top;
   vertical-align: middle;
 }
 .hero-intro {
@@ -291,6 +295,14 @@ h3.hero-subtitle,
   text-decoration: none;
   transition: all 0.3s;
   display: inline-block;
+  cursor: pointer;
+  font-family: inherit;
+}
+button.btn-primary-cyber {
+  width: auto;
+}
+button.btn-primary-cyber.w-100 {
+  width: 100%;
 }
 .btn-primary-cyber:hover {
   background: var(--cyber-green);
@@ -396,6 +408,63 @@ h3.hero-subtitle,
   border-radius: 2px;
 }
 
+/* CYBEORCH LABS + Services banner spacing */
+.section-cybeorch-lab {
+  padding: 2.5rem 0 2rem;
+  background: var(--cyber-dark);
+  position: relative;
+  z-index: 1;
+}
+.section-cybeorch-services {
+  padding: 0 0 2.75rem;
+  background: var(--cyber-dark);
+  position: relative;
+  z-index: 1;
+}
+.cybeorch-services-card {
+  background: #000;
+  border: 1px solid rgba(0, 212, 255, 0.28);
+  border-radius: 18px;
+  padding: 1rem 1.15rem;
+  margin: 0 auto;
+  max-width: 100%;
+  box-shadow:
+    0 0 0 1px rgba(0, 212, 255, 0.06),
+    0 12px 42px rgba(0, 212, 255, 0.14),
+    0 8px 32px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.cybeorch-services-card:hover {
+  border-color: rgba(0, 212, 255, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(0, 212, 255, 0.1),
+    0 16px 48px rgba(0, 212, 255, 0.2),
+    0 10px 36px rgba(0, 0, 0, 0.6);
+}
+.cybeorch-services-img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+#webinars.section {
+  padding-top: 2.5rem;
+}
+@media (max-width: 991.98px) {
+  .section-cybeorch-lab { padding: 2rem 0 1.5rem; }
+  .section-cybeorch-services { padding-bottom: 2.25rem; }
+  .cybeorch-services-card { border-radius: 16px; padding: 0.85rem; }
+}
+@media (max-width: 575.98px) {
+  .section-cybeorch-lab { padding: 1.5rem 0 1.25rem; }
+  .section-cybeorch-services { padding-bottom: 1.75rem; }
+  .cybeorch-services-card { border-radius: 15px; padding: 0.65rem; }
+  .cybeorch-services-img { border-radius: 10px; }
+}
+
 /* â”€â”€ WEBINAR CARDS â”€â”€ */
 .webinar-card {
   background: var(--cyber-card);
@@ -404,9 +473,33 @@ h3.hero-subtitle,
   padding: 1.5rem;
   transition: all 0.3s;
   height: 100%;
+  width: 100%;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
+.webinar-card-body { flex: 1 1 auto; min-height: 0; }
+.webinar-card-footer {
+  margin-top: auto;
+  flex-shrink: 0;
+  padding-top: 0.75rem;
+}
+.webinar-paid-compact {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--cyber-gold-dark);
+  margin: 0 0 0.75rem;
+  letter-spacing: 0.02em;
+}
+.webinar-card-footer .webinar-fee-notice--free {
+  min-height: 2.25rem;
+  margin: 0 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.webinar-card-footer .btn-primary-cyber { display: block; width: 100%; }
 .webinar-card::before {
   content: '';
   position: absolute;
@@ -418,17 +511,23 @@ h3.hero-subtitle,
 }
 .webinar-card:hover { border-color: var(--cyber-accent); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,212,255,0.15); }
 .webinar-card:hover::before { opacity: 1; }
-.webinar-badge {
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+.webinar-thumb-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0,212,255,0.22);
+  background: rgba(10,22,40,0.7);
+  margin-bottom: 1rem;
+  padding: .75rem;
 }
-.badge-free { background: rgba(0,255,136,0.15); color: var(--cyber-green); border: 1px solid rgba(0,255,136,0.3); }
-.badge-paid { background: rgba(255,107,53,0.15); color: var(--cyber-orange); border: 1px solid rgba(255,107,53,0.3); }
-.badge-live { background: rgba(255,0,0,0.2); color: #ff4444; border: 1px solid rgba(255,0,0,0.3); }
+.webinar-thumb {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 10px;
+}
 .webinar-meta { color: var(--cyber-muted); font-size: 0.85rem; margin: 0.75rem 0; display: flex; gap: 1rem; flex-wrap: wrap; }
 .webinar-meta span { display: flex; align-items: center; gap: 0.3rem; }
 .webinar-title { font-family: 'Rajdhani', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--cyber-text); margin-bottom: 0.5rem; }
@@ -450,67 +549,6 @@ h3.hero-subtitle,
   overflow: hidden;
 }
 .seats-fill { height: 100%; background: linear-gradient(90deg, var(--cyber-accent), var(--cyber-green)); border-radius: 2px; }
-
-/* â”€â”€ BOOTCAMP CARDS â”€â”€ */
-.bootcamp-card {
-  background: var(--cyber-card);
-  border: 1px solid var(--cyber-border);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s;
-}
-.bootcamp-card:hover { border-color: var(--cyber-green); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,255,136,0.12); }
-.bootcamp-header {
-  background: linear-gradient(135deg, var(--cyber-blue), rgba(0,212,255,0.2));
-  padding: 2rem;
-  position: relative;
-}
-.bootcamp-price {
-  position: absolute;
-  top: 1rem; right: 1rem;
-  text-align: right;
-}
-.price-original { font-size: 0.85rem; color: var(--cyber-muted); text-decoration: line-through; }
-.price-current { font-family: 'Rajdhani', sans-serif; font-size: 1.8rem; font-weight: 700; color: var(--cyber-green); }
-.bootcamp-body { padding: 1.5rem; }
-.feature-list { list-style: none; margin: 1rem 0; }
-.feature-list li { padding: 0.35rem 0; font-size: 0.88rem; color: var(--cyber-muted); display: flex; align-items: flex-start; gap: 0.55rem; }
-.feature-list li i, .feature-list li .fa { flex-shrink: 0; margin-top: 0.12rem; width: 1.15em; text-align: center; color: var(--cyber-accent); }
-.feature-list li .fa-coins { color: var(--cyber-green); }
-
-/* â”€â”€ PRICING â”€â”€ */
-.pricing-card {
-  background: var(--cyber-card);
-  border: 1px solid var(--cyber-border);
-  border-radius: 12px;
-  padding: 2rem;
-  text-align: center;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-.pricing-card.featured {
-  border-color: var(--cyber-accent);
-  background: rgba(0,212,255,0.05);
-}
-.pricing-card.featured::before {
-  content: 'MOST POPULAR';
-  position: absolute;
-  top: 0; left: 50%; transform: translateX(-50%);
-  background: var(--cyber-accent);
-  color: var(--cyber-dark);
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.2rem 1.5rem;
-  border-radius: 0 0 8px 8px;
-  letter-spacing: 1px;
-}
-.pricing-name { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem; }
-.pricing-price { font-family: 'Rajdhani', sans-serif; font-size: 3rem; font-weight: 700; color: var(--cyber-accent); }
-.pricing-period { font-size: 0.85rem; color: var(--cyber-muted); }
-.pricing-features { list-style: none; margin: 1.5rem 0; text-align: left; }
-.pricing-features li { padding: 0.4rem 0; font-size: 0.9rem; color: var(--cyber-muted); display: flex; align-items: center; gap: 0.5rem; }
-.pricing-features li i { color: var(--cyber-green); width: 16px; }
 
 /* â”€â”€ TECH STACK SLIDER â”€â”€ */
 .tech-slider {
@@ -635,18 +673,6 @@ h3.hero-subtitle,
 }
 .form-control::placeholder { color: var(--cyber-muted) !important; }
 .form-label { color: var(--cyber-muted); font-size: 0.88rem; margin-bottom: 0.4rem; }
-.form-select {
-  background: rgba(255,255,255,0.05) !important;
-  border: 1px solid var(--cyber-border) !important;
-  color: var(--cyber-text) !important;
-  border-radius: 6px !important;
-  padding: 0.75rem 1rem !important;
-}
-.form-select option { background: #0a1628; color: var(--cyber-text); }
-.form-select:focus {
-  border-color: var(--cyber-accent) !important;
-  box-shadow: 0 0 0 3px rgba(0,212,255,0.1) !important;
-}
 
 /* â”€â”€ ALERTS â”€â”€ */
 .alert { padding: 1rem 1.5rem; border-radius: 6px; margin: 1rem 0; font-size: 0.9rem; }
@@ -719,7 +745,7 @@ h3.hero-subtitle,
 .fade-in.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
-<body class="<?= $showRegistrationPopup ? 'cybeorch-registration-locked' : '' ?>">
+<body class="<?= $showRegistrationPopup ? 'auth-reg-locked cybeorch-registration-locked' : '' ?>">
 
 <?php $navActive = 'home'; require __DIR__ . '/includes/public-navbar.php'; ?>
 
@@ -730,9 +756,11 @@ h3.hero-subtitle,
       <div class="col-lg-12">
         <div class="hero-terminal">
           <img
-            src="<?= url('assets/images/Blue_home_white.png') ?>"
-            alt="CYBEORCH LAB"
+            src="<?= htmlspecialchars(urlVersioned('assets/images/Blue_home_white.png'), ENT_QUOTES, 'UTF-8') ?>"
+            alt="CYBEORCH LABS"
             class="hero-img"
+            width="1536"
+            height="1024"
             decoding="async"
             fetchpriority="high"
           >
@@ -743,12 +771,9 @@ h3.hero-subtitle,
 </section>
 <!-- HERO SECTION END -->
 
-
-<!-- WEBINARS -->
-<section class="section" id="webinars">
+<!-- CYBEORCH LABS -->
+<section class="section section-cybeorch-lab" id="cybeorch-lab">
   <div class="container">
-    <div class="text-center mb-5">
-      
     <div class="hero-content hero-intro-wrap text-center">
       <div class="hero-intro-card fade-in">
         <div class="hero-page-title mt-2">
@@ -765,174 +790,86 @@ h3.hero-subtitle,
         </h1>
 
         <div class="hero-buttons">
-          <a href="<?= url('assignments.php') ?>" class="btn-primary-cyber"><i class="fas fa-briefcase me-2"></i>Assignments</a>
+          <a href="<?= url('hands-on-projects.php') ?>" class="btn-primary-cyber"><i class="fas fa-briefcase me-2"></i>Hands-on Projects</a>
           <a href="<?= url('enquire-enroll.php') ?>" class="btn-outline-cyber"><i class="fas fa-graduation-cap me-2"></i>Register for a Bootcamp</a>
           <a href="<?= url('register-freelancer.php') ?>" class="btn-outline-cyber"><i class="fas fa-user-tie me-2"></i>Register as a Freelancer</a>
         </div>
       </div>
     </div>
-    <br><br>
+  </div>
+</section>
+
+<?php
+if ($homepageProjects['live'] !== []) {
+    renderHomepageProjectSection(
+        'live-projects',
+        'Live',
+        'Projects',
+        'Collaborate on real-world builds across AI, blockchain, fintech, and security.',
+        $homepageProjects['live'],
+        url('live-projects.php'),
+        'live'
+    );
+}
+if ($homepageProjects['hands_on'] !== []) {
+    renderHomepageProjectSection(
+        'hands-on-projects',
+        'Hands-On',
+        'Projects',
+        'Internships and practical roles for students and early-career professionals.',
+        $homepageProjects['hands_on'],
+        url('hands-on-projects.php'),
+        'hands-on'
+    );
+}
+if ($homepageProjects['freelance'] !== []) {
+    renderHomepageProjectSection(
+        'freelancer-projects',
+        'Freelancer',
+        'Projects',
+        'Scoped engagements for registered CYBEORCH freelancers.',
+        $homepageProjects['freelance'],
+        url('freelance-projects.php'),
+        'freelance'
+    );
+}
+?>
+
+<!-- CYBEORCH SERVICES BANNER -->
+<section class="section section-cybeorch-services" id="cybeorch-services" aria-labelledby="cybeorch-services-title">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title mt-3" id="cybeorch-services-title">Our <span class="accent">Services</span></h2>
+      <div class="divider mx-auto"></div>
+      <p class="section-subtitle">Empowering businesses with cutting-edge technology solutions and digital transformation services</p>
+    </div>
+    <div class="cybeorch-services-card fade-in">
+      <img
+        src="<?= htmlspecialchars(str_replace(' ', '%20', urlVersioned('assets/images/Cybeorch Services.png')), ENT_QUOTES, 'UTF-8') ?>"
+        alt="CYBEORCH Services — Secure, Build, Innovate, Transform"
+        class="cybeorch-services-img"
+        width="1920"
+        height="960"
+        loading="lazy"
+        decoding="async"
+      >
+    </div>
+  </div>
+</section>
+
+<!-- UPCOMING WEBINARS -->
+<section class="section" id="webinars">
+  <div class="container">
+    <div class="text-center mb-5">
       <h2 class="section-title mt-3">Upcoming <span class="accent">Webinars</span></h2>
       <div class="divider mx-auto"></div>
-      <p class="section-subtitle">Expert-led live sessions on the latest cybersecurity topics</p>
+      <p class="section-subtitle">Register early for scheduled sessions on cybersecurity and emerging tech</p>
     </div>
-    <div class="row g-4">
-      <?php foreach ($webinars as $w): ?>
-      <div class="col-md-6 col-lg-4 fade-in">
-        <div class="webinar-card">
-          <div class="d-flex justify-content-between align-items-start mb-2">
-            <span class="webinar-badge <?= $w['is_free'] ? 'badge-free' : 'badge-paid' ?>">
-              <?= $w['is_free'] ? 'FREE' : formatRupee((float) $w['fee']) ?>
-            </span>
-            <?php if ($w['status'] === 'live'): ?>
-            <span class="webinar-badge badge-live"><i class="fas fa-circle me-1" style="font-size:0.6rem"></i>LIVE</span>
-            <?php endif; ?>
-          </div>
-          <h3 class="webinar-title"><?= htmlspecialchars($w['title']) ?></h3>
-          <p class="webinar-desc"><?= htmlspecialchars($w['short_desc']) ?></p>
-          <div class="webinar-meta">
-            <span><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><?= date('d M Y', strtotime($w['scheduled_at'])) ?></span>
-            <span><i class="fa-solid fa-clock me-1" aria-hidden="true"></i><?= date('h:i A', strtotime($w['scheduled_at'])) ?></span>
-            <span><i class="fa-solid fa-hourglass-half me-1" aria-hidden="true"></i><?= (int) $w['duration_mins'] ?> min</span>
-          </div>
-          <?php if ($w['instructor']): ?>
-          <div class="webinar-instructor">
-            <div class="instructor-avatar"><?= strtoupper(substr($w['instructor'], 0, 1)) ?></div>
-            <span class="instructor-name"><?= htmlspecialchars($w['instructor']) ?></span>
-          </div>
-          <?php endif; ?>
-          <?php
-            $fillPct = $w['max_seats'] > 0 ? min(100, ($w['registered_seats'] / $w['max_seats']) * 100) : 0;
-          ?>
-          <div class="d-flex justify-content-between align-items-center mb-1" style="font-size:0.8rem; color:var(--cyber-muted)">
-            <span><?= $w['registered_seats'] ?> registered</span>
-            <span><?= $w['max_seats'] - $w['registered_seats'] ?> seats left</span>
-          </div>
-          <div class="seats-bar"><div class="seats-fill" style="width:<?= $fillPct ?>%"></div></div>
-          <div class="mt-3">
-            <a href="<?= url('webinar.php?slug=' . urlencode($w['slug'])) ?>" class="btn-primary-cyber w-100 text-center" style="font-size:0.9rem; padding:0.65rem">
-              <?= $w['is_free'] ? '<i class="fas fa-bolt me-1"></i>Register Free' : '<i class="fas fa-ticket me-1"></i>Register Now' ?>
-            </a>
-          </div>
-        </div>
-      </div>
-      <?php endforeach; ?>
-      <?php if (empty($webinars)): ?>
-      <div class="col-12 text-center" style="color:var(--cyber-muted); padding:3rem">
-        <i class="fas fa-calendar-xmark" style="font-size:3rem; opacity:0.3"></i>
-        <p class="mt-2">No upcoming webinars. Check back soon!</p>
-      </div>
-      <?php endif; ?>
-    </div>
-    <div class="text-center mt-4">
-      <a href="<?= url('webinars.php') ?>" class="btn-outline-cyber">View All Webinars <i class="fas fa-arrow-right ms-2"></i></a>
-    </div>
-  </div>
-</section>
-
-<!-- BOOTCAMPS -->
-<section class="section" id="bootcamps" style="background:rgba(10,22,40,0.5)">
-  <div class="container">
-    <div class="text-center mb-5">
-      
-      <h2 class="section-title mt-3">Cybersecurity <span class="accent">Bootcamps</span></h2>
-      <div class="divider mx-auto"></div>
-      <p class="section-subtitle">Hands-on intensive training programs with certificate of completion</p>
-    </div>
-    <div class="row g-4">
-      <?php foreach ($bootcamps as $b): ?>
-      <div class="col-md-6 fade-in">
-        <div class="bootcamp-card">
-          <div class="bootcamp-header">
-            <div class="bootcamp-price">
-              <div class="price-original">₹<?= number_format($b['original_fee']) ?></div>
-              <div class="price-current">₹<?= number_format($b['discounted_fee']) ?></div>
-            </div>
-            <span class="webinar-badge badge-free mb-2"><?= htmlspecialchars($b['category']) ?></span>
-            <h3 style="font-family:'Rajdhani',sans-serif; font-size:1.4rem; font-weight:600; color:#fff; margin-top:0.5rem"><?= htmlspecialchars($b['title']) ?></h3>
-            <div style="color:rgba(255,255,255,0.6); font-size:0.85rem; margin-top:0.5rem">
-              <i class="far fa-calendar me-1"></i><?= date('d M', strtotime($b['start_date'])) ?> “ <?= date('d M Y', strtotime($b['end_date'])) ?>
-              <span class="ms-3"><i class="fas fa-clock me-1"></i><?= $b['duration_weeks'] ?> Weeks</span>
-            </div>
-          </div>
-          <div class="bootcamp-body">
-            <p style="color:var(--cyber-muted); font-size:0.88rem; margin-bottom:1rem"><?= htmlspecialchars($b['short_desc']) ?></p>
-            <ul class="feature-list">
-              <li><i class="fa-solid fa-flask" aria-hidden="true"></i> Hands-on lab exercises &amp; CTF challenges</li>
-              <li><i class="fa-solid fa-user-tie" aria-hidden="true"></i> Industry expert mentorship</li>
-              <?php if ($b['certificate']): ?><li><i class="fa-solid fa-certificate" aria-hidden="true"></i> Certificate of completion</li><?php endif; ?>
-              <li><i class="fa-solid fa-users" aria-hidden="true"></i> <?= (int) ($b['total_seats'] - $b['enrolled_seats']) ?> seats remaining</li>
-              <li><i class="fa-solid fa-coins" aria-hidden="true"></i> Earn <?= (int) NXL_BOOTCAMP_REWARD ?> NxL tokens on enrollment</li>
-            </ul>
-            <a href="<?= url('bootcamp.php?slug=' . urlencode($b['slug'])) ?>" class="btn-primary-cyber w-100 text-center" style="font-size:0.9rem">
-              <i class="fas fa-rocket me-2"></i>Enroll Now ₹<?= number_format($b['discounted_fee']) ?>
-            </a>
-          </div>
-        </div>
-      </div>
-      <?php endforeach; ?>
-    </div>
-  </div>
-</section>
-
-<!-- PRICING -->
-<section class="section" id="pricing">
-  <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="section-title">Simple <span class="accent">Pricing</span></h2>
-      <div class="divider mx-auto"></div>
-      <p class="section-subtitle">Choose the plan that suits your learning journey</p>
-    </div>
-    <div class="row g-4 justify-content-center">
-      <div class="col-md-4">
-        <div class="pricing-card">
-          <div class="pricing-name">Starter</div>
-          <div class="pricing-price">Free</div>
-          <div class="pricing-period">Forever free</div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i>Access to free webinars</li>
-            <li><i class="fas fa-check"></i>NxL wallet & tokens</li>
-            <li><i class="fas fa-check"></i>Community access</li>
-            <li><i class="fas fa-check"></i>Referral rewards</li>
-            <li style="opacity:0.4"><i class="fas fa-times"></i>Paid webinars</li>
-            <li style="opacity:0.4"><i class="fas fa-times"></i>Bootcamp access</li>
-          </ul>
-          <a href="<?= url('enquire-enroll.php') ?>" class="btn-outline-cyber w-100 text-center">Get Started</a>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="pricing-card featured">
-          <div class="pricing-name" style="margin-top:1rem">Pro Learner</div>
-          <div class="pricing-price">₹999</div>
-          <div class="pricing-period">per month</div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i>Unlimited webinar access</li>
-            <li><i class="fas fa-check"></i>50% off bootcamps</li>
-            <li><i class="fas fa-check"></i>Priority NxL rewards</li>
-            <li><i class="fas fa-check"></i>Certificate of completion</li>
-            <li><i class="fas fa-check"></i>1:1 mentorship sessions</li>
-            <li><i class="fas fa-check"></i>Career support</li>
-          </ul>
-          <a href="<?= url('enquire-enroll.php?plan=pro-trial') ?>" class="btn-primary-cyber w-100 text-center">Start Pro Trial</a>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="pricing-card">
-          <div class="pricing-name">Enterprise</div>
-          <div class="pricing-price">Custom</div>
-          <div class="pricing-period">For teams & institutes</div>
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i>Team dashboards</li>
-            <li><i class="fas fa-check"></i>Bulk enrollments</li>
-            <li><i class="fas fa-check"></i>Custom training modules</li>
-            <li><i class="fas fa-check"></i>Dedicated support</li>
-            <li><i class="fas fa-check"></i>White-label options</li>
-            <li><i class="fas fa-check"></i>API access</li>
-          </ul>
-          <a href="<?= url('contact.php') ?>" class="btn-outline-cyber w-100 text-center">Contact Us</a>
-        </div>
-      </div>
-    </div>
+    <?php if ($upcomingWebinars === []): ?>
+    <p class="text-center" style="color:var(--cyber-muted)">No upcoming webinars scheduled right now.</p>
+    <?php else: ?>
+    <?php renderPublicWebinarCardGrid($upcomingWebinars); ?>
+    <?php endif; ?>
   </div>
 </section>
 
@@ -1023,22 +960,10 @@ h3.hero-subtitle,
     <div class="row g-5 align-items-center">
       <div class="col-lg-5">
         <h2 class="section-title">Get In <span class="accent">Touch</span></h2>
-        <div class="divider"></div>
         <p style="color:var(--cyber-muted); line-height:1.8">Have questions about our programs? Want to collaborate? We're here to help you navigate your cybersecurity career path.</p>
         <div class="mt-4">
-          <div class="d-flex align-items-center gap-3 mb-3">
-            <div style="width:40px;height:40px;background:rgba(0,212,255,0.1);border:1px solid var(--cyber-border);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-              <i class="fas fa-envelope" style="color:var(--cyber-accent)"></i>
-            </div>
-            <div><div style="font-size:0.8rem;color:var(--cyber-muted)">Email</div><div style="font-size:0.9rem">info@CYBEORCH.com</div></div>
-          </div>
-          <div class="d-flex align-items-center gap-3 mb-3">
-            <div style="width:40px;height:40px;background:rgba(0,212,255,0.1);border:1px solid var(--cyber-border);border-radius:8px;display:flex;align-items:center;justify-content:center;">
-              <i class="fab fa-whatsapp" style="color:var(--cyber-green)"></i>
-            </div>
-            <div><div style="font-size:0.8rem;color:var(--cyber-muted)">WhatsApp</div><div style="font-size:0.9rem">+91 97640 96069</div></div>
-          </div>
-          <div class="d-flex align-items-center gap-3 mb-3">
+          <?php renderContactActionStyles(); renderContactActionGrid(); ?>
+          <div class="d-flex align-items-center gap-3 mb-3 mt-3">
             <div style="width:40px;height:40px;background:rgba(0,212,255,0.1);border:1px solid var(--cyber-border);border-radius:8px;display:flex;align-items:center;justify-content:center;">
               <i class="fab fa-x-twitter" style="color:var(--cyber-text)"></i>
             </div>
@@ -1095,97 +1020,26 @@ h3.hero-subtitle,
 </section>
 
 <?php if ($showRegistrationPopup): ?>
-<!-- Mandatory registration popup — POST only, cannot close without registering -->
-<div class="cybeorch-reg-overlay" id="cybeorchRegOverlay" role="dialog" aria-modal="true" aria-labelledby="cybeorchRegTitle">
-  <div class="cybeorch-reg-card">
-    <div class="cybeorch-reg-brand">
-      <h2 id="cybeorchRegTitle">WELCOME TO <span class="accent">CYBEORCH</span></h2>
-    </div>
-    <p class="cybeorch-reg-tagline">Registration is required to access this website. Complete the form below to continue.</p>
-
-    <?php if ($websiteRegError !== ''): ?>
-    <div class="cybeorch-reg-alert cybeorch-reg-alert-error" role="alert">
-      <i class="fas fa-exclamation-circle"></i><span><?= htmlspecialchars($websiteRegError) ?></span>
-    </div>
-    <?php endif; ?>
-
-    <?php if (!empty($_GET['register_required'])): ?>
-    <div class="cybeorch-reg-alert cybeorch-reg-alert-info" role="status">
-      <i class="fas fa-lock"></i><span>Please register to unlock webinars, programs, and your dashboard.</span>
-    </div>
-    <?php endif; ?>
-
-    <div id="cybeorchRegAjaxAlert" class="cybeorch-reg-alert cybeorch-reg-alert-info" role="status" hidden></div>
-
-    <div class="cybeorch-reg-scroll">
-    <form id="cybeorchRegForm" novalidate
-      data-send-url="<?= htmlspecialchars(url('send_otp.php')) ?>"
-      data-verify-url="<?= htmlspecialchars(url('verify_otp.php')) ?>"
-      data-register-url="<?= htmlspecialchars(url('register-website.php')) ?>"
-      data-success-url="<?= htmlspecialchars(url('index.php?registered=1')) ?>">
-      <input type="hidden" name="csrf_token" value="<?= generateCSRF() ?>">
-      <input type="text" name="company_url" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
-
-      <div class="cybeorch-reg-field">
-        <label for="regFullName">Full Name *</label>
-        <input type="text" name="full_name" id="regFullName" placeholder="Your full name" required minlength="2" maxlength="255" autocomplete="name" value="<?= htmlspecialchars($interestPrefillName) ?>">
-      </div>
-
-      <div class="cybeorch-reg-field">
-        <label for="regMobile">Contact Number *</label>
-        <input type="tel" name="mobile" id="regMobile" placeholder="10-digit mobile number" required minlength="8" maxlength="20" autocomplete="tel" value="<?= htmlspecialchars($interestPrefillPhone) ?>">
-      </div>
-
-      <div class="cybeorch-reg-field">
-        <label for="regEmail">Email Address *</label>
-        <div class="cybeorch-reg-email-row">
-          <input type="email" name="email" id="regEmail" placeholder="you@email.com" required maxlength="255" autocomplete="email" value="<?= htmlspecialchars($interestPrefillEmail) ?>">
-          <button type="button" class="cybeorch-reg-btn-secondary" id="cybeorchBtnSendOtp">
-            <span class="cybeorch-reg-spinner" aria-hidden="true"></span>
-            <span>Send OTP</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="cybeorch-reg-field cybeorch-reg-otp-block">
-        <label for="regOtp">OTP <span class="cybeorch-reg-otp-hint">(Email Verification) *</span></label>
-        <div class="cybeorch-reg-otp-row">
-          <input type="text" name="otp" id="regOtp" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="6-digit OTP" autocomplete="one-time-code" aria-required="true">
-          <button type="button" class="cybeorch-reg-btn-secondary" id="cybeorchBtnVerifyOtp">
-            <span class="cybeorch-reg-spinner" aria-hidden="true"></span>
-            <span>Verify</span>
-          </button>
-        </div>
-        <p class="cybeorch-reg-timer" id="cybeorchOtpTimer" aria-live="polite"></p>
-        <div class="cybeorch-reg-otp-actions">
-          <button type="button" class="cybeorch-reg-btn-secondary" id="cybeorchBtnResendOtp" disabled>Resend OTP</button>
-        </div>
-      </div>
-
-      <div id="registerAfterOtp" class="register-after-otp">
-        <div class="cybeorch-reg-field">
-          <label for="password">Password *</label>
-          <input type="password" name="password" id="password" placeholder="Min 8 chars, 1 uppercase, 1 number" required autocomplete="new-password" disabled>
-        </div>
-
-        <div class="cybeorch-reg-field">
-          <label for="confirm_pass">Confirm Password *</label>
-          <input type="password" name="confirm_password" id="confirm_pass" placeholder="Repeat password" required autocomplete="new-password" disabled>
-        </div>
-
-        <button type="submit" class="cybeorch-reg-submit" id="cybeorchRegSubmit" disabled aria-disabled="true">
-          <span class="cybeorch-reg-spinner" aria-hidden="true"></span>
-          <span><i class="fas fa-user-plus"></i> Sign Up</span>
-        </button>
-      </div>
-    </form>
-    <div class="cybeorch-reg-footer">
-      <p class="cybeorch-reg-footer-note">By registering you agree to our <a href="<?= url('terms.php') ?>" target="_blank" rel="noopener">Terms</a> and <a href="<?= url('privacy.php') ?>" target="_blank" rel="noopener">Privacy Policy</a>.</p>
-      <p class="cybeorch-reg-footer-note">Already have an account? <a href="<?= url('login.php') ?>">Sign in</a></p>
-    </div>
-    </div>
-  </div>
-</div>
+<?php $GLOBALS['cybeorch_skip_public_reg_assets'] = true; ?>
+<?php
+renderAuthRegistrationPopup(buildAuthRegistrationPopupConfig([
+    'mandatory'              => true,
+    'csrf_token'             => generateCSRF(),
+    'success_url'            => authRegistrationSuccessUrl(),
+    'ref_code'               => $refCode,
+    'prefill_name'           => $interestPrefillName,
+    'prefill_email'          => $interestPrefillEmail,
+    'prefill_phone'          => $interestPrefillPhone,
+    'login_action'           => url('login.php'),
+    'login_redirect'         => 'index.php',
+    'website_error'          => $websiteRegError,
+    'show_register_required' => !empty($_GET['register_required']),
+    'banner_tagline'         => '',
+]));
+?>
+<?php
+renderAuthRegistrationPopupScripts(false);
+?>
 <?php elseif ($websiteRegSuccess !== ''): ?>
 <div class="alert alert-success container mt-3" style="position:relative;z-index:10" role="status">
   <i class="fas fa-check-circle me-2"></i><?= htmlspecialchars($websiteRegSuccess) ?>
@@ -1206,5 +1060,11 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 <?php if ($showRegistrationPopup): ?>
 <script src="<?= url('assets/js/registration-otp.js') ?>"></script>
 <?php endif; ?>
+<?php
+if (!empty($_SESSION['user_id'])) {
+    require_once __DIR__ . '/includes/nxl-wallet.php';
+    renderNxlRewardPopups();
+}
+?>
 </body>
 </html>

@@ -1,13 +1,21 @@
 <?php
 declare(strict_types=1);
 /**
- * Copy to config.local.php (gitignored) for local SMTP without .env.
- * setup-smtp.php auto-syncs these values into .env on localhost.
+ * Legacy fallback when .env is not present.
+ * Preferred: copy .env.example → .env at the project root.
+ *
+ * setup-smtp.php can sync SMTP values into .env on your local machine.
  */
+define('DB_HOST', 'localhost');
+define('DB_PORT', 3306);
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'cybeorch_db');
+
 define('SMTP_HOST', 'smtp.stackmail.com');
 define('SMTP_PORT', 465);
 define('SMTP_SECURE', 'ssl');
-define('SMTP_USER', 'info@cybeorch.com');
-define('SMTP_PASS', 'Nexus@369');
-define('SMTP_FROM_EMAIL', 'info@cybeorch.com');
-define('SMTP_FROM_NAME', 'CYBEORCH LAB');
+define('SMTP_USER', 'info@xyz.com');
+define('SMTP_PASS', 'your_password');
+define('SMTP_FROM_EMAIL', 'info@xyz.com');
+define('SMTP_FROM_NAME', 'CYBEORCH LABS');

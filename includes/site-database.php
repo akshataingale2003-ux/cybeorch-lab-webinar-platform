@@ -5,6 +5,11 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/contact-messages.php';
 require_once __DIR__ . '/admin-schema.php';
 require_once __DIR__ . '/training-catalog.php';
+require_once __DIR__ . '/catalog-content.php';
+require_once __DIR__ . '/admin-actions.php';
+require_once __DIR__ . '/demo-requests.php';
+require_once __DIR__ . '/collaboration-inquiries.php';
+require_once __DIR__ . '/form-submissions.php';
 
 /**
  * Ensure all runtime tables used by the public site and admin exist.
@@ -17,10 +22,68 @@ function ensureSiteDatabaseSchemas(): void
         ensureWebsiteUsersSchema();
     }
     ensureFreelancerRegistrationsSchema();
+    ensureAttendanceSchema();
+    if (function_exists('ensureAdminActionsSchema')) {
+        require_once __DIR__ . '/admin-actions.php';
+        ensureAdminActionsSchema();
+    }
+    ensureDemoRequestsSchema();
+    ensureCollaborationInquiriesSchema();
+    ensureFormSubmissionsSchema();
     ensureTrainingCatalog();
+    ensureCatalogContentSchemas();
+    ensureAdminActionsSchema();
+    if (function_exists('ensureWebinarRegistrationIntakeSchema')) {
+        require_once __DIR__ . '/webinar-registration-service.php';
+        ensureWebinarRegistrationIntakeSchema();
+    }
     if (function_exists('ensureSupportTicketSchema')) {
         require_once __DIR__ . '/support-tickets.php';
         ensureSupportTicketSchema();
+    }
+    if (function_exists('ensureNxlWalletSchema')) {
+        require_once __DIR__ . '/nxl-wallet.php';
+        ensureNxlWalletSchema();
+    }
+    if (function_exists('ensureWebinarClosingSoonSchema')) {
+        require_once __DIR__ . '/webinar-closing-soon.php';
+        ensureWebinarClosingSoonSchema();
+    }
+    if (function_exists('ensureClosingSoonSettingsSchema')) {
+        require_once __DIR__ . '/closing-soon-settings.php';
+        ensureClosingSoonSettingsSchema();
+    }
+    if (function_exists('ensureCompanyContentSchema')) {
+        require_once __DIR__ . '/company-content.php';
+        ensureCompanyContentSchema();
+    }
+    if (function_exists('ensureWebinarTextEncoding')) {
+        require_once __DIR__ . '/webinar-admin.php';
+        ensureWebinarTextEncoding();
+    }
+    if (function_exists('ensureBootcampTextEncoding')) {
+        require_once __DIR__ . '/program-pricing.php';
+        ensureBootcampTextEncoding();
+    }
+    if (function_exists('ensurePasswordResetSchema')) {
+        require_once __DIR__ . '/password-reset.php';
+        ensurePasswordResetSchema();
+    }
+    if (function_exists('ensureRecordedSessionsSchema')) {
+        require_once __DIR__ . '/recorded-sessions.php';
+        ensureRecordedSessionsSchema();
+    }
+    if (function_exists('ensureChatbotSchema')) {
+        require_once __DIR__ . '/chatbot.php';
+        ensureChatbotSchema();
+    }
+    if (function_exists('ensureCertificatesSchema')) {
+        require_once __DIR__ . '/certificate-system.php';
+        ensureCertificatesSchema();
+    }
+    if (function_exists('ensureInvoiceAmcSchema')) {
+        require_once __DIR__ . '/invoice-amc.php';
+        ensureInvoiceAmcSchema();
     }
 }
 
@@ -64,15 +127,28 @@ function getSiteTableStats(): array
         ['label' => 'User Registrations & Trainees (users)', 'table' => 'users', 'admin_page' => 'admin/students.php'],
         ['label' => 'Webinars', 'table' => 'webinars', 'admin_page' => 'admin/webinars.php'],
         ['label' => 'Bootcamps', 'table' => 'bootcamps', 'admin_page' => 'admin/bootcamps.php'],
+        ['label' => 'Recorded sessions', 'table' => 'recorded_sessions', 'admin_page' => 'admin/recorded-sessions.php'],
+        ['label' => 'Live projects', 'table' => 'live_projects', 'admin_page' => 'admin/live-projects.php'],
+        ['label' => 'Hands-on Projects', 'table' => 'assignments', 'admin_page' => 'admin/assignments.php'],
+        ['label' => 'Freelance projects', 'table' => 'freelance_projects', 'admin_page' => 'admin/freelance-projects.php'],
         ['label' => 'Webinar registrations', 'table' => 'webinar_registrations', 'admin_page' => 'admin/registrations.php'],
         ['label' => 'Bootcamp enrollments', 'table' => 'bootcamp_enrollments', 'admin_page' => 'admin/registrations.php'],
         ['label' => 'Payments', 'table' => 'payments', 'admin_page' => 'admin/payments.php'],
+        ['label' => 'Invoice clients', 'table' => 'clients', 'admin_page' => 'admin/invoices.php'],
+        ['label' => 'Invoices', 'table' => 'invoices', 'admin_page' => 'admin/invoices.php'],
+        ['label' => 'AMC contracts', 'table' => 'amc_contracts', 'admin_page' => 'admin/amc.php'],
         ['label' => 'NxL wallets', 'table' => 'wallet', 'admin_page' => 'admin/wallet.php'],
         ['label' => 'Referrals', 'table' => 'referrals', 'admin_page' => 'admin/referrals.php'],
+        ['label' => 'Form submission log', 'table' => 'form_submissions', 'admin_page' => 'admin/form-submissions.php'],
         ['label' => 'Form messages', 'table' => 'contact_messages', 'admin_page' => 'admin/messages.php'],
+        ['label' => 'Product demo requests', 'table' => 'demo_requests', 'admin_page' => 'admin/demo-requests.php'],
+        ['label' => 'Collaboration inquiries', 'table' => 'collaboration_inquiries', 'admin_page' => 'admin/collaboration-inquiries.php'],
+        ['label' => 'Website popup registrations', 'table' => 'website_users', 'admin_page' => 'admin/website-registrations.php'],
         ['label' => 'Freelancer applications', 'table' => 'freelancer_registrations', 'admin_page' => 'admin/freelancers.php'],
         ['label' => 'Support tickets', 'table' => 'support_tickets', 'admin_page' => 'admin/tickets.php'],
         ['label' => 'Attendance', 'table' => 'attendance', 'admin_page' => 'admin/attendance.php'],
+        ['label' => 'Chatbot Q&A', 'table' => 'chatbot_data', 'admin_page' => 'admin/manage_qa.php'],
+        ['label' => 'Chat history', 'table' => 'chat_history', 'admin_page' => 'admin/chat_history.php'],
     ];
 
     $stats = [];
@@ -98,54 +174,14 @@ function getSiteTableStats(): array
  */
 function getPublicFormAdminLinks(): array
 {
-    return [
-        [
-            'form'         => 'Contact us',
-            'page'         => 'contact.php',
-            'subject'      => 'Contact',
-            'admin_filter' => 'Contact',
-        ],
-        [
-            'form'         => 'Free bootcamps & webinars',
-            'page'         => 'enquire-enroll.php',
-            'subject'      => 'Free Bootcamps & Webinars Registration',
-            'admin_filter' => 'Free enrollment',
-        ],
-        [
-            'form'         => 'Pro Learner trial',
-            'page'         => 'enquire-enroll.php?plan=pro-trial',
-            'subject'      => 'Pro Learner Trial Registration',
-            'admin_filter' => 'Pro Learner trial',
-        ],
-        [
-            'form'         => 'Assignment applications',
-            'page'         => 'assignment-register.php',
-            'subject'      => 'Assignment Registration',
-            'admin_filter' => 'Assignment applications',
-        ],
-        [
-            'form'         => 'Start your project',
-            'page'         => 'start-project.php',
-            'subject'      => 'Start Your Project',
-            'admin_filter' => 'Start Your Project',
-        ],
-        [
-            'form'         => 'Book consulting',
-            'page'         => 'book-consulting.php',
-            'subject'      => 'Book Consulting',
-            'admin_filter' => 'Book Consulting',
-        ],
-        [
-            'form'         => 'User Registration & Trainee signup',
-            'page'         => 'index.php',
-            'subject'      => 'users table',
-            'admin_filter' => 'admin/students.php',
-        ],
-        [
-            'form'         => 'Freelancer signup',
-            'page'         => 'register-freelancer.php',
-            'subject'      => 'freelancer_registrations',
-            'admin_filter' => 'admin/freelancers.php',
-        ],
-    ];
+    $links = [];
+    foreach (getFormSubmissionRegistry() as $row) {
+        $links[] = [
+            'form'         => $row['form'],
+            'page'         => $row['page'],
+            'subject'      => $row['table'],
+            'admin_filter' => $row['admin'],
+        ];
+    }
+    return $links;
 }

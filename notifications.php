@@ -13,7 +13,7 @@ renderStudentHead('Notifications');
 renderStudentSidebar('notifications', $ctx);
 ?>
 <main class="main">
-  <div class="topbar"><div class="page-title"><i class="fas fa-bell me-2" style="color:var(--cyber-orange)"></i>Notifications</div></div>
+  <?php renderPortalTopbar('<i class="fas fa-bell me-2" style="color:var(--cyber-orange)"></i>Notifications'); ?>
   <div class="content">
     <?php if (empty($notifications)): ?>
     <div class="card-panel" style="color:var(--cyber-muted)">No notifications yet.</div>

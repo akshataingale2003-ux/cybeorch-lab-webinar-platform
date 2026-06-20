@@ -19,16 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCSRF($_POST['csrf_token'] ?? '')) {
         $error = 'Invalid request. Please try again.';
     } else {
-        $userId = $loggedIn ? (int) $_SESSION['user_id'] : null;
-        $result = Auth::registerFreelancer($_POST, $userId);
-        if ($result['success']) {
-            if (!$loggedIn && !empty($_POST['email']) && !empty($_POST['password'])) {
-                Auth::login($_POST['email'], $_POST['password']);
+        require_once __DIR__ . '/includes/resume-upload.php';
+        $resumeResult = validateAndStoreResumeUpload($_FILES['resume'] ?? []);
+        if (!$resumeResult['ok']) {
+            $error = $resumeResult['error'];
+        } else {
+            $userId = $loggedIn ? (int) $_SESSION['user_id'] : null;
+            $postData = $_POST;
+            $postData['resume_path'] = $resumeResult['path'];
+            $postData['resume_original_name'] = $resumeResult['original_name'];
+            $result = Auth::registerFreelancer($postData, $userId);
+            if ($result['success']) {
+                if (!$loggedIn && !empty($_POST['email']) && !empty($_POST['password'])) {
+                    Auth::login($_POST['email'], $_POST['password']);
+                }
+                header('Location: ' . url('freelancer-register-success.php'));
+                exit;
             }
-            header('Location: ' . url('freelancer-register-success.php'));
-            exit;
+            $error = $result['message'];
         }
-        $error = $result['message'];
     }
 }
 
@@ -42,6 +51,14 @@ $roleLabels = [
     'mobile'         => 'Mobile Developer',
     'other'          => 'Other',
 ];
+
+require_once __DIR__ . '/includes/admin-schema.php';
+$appliedRoles = [];
+if ($loggedIn && $currentUser) {
+    $appliedRoles = getFreelancerAppliedRoles((int) $currentUser['id']);
+} elseif (!empty($_POST['email'])) {
+    $appliedRoles = getFreelancerAppliedRoles(null, (string) $_POST['email']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,10 +83,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .auth-title{font-family:'Rajdhani',sans-serif;font-size:1.6rem;font-weight:700;text-align:center;margin-bottom:0.25rem;}
 .auth-subtitle{color:var(--cyber-muted);font-size:0.88rem;text-align:center;margin-bottom:1.5rem;line-height:1.6;}
 .form-label{color:var(--cyber-muted);font-size:0.85rem;margin-bottom:0.4rem;}
-.form-control,.form-select{background:rgba(255,255,255,0.05)!important;border:1px solid var(--cyber-border)!important;color:var(--cyber-text)!important;border-radius:8px!important;padding:0.75rem 1rem!important;}
+.form-control{background:rgba(255,255,255,0.05)!important;border:1px solid var(--cyber-border)!important;color:var(--cyber-text)!important;border-radius:8px!important;padding:0.75rem 1rem!important;}
 .form-control:focus,.form-select:focus{border-color:var(--cyber-accent)!important;box-shadow:0 0 0 3px rgba(0,212,255,0.1)!important;outline:none!important;}
 .form-control::placeholder{color:var(--cyber-muted)!important;}
-.form-select option{background:var(--cyber-navy);color:var(--cyber-text);}
 .input-group .form-control{border-radius:8px 0 0 8px!important;}
 .input-group .btn{background:rgba(255,255,255,0.05);border:1px solid var(--cyber-border);border-left:none;color:var(--cyber-muted);border-radius:0 8px 8px 0;}
 .input-group .btn:hover{color:var(--cyber-accent);}
@@ -86,6 +102,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .section-heading{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;color:var(--cyber-accent);margin:1.25rem 0 0.75rem;padding-bottom:0.35rem;border-bottom:1px solid var(--cyber-border);}
 textarea.form-control{min-height:90px;resize:vertical;}
 </style>
+<?php renderFormSelectStyles(); ?>
 </head>
 <body>
 <div class="auth-container">
@@ -94,7 +111,7 @@ textarea.form-control{min-height:90px;resize:vertical;}
   </a>
   <div class="auth-card">
     <h1 class="auth-title">Register as a Freelancer</h1>
-    <p class="auth-subtitle">Join CYBEORCH for client projects, product development, and remote collaboration on software, cybersecurity, and AI assignments.</p>
+    <p class="auth-subtitle">Join CYBEORCH for client projects, product development, and remote collaboration on software, cybersecurity, and AI hands-on projects.</p>
 
     <div class="info-badge">
       <i class="fas fa-briefcase mt-1"></i>
@@ -105,10 +122,24 @@ textarea.form-control{min-height:90px;resize:vertical;}
     <div class="logged-badge"><i class="fas fa-check-circle me-2"></i>Logged in as <strong><?= htmlspecialchars($currentUser['full_name']) ?></strong> (<?= htmlspecialchars($currentUser['email']) ?>)</div>
     <?php endif; ?>
 
+    <?php if ($appliedRoles): ?>
+    <div class="info-badge">
+      <i class="fas fa-layer-group mt-1"></i>
+      <span>You have already applied for:
+        <strong><?= htmlspecialchars(implode(', ', array_map(static fn ($r) => $roleLabels[$r] ?? ucfirst($r), $appliedRoles))) ?></strong>.
+        You may submit a new application for a different role below.
+      </span>
+    </div>
+    <?php endif; ?>
+
     <?php if ($error): ?><div class="alert alert-error"><i class="fas fa-exclamation-circle"></i><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
       <input type="hidden" name="csrf_token" value="<?= generateCSRF() ?>">
+      <?php if ($loggedIn && $currentUser): ?>
+      <input type="hidden" name="full_name" value="<?= htmlspecialchars($currentUser['full_name']) ?>">
+      <input type="hidden" name="email" value="<?= htmlspecialchars($currentUser['email']) ?>">
+      <?php endif; ?>
 
       <div class="section-heading"><i class="fas fa-user me-2"></i>Personal Details</div>
 
@@ -149,10 +180,11 @@ textarea.form-control{min-height:90px;resize:vertical;}
       <div class="row g-3">
         <div class="col-md-6">
           <label class="form-label">Primary Role *</label>
-          <select name="primary_role" class="form-select" required>
+          <select name="primary_role" id="primaryRole" class="form-select" required>
             <option value="">Select role</option>
             <?php foreach ($roleLabels as $val => $label): ?>
-            <option value="<?= $val ?>" <?= ($_POST['primary_role'] ?? '') === $val ? 'selected' : '' ?>><?= htmlspecialchars($label) ?></option>
+            <?php $alreadyApplied = in_array($val, $appliedRoles, true); ?>
+            <option value="<?= $val ?>" <?= ($_POST['primary_role'] ?? '') === $val ? 'selected' : '' ?> <?= $alreadyApplied ? 'disabled' : '' ?>><?= htmlspecialchars($label) ?><?= $alreadyApplied ? ' (already applied)' : '' ?></option>
             <?php endforeach; ?>
           </select>
         </div>
@@ -184,7 +216,13 @@ textarea.form-control{min-height:90px;resize:vertical;}
 
       <div class="mb-3">
         <label class="form-label">About You *</label>
-        <textarea name="about" class="form-control" placeholder="Brief introduction, past projects, and what kind of assignments you are looking for..." required><?= htmlspecialchars($_POST['about'] ?? '') ?></textarea>
+        <textarea name="about" class="form-control" placeholder="Brief introduction, past projects, and what kind of hands-on projects you are looking for..." required><?= htmlspecialchars($_POST['about'] ?? '') ?></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Resume / CV *</label>
+        <input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required>
+        <p style="font-size:0.8rem;color:var(--cyber-muted);margin-top:0.35rem;line-height:1.45">Attach your Resume or CV in PDF, DOC, or DOCX format (max <?= (int) (MAX_UPLOAD_SIZE / 1024 / 1024) ?>MB).</p>
       </div>
 
       <div class="section-heading"><i class="fas fa-link me-2"></i>Portfolio Links <span style="color:var(--cyber-muted);font-weight:400;font-size:0.8rem">(optional)</span></div>
@@ -243,7 +281,7 @@ textarea.form-control{min-height:90px;resize:vertical;}
   <div class="auth-footer">
     <?php if ($loggedIn): ?>
     <a href="<?= url('dashboard.php') ?>">Back to Dashboard</a>
-    <?php else: ?>
+    <?php elseif (isPublicAuthEnabled()): ?>
     Already have an account? <a href="<?= url('login.php') ?>">Sign in here</a>
     <?php endif; ?>
   </div>
@@ -262,6 +300,14 @@ document.querySelector('form')?.addEventListener('submit', function(e) {
   if (pass && confirm && pass.value !== confirm.value) {
     e.preventDefault();
     alert('Passwords do not match!');
+    return;
+  }
+
+  const appliedRoles = <?= json_encode(array_values($appliedRoles), JSON_UNESCAPED_UNICODE) ?>;
+  const roleSelect = document.getElementById('primaryRole');
+  if (roleSelect && appliedRoles.indexOf(roleSelect.value) !== -1) {
+    e.preventDefault();
+    alert('You have already applied for this freelancer role.');
   }
 });
 </script>

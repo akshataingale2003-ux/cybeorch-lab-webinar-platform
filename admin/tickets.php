@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/includes/auth_check.php';
 require_once __DIR__ . '/../includes/admin-init.php';
 require_once __DIR__ . '/../includes/support-tickets.php';
 requireAdminLogin();
@@ -40,7 +41,7 @@ echo showFlash();
             <td><?= htmlspecialchars($t['team_name'] ?? '—') ?></td>
             <td style="font-size:0.8rem;color:var(--cyber-muted)"><?= date('d M Y H:i', strtotime($t['updated_at'])) ?></td>
             <td>
-              <a href="<?= url('admin/ticket-view.php?id=' . (int) $t['id']) ?>" class="btn-sm-link">Manage</a>
+              <a href="<?= adminUrl('ticket-view.php?id=' . (int) $t['id']) ?>" class="btn-sm-link">Manage</a>
               <?php renderAdminRecordActions('support_ticket', (int) $t['id'], $blocked); ?>
             </td>
           </tr>

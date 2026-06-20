@@ -3,18 +3,42 @@ require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/payment.php';
+require_once __DIR__ . '/includes/public-catalog.php';
+require_once __DIR__ . '/includes/webinar-registration-service.php';
+require_once __DIR__ . '/includes/webinar-register-helpers.php';
+require_once __DIR__ . '/includes/program-pricing.php';
 
 startSession();
-requireLogin();
-
-$userId = $_SESSION['user_id'];
-$user   = db()->fetchOne('SELECT * FROM users WHERE id = ?', [$userId]);
 
 $type = $_GET['type'] ?? '';
 $id   = (int) ($_GET['id'] ?? 0);
 
+if ($type === 'webinar' && $id > 0) {
+    $earlyWebinar = publicFetchWebinarById($id);
+    if ($earlyWebinar && !empty($earlyWebinar['is_free'])) {
+        header('Location: ' . webinarRegistrationRegisterFreeUrl($id));
+        exit;
+    }
+}
+
+requireLogin();
+
+if (!isLoggedIn()) {
+    setFlash('info', 'Please use the enquiry form to register interest. Online checkout requires an account when sign-in is enabled.');
+    header('Location: ' . url(isPublicAuthEnabled() ? 'login.php' : 'enquire-enroll.php'));
+    exit;
+}
+
+$userId = (int) $_SESSION['user_id'];
+$user   = db()->fetchOne('SELECT * FROM users WHERE id = ?', [$userId]);
+
 if (!in_array($type, ['webinar', 'bootcamp'], true) || $id < 1) {
     header('Location: ' . url(''));
+    exit;
+}
+
+if ($type === 'bootcamp' && $_SERVER['REQUEST_METHOD'] === 'GET' && empty($_GET['proceed'])) {
+    header('Location: ' . url('secure-payment.php?type=bootcamp&id=' . $id));
     exit;
 }
 
@@ -22,32 +46,27 @@ $item = null;
 $fee  = 0;
 $isFreeWebinar = false;
 $alreadyRegistered = false;
+$paymentCurrency = 'INR';
 
 if ($type === 'webinar') {
-    $item = db()->fetchOne(
-        "SELECT * FROM webinars WHERE id = ? AND status IN ('upcoming','live')",
-        [$id]
-    );
+    $item = publicFetchWebinarById($id);
     if (!$item) {
         header('Location: ' . url('webinars.php'));
         exit;
     }
-    $fee = (float) $item['fee'];
     $isFreeWebinar = !empty($item['is_free']);
-    if ($isFreeWebinar) {
-        $fee = 0.0;
-    }
-    $alreadyRegistered = (bool) db()->fetchOne(
-        'SELECT id FROM webinar_registrations WHERE user_id = ? AND webinar_id = ?',
-        [$userId, $id]
-    );
+    $paymentCurrency = webinarNormalizeCurrency($_GET['currency'] ?? $_POST['payment_currency'] ?? 'INR');
+    $fee = webinarCheckoutFee($item, $paymentCurrency);
+    $alreadyRegistered = userHasActiveWebinarRegistration($userId, $id);
 } else {
-    $item = db()->fetchOne("SELECT * FROM bootcamps WHERE id = ? AND status='open'", [$id]);
+    $item = publicFetchBootcampById($id);
     if (!$item) {
         header('Location: ' . url('bootcamps.php'));
         exit;
     }
-    $fee = (float) $item['discounted_fee'];
+    $item = bootcampRowWithProgramDefaults($item);
+    $paymentCurrency = webinarNormalizeCurrency($_GET['currency'] ?? $_POST['payment_currency'] ?? 'INR');
+    $fee = bootcampCheckoutFee($item, $paymentCurrency);
     $alreadyRegistered = (bool) db()->fetchOne(
         'SELECT id FROM bootcamp_enrollments WHERE user_id = ? AND bootcamp_id = ?',
         [$userId, $id]
@@ -59,7 +78,7 @@ $useWallet     = false;
 $walletApplied = 0;
 $finalFee      = $fee;
 
-if (isset($_POST['use_wallet'])) {
+if (isset($_POST['use_wallet']) && $paymentCurrency === 'INR') {
     $walletApplied = min($walletBalance, $fee);
     $finalFee      = max(0, $fee - $walletApplied);
     $useWallet     = true;
@@ -80,17 +99,27 @@ if (
         redirectToRegistrationSuccess('webinar', $id);
     } else {
         $regNo = generateRegNo('CYB-W');
-        db()->execute(
+        $regId = db()->insert(
             "INSERT INTO webinar_registrations (user_id, webinar_id, registration_no, payment_status) VALUES (?,?,?,'free')",
             [$userId, $id, $regNo]
         );
-        db()->execute('UPDATE webinars SET registered_seats = registered_seats + 1 WHERE id = ?', [$id]);
+        // Seats booked must be derived from webinar_registrations (no caching).
         sendNotification(
             $userId,
             'registration',
             'You are registered!',
             "You have successfully registered for: {$item['title']}"
         );
+        require_once __DIR__ . '/includes/form-submissions.php';
+        recordWebinarRegistrationForm($regId, [
+            'full_name'       => $user['full_name'] ?? '',
+            'email'           => $user['email'] ?? '',
+            'phone'           => $user['phone'] ?? '',
+            'title'           => $item['title'],
+            'registration_no' => $regNo,
+            'payment_status'  => 'free',
+            'webinar_id'      => $id,
+        ]);
         redirectToRegistrationSuccess('webinar', $id);
     }
 }
@@ -99,33 +128,93 @@ $skipOrderCreate = $_SERVER['REQUEST_METHOD'] === 'POST'
     && (isset($_POST['confirm_free']) || isset($_POST['confirm_wallet']));
 
 if ($finalFee > 0 && !$skipOrderCreate) {
+    $orderCurrency = ($type === 'webinar' || bootcampShowsDualCurrency($item)) ? $paymentCurrency : 'INR';
     $orderData = Payment::createOrder($userId, $finalFee, $type, $id, [
         'student_name'  => $user['full_name'],
         'student_email' => $user['email'],
         'item'          => $item['title'],
-    ]);
+    ], $orderCurrency, $useWallet ? (float) $walletApplied : 0, (float) $fee);
     if (!$orderData['success']) {
         $error = $orderData['message'];
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_wallet'])) {
-    debitWallet($userId, $walletApplied, 'redemption', $id, "Paid for: {$item['title']}");
-    $regNo = generateRegNo($type === 'webinar' ? 'CYB-W' : 'CYB-B');
-    if ($type === 'webinar') {
-        db()->execute(
-            "INSERT IGNORE INTO webinar_registrations (user_id, webinar_id, registration_no, payment_status) VALUES (?,?,?,'paid')",
-            [$userId, $id, $regNo]
-        );
-        db()->execute('UPDATE webinars SET registered_seats = registered_seats + 1 WHERE id = ?', [$id]);
+    require_once __DIR__ . '/includes/nxl-wallet.php';
+    $debit = debitNxlForPayment($userId, (float) $walletApplied, $type, $id, (string) $item['title']);
+    if (!$debit['success']) {
+        $error = $debit['message'];
     } else {
-        db()->execute(
-            "INSERT IGNORE INTO bootcamp_enrollments (user_id, bootcamp_id, enrollment_no, payment_status) VALUES (?,?,?,'paid')",
-            [$userId, $id, $regNo]
+        $regNo = generateRegNo($type === 'webinar' ? 'CYB-W' : 'CYB-B');
+        $payRecord = Payment::recordWalletPayment(
+            $userId,
+            $type,
+            $id,
+            (float) $fee,
+            (float) $walletApplied,
+            (int) ($debit['transaction_id'] ?? 0),
+            $regNo
         );
-        db()->execute('UPDATE bootcamps SET enrolled_seats = enrolled_seats + 1 WHERE id = ?', [$id]);
-        creditWallet($userId, NXL_BOOTCAMP_REWARD, 'bootcamp_reward', $id, 'Bootcamp enrollment NxL reward!');
+        $paymentId = (int) ($payRecord['payment_id'] ?? 0);
+        require_once __DIR__ . '/includes/form-submissions.php';
+        if ($type === 'webinar') {
+            $regId = db()->insert(
+                "INSERT IGNORE INTO webinar_registrations (user_id, webinar_id, registration_no, payment_id, payment_status) VALUES (?,?,?,?,'paid')",
+                [$userId, $id, $regNo, $paymentId ?: null]
+            );
+            if ($regId < 1) {
+                $row = fetchActiveWebinarRegistrationByUser($userId, $id);
+                $regId = (int) ($row['id'] ?? 0);
+                if ($regId > 0 && $paymentId > 0) {
+                    db()->execute('UPDATE webinar_registrations SET payment_id = ? WHERE id = ?', [$paymentId, $regId]);
+                }
+            }
+            if ($regId > 0) {
+                recordWebinarRegistrationForm($regId, [
+                    'full_name'       => $user['full_name'] ?? '',
+                    'email'           => $user['email'] ?? '',
+                    'phone'           => $user['phone'] ?? '',
+                    'title'           => $item['title'],
+                    'registration_no' => $regNo,
+                    'payment_status'  => 'paid',
+                    'webinar_id'      => $id,
+                    'payment_method'  => 'nxl_wallet',
+                    'nxl_tokens_used' => (int) round($walletApplied),
+                ]);
+            }
+        } else {
+            $enrollId = db()->insert(
+                "INSERT IGNORE INTO bootcamp_enrollments (user_id, bootcamp_id, enrollment_no, payment_id, payment_status) VALUES (?,?,?,?,'paid')",
+                [$userId, $id, $regNo, $paymentId ?: null]
+            );
+            if ($enrollId < 1) {
+                $row = db()->fetchOne('SELECT id FROM bootcamp_enrollments WHERE user_id = ? AND bootcamp_id = ?', [$userId, $id]);
+                $enrollId = (int) ($row['id'] ?? 0);
+                if ($enrollId > 0 && $paymentId > 0) {
+                    db()->execute('UPDATE bootcamp_enrollments SET payment_id = ? WHERE id = ?', [$paymentId, $enrollId]);
+                }
+            }
+            db()->execute('UPDATE bootcamps SET enrolled_seats = enrolled_seats + 1 WHERE id = ?', [$id]);
+            creditWallet($userId, NXL_BOOTCAMP_REWARD, 'bootcamp_reward', $id, 'Bootcamp enrollment NxL reward!');
+            if ($enrollId > 0) {
+                recordBootcampRegistrationForm($enrollId, [
+                    'full_name'     => $user['full_name'] ?? '',
+                    'email'         => $user['email'] ?? '',
+                    'phone'         => $user['phone'] ?? '',
+                    'title'         => $item['title'],
+                    'enrollment_no' => $regNo,
+                    'payment_status'=> 'paid',
+                    'bootcamp_id'   => $id,
+                    'payment_method'=> 'nxl_wallet',
+                    'nxl_tokens_used' => (int) round($walletApplied),
+                ]);
+            }
+        }
+        sendNotification($userId, 'payment', 'Payment Successful ✓', "Paid via NxL wallet for: {$item['title']}");
+        if ($paymentId > 0) {
+            header('Location: ' . url('payment-success.php?type=' . urlencode($type) . '&pid=' . $paymentId));
+            exit;
+        }
+        redirectToRegistrationSuccess($type, $id);
     }
-    sendNotification($userId, 'payment', 'Payment Successful ✓', "Paid via NxL wallet for: {$item['title']}");
-    redirectToRegistrationSuccess($type, $id);
 }
 ?>
 <!DOCTYPE html>
@@ -133,7 +222,7 @@ if ($finalFee > 0 && !$skipOrderCreate) {
 <head>
 <meta charset="UTF-8">
 <?php renderStandardViewport(); ?>
-<title>Checkout – CYBEORCH LAB</title>
+<title>Checkout – CYBEORCH LABS</title>
 <?php renderAuthPageHead(); ?>
 <style>
 :root{--cyber-dark:#050b18;--cyber-navy:#0a1628;--cyber-accent:#00d4ff;--cyber-green:#00ff88;--cyber-orange:#ff6b35;--cyber-muted:#7a8fa6;--cyber-text:#e0e8f0;--cyber-border:rgba(0,212,255,0.2);--cyber-card:rgba(15,52,96,0.35);}
@@ -162,6 +251,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .alert-success{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:var(--cyber-green);}
 .alert-error{background:rgba(255,68,68,0.1);border:1px solid rgba(255,68,68,0.3);color:#ff6666;}
 .wallet-use{background:rgba(0,212,255,0.06);border:1px solid var(--cyber-border);border-radius:8px;padding:1rem;margin-bottom:1rem;}
+.webinar-fee-notice{font-size:.9rem;line-height:1.5;color:var(--cyber-text);}
+.webinar-fee-notice strong{color:#fff;font-weight:700;}
+<?= webinarCurrencySelectorStylesCss() ?>
 </style>
 </head>
 <body>
@@ -193,8 +285,24 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <div class="alert-box alert-error"><i class="fas fa-exclamation-circle"></i><?= htmlspecialchars($error === 'Invalid request. Please try again.' ? $error : paymentUserMessage()) ?></div>
           <?php endif; ?>
 
+          <?php if (($type === 'webinar' && !$isFreeWebinar) || ($type === 'bootcamp' && bootcampShowsDualCurrency($item))): ?>
+          <form method="GET" id="checkoutCurrencyForm" class="mb-3">
+            <input type="hidden" name="type" value="<?= htmlspecialchars($type) ?>">
+            <input type="hidden" name="id" value="<?= $id ?>">
+            <input type="hidden" name="proceed" value="1">
+            <?php
+            $currencyOpts = ['label' => 'Choose payment currency', 'auto_submit' => true];
+            if ($type === 'bootcamp') {
+                $currencyOpts['fee_resolver'] = static fn (string $code): float => bootcampCheckoutFee($item, $code);
+                $currencyOpts['format_resolver'] = static fn (string $code, float $amt): string => bootcampFormatCheckoutAmount($code, $amt, $item);
+            }
+            renderWebinarCurrencySelector($paymentCurrency, 'currency', $currencyOpts);
+            ?>
+          </form>
+          <?php endif; ?>
+
           <!-- Wallet -->
-          <?php if ($walletBalance > 0 && $fee > 0): ?>
+          <?php if ($walletBalance > 0 && $fee > 0 && $paymentCurrency === 'INR'): ?>
           <div class="wallet-use">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem">
               <div style="font-size:0.88rem;font-weight:500"><i class="fas fa-coins me-1" style="color:var(--cyber-green)"></i>NxL Wallet Balance</div>
@@ -216,10 +324,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <!-- Order Summary -->
           <div class="order-summary">
             <div class="order-row">
-              <span class="order-label"><?= ucfirst($type) ?> Fee</span>
-              <span class="order-value">₹<?= number_format($fee) ?></span>
+              <span class="order-label"><?= $type === 'webinar' && !$isFreeWebinar ? htmlspecialchars(webinarPaidCompactLabel()) : (ucfirst($type) . ' Fee') ?></span>
+              <span class="order-value"><?= $type === 'webinar' && $isFreeWebinar ? 'FREE' : ($type === 'webinar' ? htmlspecialchars(webinarFormatCheckoutAmount($paymentCurrency, $fee)) : htmlspecialchars(bootcampFormatCheckoutAmount($paymentCurrency, $fee, $item))) ?></span>
             </div>
-            <?php if ($walletApplied > 0): ?>
+            <?php if ($walletApplied > 0 && $paymentCurrency === 'INR'): ?>
             <div class="order-row">
               <span class="order-label" style="color:var(--cyber-green)">NxL Wallet Discount</span>
               <span class="order-value" style="color:var(--cyber-green)">-₹<?= number_format($walletApplied) ?></span>
@@ -231,7 +339,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             </div>
             <div class="order-row">
               <span class="order-total-label">Total Payable</span>
-              <span class="order-total-value">₹<?= number_format($finalFee) ?></span>
+              <span class="order-total-value"><?= htmlspecialchars($type === 'webinar' ? webinarFormatCheckoutAmount($paymentCurrency, $finalFee) : bootcampFormatCheckoutAmount(bootcampShowsDualCurrency($item) ? $paymentCurrency : 'INR', $finalFee, $item)) ?></span>
             </div>
           </div>
 
@@ -251,13 +359,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
             <form method="POST">
               <input type="hidden" name="csrf_token" value="<?= generateCSRF() ?>">
               <button type="submit" name="confirm_free" value="1" class="pay-btn" style="background:var(--cyber-green)">
-                <i class="fas fa-check-circle"></i> Confirm Free Registration
+                <i class="fas fa-check-circle"></i> Confirm Registration
               </button>
             </form>
             <?php endif; ?>
           <?php elseif ($finalFee > 0 && !empty($orderData['success'])): ?>
           <button id="rzp-btn" class="pay-btn" type="button">
-            <i class="fas fa-lock"></i> Pay <?= formatRupee($finalFee) ?> Securely
+            <i class="fas fa-lock"></i> Pay <?= htmlspecialchars(webinarFormatCheckoutAmount($type === 'webinar' ? $paymentCurrency : 'INR', $finalFee)) ?> Securely
           </button>
           <?php elseif ($finalFee > 0): ?>
             <div class="alert-box alert-error"><i class="fas fa-exclamation-circle"></i><?= htmlspecialchars(paymentUserMessage()) ?></div>
@@ -332,8 +440,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 const options = {
   key: '<?= RAZORPAY_KEY_ID ?>',
   amount: <?= $orderData['amount_paise'] ?>,
-  currency: '<?= RAZORPAY_CURRENCY ?>',
-  name: 'CYBEORCH LAB',
+  currency: <?= json_encode($type === 'webinar' ? $paymentCurrency : 'INR') ?>,
+  name: 'CYBEORCH LABS',
   description: '<?= addslashes($item['title']) ?>',
   order_id: '<?= $orderData['razorpay_order_id'] ?>',
   handler: function(response) {
@@ -369,11 +477,26 @@ document.getElementById('rzp-btn').addEventListener('click', function() {
   rzp.on('payment.failed', function(res) {
     alert(<?= json_encode(paymentUserMessage()) ?>);
     document.getElementById('rzp-btn').disabled = false;
-    document.getElementById('rzp-btn').innerHTML = '<i class="fas fa-lock"></i> Pay ₹<?= number_format($finalFee) ?> Securely';
+    document.getElementById('rzp-btn').innerHTML = '<i class="fas fa-lock"></i> Pay <?= addslashes(webinarFormatCheckoutAmount($type === 'webinar' ? $paymentCurrency : 'INR', $finalFee)) ?> Securely';
   });
 });
 </script>
 <?php endif; ?>
+<script>
+document.querySelectorAll('#checkoutCurrencyForm input[data-auto-submit]').forEach(function (radio) {
+  radio.addEventListener('change', function () {
+    document.getElementById('checkoutCurrencyForm')?.submit();
+  });
+});
+document.querySelectorAll('#checkoutCurrencyForm .webinar-currency-option').forEach(function (tile) {
+  tile.addEventListener('click', function () {
+    document.querySelectorAll('#checkoutCurrencyForm .webinar-currency-option').forEach(function (t) {
+      t.classList.remove('is-selected');
+    });
+    tile.classList.add('is-selected');
+  });
+});
+</script>
 <?php renderSiteScripts(); ?>
 </body>
 </html>

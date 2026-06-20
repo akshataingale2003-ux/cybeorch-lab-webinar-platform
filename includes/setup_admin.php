@@ -1,21 +1,75 @@
 <?php
 declare(strict_types=1);
 
+/** Registered admin email for login and password reset delivery. */
+function cybeorchAdminRegisteredEmail(): string
+{
+    return 'akshataingale2003@gmail.com';
+}
+
+/**
+ * Ensure the primary admin account uses the registered email address.
+ */
+function ensureAdminRegisteredEmail(): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    $canonical = strtolower(cybeorchAdminRegisteredEmail());
+
+    try {
+        $primary = db()->fetchOne(
+            "SELECT id, email FROM admin WHERE username = 'cybeorch_admin' OR role = 'super_admin' ORDER BY id ASC LIMIT 1"
+        );
+        if (!$primary) {
+            return;
+        }
+
+        $primaryId = (int) $primary['id'];
+        if (strtolower(trim((string) ($primary['email'] ?? ''))) === $canonical) {
+            return;
+        }
+
+        $conflict = db()->fetchOne(
+            'SELECT id FROM admin WHERE LOWER(email) = ? AND id != ? LIMIT 1',
+            [$canonical, $primaryId]
+        );
+        if ($conflict) {
+            return;
+        }
+
+        db()->execute('UPDATE admin SET email = ? WHERE id = ?', [cybeorchAdminRegisteredEmail(), $primaryId]);
+    } catch (Throwable $e) {
+        // DB offline
+    }
+}
+
 /**
  * Ensures default admin exists with a valid password hash (Admin@123).
  * Fixes database.sql placeholder: XYZ_REPLACE_WITH_HASHED_PASSWORD
  */
 function ensureDefaultAdminAccount(): array
 {
+    ensureAdminRegisteredEmail();
+
     $defaultUser = 'cybeorch_admin';
-    $defaultEmail = 'admin@cybeorch.com';
+    $defaultEmail = cybeorchAdminRegisteredEmail();
     $defaultPass = 'Admin@123';
 
     try {
         $admin = db()->fetchOne(
-            'SELECT id, password FROM admin WHERE username = ? OR email = ? LIMIT 1',
-            [$defaultUser, $defaultEmail]
+            'SELECT id, password, email FROM admin WHERE username = ? LIMIT 1',
+            [$defaultUser]
         );
+        if (!$admin) {
+            $admin = db()->fetchOne(
+                'SELECT id, password, email FROM admin WHERE LOWER(email) = ? LIMIT 1',
+                [strtolower($defaultEmail)]
+            );
+        }
 
         $broken = !$admin
             || str_contains((string) $admin['password'], 'XYZ_REPLACE')
@@ -28,7 +82,10 @@ function ensureDefaultAdminAccount(): array
         $hash = password_hash($defaultPass, PASSWORD_BCRYPT, ['cost' => HASH_COST]);
 
         if ($admin) {
-            db()->execute('UPDATE admin SET password = ? WHERE id = ?', [$hash, $admin['id']]);
+            db()->execute(
+                'UPDATE admin SET password = ?, email = ? WHERE id = ?',
+                [$hash, $defaultEmail, $admin['id']]
+            );
         } else {
             db()->insert(
                 'INSERT INTO admin (username, email, password, full_name, role) VALUES (?, ?, ?, ?, ?)',

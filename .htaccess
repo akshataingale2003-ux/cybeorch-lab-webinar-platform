@@ -26,10 +26,16 @@ DirectoryIndex index.php
     RewriteEngine On
     RewriteRule ^includes/ - [F,L]
     RewriteRule ^uploads/.*\.(php|php5|phtml|cgi|pl|py|rb|sh)$ - [F,L]
+    RewriteRule ^assignment\.php$ hands-on-projects.php [R=301,L,NC]
+    RewriteRule ^assignments\.php$ hands-on-projects.php [R=301,L,NC]
+    RewriteRule ^live-project\.php$ live-projects.php [R=301,L,NC,QSA]
+    RewriteRule ^freelance-project\.php$ freelance-projects.php [R=301,L,NC,QSA]
+    RewriteRule ^rewards\.php$ wallet.php [R=301,L,NC]
+    RewriteRule ^leaderboard\.php$ leadership.php [R=301,L,NC]
 </IfModule>
 
-# PHP Settings
-<IfModule mod_php.c>
+# PHP Settings (php_module on XAMPP PHP 8+)
+<IfModule php_module>
     php_flag display_errors Off
     php_flag log_errors On
     php_value session.cookie_httponly 1

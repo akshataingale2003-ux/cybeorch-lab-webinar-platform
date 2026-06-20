@@ -2,6 +2,7 @@
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/db.php';
 require_once __DIR__ . '/includes/helpers.php';
+require_once __DIR__ . '/includes/webinar-registration-service.php';
 
 startSession();
 requireLogin();
@@ -20,10 +21,7 @@ $reg  = null;
 
 if ($type === 'webinar') {
     $item = db()->fetchOne('SELECT * FROM webinars WHERE id = ?', [$id]);
-    $reg  = db()->fetchOne(
-        'SELECT * FROM webinar_registrations WHERE user_id = ? AND webinar_id = ?',
-        [$userId, $id]
-    );
+    $reg  = fetchActiveWebinarRegistrationByUser($userId, $id);
 } else {
     $item = db()->fetchOne('SELECT * FROM bootcamps WHERE id = ?', [$id]);
     $reg  = db()->fetchOne(
@@ -44,7 +42,7 @@ $pageTitle = $isFree ? 'Registration Confirmed' : 'Registration Confirmed';
 <head>
 <meta charset="UTF-8">
 <?php renderStandardViewport(); ?>
-<title><?= htmlspecialchars($pageTitle) ?> &ndash; CYBEORCH LAB</title>
+<title><?= htmlspecialchars($pageTitle) ?> &ndash; CYBEORCH LABS</title>
 <?php renderAuthPageHead(); ?>
 <style>
 :root{--cyber-dark:#050b18;--cyber-navy:#0a1628;--cyber-accent:#00d4ff;--cyber-green:#00ff88;--cyber-muted:#7a8fa6;--cyber-text:#e0e8f0;--cyber-border:rgba(0,212,255,0.2);--cyber-card:rgba(15,52,96,0.35);}

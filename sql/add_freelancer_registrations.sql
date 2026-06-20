@@ -16,10 +16,13 @@ CREATE TABLE IF NOT EXISTS freelancer_registrations (
     availability ENUM('full_time','part_time','project_based') NOT NULL,
     location VARCHAR(100) DEFAULT NULL,
     about TEXT,
+    resume_path VARCHAR(500) DEFAULT NULL,
+    resume_original_name VARCHAR(255) DEFAULT NULL,
     status ENUM('pending','reviewed','shortlisted','rejected','active') DEFAULT 'pending',
     admin_notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
-    UNIQUE KEY unique_freelancer_email (email)
+    UNIQUE KEY unique_freelancer_email_role (email, primary_role),
+    UNIQUE KEY unique_freelancer_user_role (user_id, primary_role)
 );

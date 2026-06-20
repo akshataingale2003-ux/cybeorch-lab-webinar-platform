@@ -6,7 +6,7 @@ require_once __DIR__ . '/includes/legal-public.php';
 startSession();
 
 $pageTitle = 'FAQ';
-renderLegalPublicPageStart($pageTitle, 'Frequently asked questions about CYBEORCH LAB webinars, bootcamps, payments, and certificates.');
+renderLegalPublicPageStart($pageTitle, 'Frequently asked questions about CYBEORCH LABS webinars, bootcamps, payments, and certificates.');
 ?>
 
 <header class="page-hero">

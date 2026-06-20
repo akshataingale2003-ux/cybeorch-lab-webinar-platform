@@ -11,7 +11,7 @@ renderStudentHead('Profile');
 renderStudentSidebar('profile', $ctx);
 ?>
 <main class="main">
-  <div class="topbar"><div class="page-title">Profile</div></div>
+  <?php renderPortalTopbar('Profile'); ?>
   <div class="content">
     <div class="card-panel">
       <p><strong>Name:</strong> <?= htmlspecialchars($user['full_name']) ?></p>

@@ -1,0 +1,25 @@
+-- Recorded sessions linked to webinars/bootcamps (enrollment-gated playback)
+CREATE TABLE IF NOT EXISTS recorded_sessions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL,
+    description TEXT,
+    link_type ENUM('webinar','bootcamp') NOT NULL,
+    webinar_id INT NULL DEFAULT NULL,
+    bootcamp_id INT NULL DEFAULT NULL,
+    video_path VARCHAR(500) DEFAULT NULL,
+    video_original VARCHAR(255) DEFAULT NULL,
+    video_mime VARCHAR(120) DEFAULT NULL,
+    video_size BIGINT UNSIGNED DEFAULT NULL,
+    status VARCHAR(32) NOT NULL DEFAULT 'Draft',
+    sort_order INT NOT NULL DEFAULT 0,
+    deleted_at DATETIME NULL DEFAULT NULL,
+    is_blocked TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_recorded_sessions_slug (slug),
+    INDEX idx_rs_webinar (webinar_id),
+    INDEX idx_rs_bootcamp (bootcamp_id),
+    INDEX idx_rs_status (status),
+    INDEX idx_rs_sort (sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

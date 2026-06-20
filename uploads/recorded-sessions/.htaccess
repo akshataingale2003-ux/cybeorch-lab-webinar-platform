@@ -1,0 +1,4 @@
+Options -Indexes
+
+# Block direct access — videos are served via authenticated stream endpoint
+Require all denied

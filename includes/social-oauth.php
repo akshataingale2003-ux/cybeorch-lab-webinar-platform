@@ -63,7 +63,7 @@ function oauthBeginGoogle(string $pendingEmail, bool $popup): void
 {
     startSession();
     if (!oauthGoogleConfigured()) {
-        oauthAbort('Google Sign-In is not configured. Add GOOGLE_OAUTH_* in includes/config.php.', $popup);
+        oauthAbort('Google Sign-In is not configured. Add GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET to .env.', $popup);
     }
     $pendingEmail = strtolower(trim($pendingEmail));
     if (!registerEmailIsAutoAuthorizable($pendingEmail)) {

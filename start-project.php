@@ -77,7 +77,6 @@ $howItWorksSteps = [
     <div class="row g-5 align-items-start">
       <div class="col-lg-5">
         <h2 class="section-title">How It <span class="accent">Works</span></h2>
-        <div class="divider"></div>
         <p style="color:var(--cyber-muted);font-size:.92rem;line-height:1.7;margin-bottom:1.5rem">From idea to launch — a simple, transparent process for startups, SMEs, and enterprises.</p>
         <ul class="step-list">
           <?php foreach ($howItWorksSteps as $i => $step): ?>
@@ -99,7 +98,6 @@ $howItWorksSteps = [
       <div class="col-lg-7">
         <div class="enquiry-form">
           <h2 class="section-title" style="font-size:1.5rem">Project <span class="accent">Brief</span></h2>
-          <div class="divider"></div>
           <?= showFlash() ?>
           <form method="POST" action="<?= url('start-project.php') ?>">
             <input type="hidden" name="csrf_token" value="<?= generateCSRF() ?>">

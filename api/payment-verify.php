@@ -1,12 +1,13 @@
 <?php
 // ============================================
-// CYBEORCH LAB - Payment Verification API
+// CYBEORCH LABS - Payment Verification API
 // ============================================
 
 require_once '../includes/config.php';
 require_once '../includes/db.php';
 require_once '../includes/helpers.php';
 require_once '../includes/payment.php';
+require_once '../includes/webinar-registration-service.php';
 
 startSession();
 requireLogin();
@@ -35,21 +36,15 @@ if ($result['success']) {
     if ($payment['payment_for'] === 'webinar') {
         $regNo = generateRegNo('CYB-W');
         // Insert registration if not exists
-        $existing = db()->fetchOne(
-            "SELECT id FROM webinar_registrations WHERE user_id = ? AND webinar_id = ?",
-            [$_SESSION['user_id'], $payment['reference_id']]
-        );
+        $existing = fetchActiveWebinarRegistrationByUser((int) $_SESSION['user_id'], (int) $payment['reference_id']);
         if (!$existing) {
             db()->execute(
                 "INSERT INTO webinar_registrations (user_id, webinar_id, registration_no, payment_id, payment_status) VALUES (?,?,?,?,'paid')",
                 [$_SESSION['user_id'], $payment['reference_id'], $regNo, $payment['id']]
             );
-            db()->execute(
-                "UPDATE webinars SET registered_seats = registered_seats + 1 WHERE id = ?",
-                [$payment['reference_id']]
-            );
+            // Seats booked must be derived from webinar_registrations (no caching).
         }
-        header('Location: ' . url('payment-success.php?type=webinar&ref=' . urlencode($rzpPaymentId)));
+        header('Location: ' . url('payment-success.php?type=webinar&pid=' . (int) ($payment['id'] ?? 0) . '&ref=' . urlencode($rzpPaymentId)));
     } else {
         $regNo = generateRegNo('CYB-B');
         $existing = db()->fetchOne(
@@ -66,7 +61,7 @@ if ($result['success']) {
                 [$payment['reference_id']]
             );
         }
-        header('Location: ' . url('payment-success.php?type=bootcamp&ref=' . urlencode($rzpPaymentId)));
+        header('Location: ' . url('payment-success.php?type=bootcamp&pid=' . (int) ($payment['id'] ?? 0) . '&ref=' . urlencode($rzpPaymentId)));
     }
     exit;
 } else {

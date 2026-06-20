@@ -101,6 +101,10 @@
       });
   }
 
+  function shouldReloadStats(entity) {
+    return entity === 'invoice' || entity === 'amc_contract' || entity === 'client';
+  }
+
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('[data-admin-action]');
     if (!btn || btn.disabled) {
@@ -136,6 +140,10 @@
         setTimeout(function () {
           row.remove();
           var tbody = document.querySelector('.data-table tbody');
+          if (shouldReloadStats(entity)) {
+            location.reload();
+            return;
+          }
           if (tbody && !tbody.querySelector('tr')) {
             location.reload();
           }

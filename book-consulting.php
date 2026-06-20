@@ -56,21 +56,11 @@ $meetingModes = [
     <div class="row g-5 align-items-start">
       <div class="col-lg-5">
         <h2 class="section-title">What to <span class="accent">Expect</span></h2>
-        <div class="divider"></div>
         <ul class="step-list">
           <li><span class="step-num">1</span><span>Fill in the consulting form with your topic and availability.</span></li>
-          <li><span class="step-num">2</span><span>We confirm your session by email or WhatsApp.</span></li>
+          <li><span class="step-num">2</span><span>We confirm your session by email.</span></li>
           <li><span class="step-num">3</span><span>30–60 minute call with a senior expert on your chosen area.</span></li>
         </ul>
-        <div class="info-card d-flex align-items-center gap-3">
-          <div style="width:44px;height:44px;background:rgba(0,255,136,0.1);border:1px solid var(--cyber-border);border-radius:8px;display:flex;align-items:center;justify-content:center">
-            <i class="fab fa-whatsapp" style="color:var(--cyber-green)"></i>
-          </div>
-          <div>
-            <div style="font-size:.8rem;color:var(--cyber-muted)">WhatsApp (<span class="brand-eva">EVA</span>)</div>
-            <div>+91 97640 96069</div>
-          </div>
-        </div>
         <div class="info-card info-card-cta mt-3">
           <div class="info-card-cta-label">Ready to start building?</div>
           <a href="<?= url('start-project.php') ?>" class="btn-outline-cyber"><i class="fas fa-rocket me-2"></i>Start Your Project</a>
@@ -80,7 +70,6 @@ $meetingModes = [
       <div class="col-lg-7">
         <div class="enquiry-form">
           <h2 class="section-title" style="font-size:1.5rem">Consulting <span class="accent">Request</span></h2>
-          <div class="divider"></div>
           <?= showFlash() ?>
           <form method="POST" action="<?= url('book-consulting.php') ?>">
             <input type="hidden" name="csrf_token" value="<?= generateCSRF() ?>">

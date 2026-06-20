@@ -10,21 +10,21 @@ declare(strict_types=1);
  */
 function enforcePublicSiteAuth(): void
 {
-    if (PHP_SAPI === 'cli') {
+    if (!isPublicAuthEnabled() || PHP_SAPI === 'cli') {
         return;
     }
 
     $script = basename($_SERVER['SCRIPT_NAME'] ?? '');
     $scriptPath = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
 
-    if (str_contains($scriptPath, '/admin/')) {
+    if (isAdminAreaRequest()) {
         return;
     }
     if (str_contains($scriptPath, '/api/')) {
         return;
     }
 
-    if (in_array($script, ['send_otp.php', 'verify_otp.php', 'setup-smtp.php'], true)) {
+    if (in_array($script, ['send_otp.php', 'verify_otp.php', 'setup-smtp.php', 'send-reset-email.php'], true)) {
         return;
     }
 
@@ -39,8 +39,10 @@ function enforcePublicSiteAuth(): void
 
     $guestAuthPages = [
         'login.php',
+        'signup.php',
         'register-website.php',
         'forgot-password.php',
+        'reset-password.php',
         'logout.php',
         'oauth-start.php',
         'oauth-callback.php',
@@ -48,10 +50,8 @@ function enforcePublicSiteAuth(): void
         'magic-login.php',
     ];
     if (in_array($script, $guestAuthPages, true)) {
-        if ($script !== 'logout.php' && isLoggedIn()) {
-            $dest = $script === 'register-website.php'
-                ? 'dashboard.php'
-                : loginSuccessRedirectPath();
+        if ($script !== 'logout.php' && $script !== 'reset-password.php' && isLoggedIn()) {
+            $dest = loginSuccessRedirectPath();
             header('Location: ' . url($dest));
             exit;
         }
@@ -63,29 +63,45 @@ function enforcePublicSiteAuth(): void
         return;
     }
 
-    /** All other pages require popup registration first. */
-    if (!hasWebsiteAccess()) {
-        header('Location: ' . url('index.php?register_required=1'));
-        exit;
-    }
-
-    /** Marketing/enquiry pages (registered guest, no user registration & trainee login required). */
-    $websiteBrowsingPages = [
+    /**
+     * Public catalog & marketing pages (no website popup, no trainee login).
+     * Admin-managed webinars, bootcamps, live projects, assignments, etc. must be visible here.
+     */
+    $publicCatalogPages = [
         'webinars.php',
         'bootcamps.php',
-        'aboutus.php',
+        'checkout.php',
+        'products.php',
+        'services.php',
+        'solutions.php',
         'about.php',
+        'corporate-services.php',
+        'portfolio.php',
+        'case-studies.php',
+        'company-profile.php',
         'contact.php',
         'terms.php',
         'privacy.php',
         'freelancer.php',
+        'freelance-projects.php',
+        'live-projects.php',
+        'hands-on-projects.php',
         'enquire-enroll.php',
+        'secure-payment.php',
         'assignment-register.php',
         'start-project.php',
         'book-consulting.php',
+        'webinar-registration-confirm.php',
+        'registration-success.php',
     ];
-    if (in_array($script, $websiteBrowsingPages, true)) {
+    if (in_array($script, $publicCatalogPages, true)) {
         return;
+    }
+
+    /** Remaining pages require website popup registration first. */
+    if (!hasWebsiteAccess()) {
+        header('Location: ' . url('index.php?register_required=1'));
+        exit;
     }
 
     /** Dashboard, wallet, profile, etc. require user registration & trainee session (created on popup register). */
@@ -124,6 +140,12 @@ function loginSuccessRedirectPath(): string
     return 'dashboard.php';
 }
 
+/** Where to send users after successful sign-up (home page, session stays active). */
+function signupSuccessRedirectPath(): string
+{
+    return 'index.php?registered=1';
+}
+
 function safeRedirectPath(string $path): string
 {
     $path = ltrim($path, '/');
@@ -133,10 +155,10 @@ function safeRedirectPath(string $path): string
     $base = explode('?', $path)[0];
     $forceHome = [
         'login.php',
+        'signin.php',
         'logout.php',
         'forgot-password.php',
         'about.php',
-        'aboutus.php',
     ];
     if (in_array($base, $forceHome, true)) {
         return 'index.php';

@@ -83,6 +83,10 @@ function ensureSupportTicketSchema(): void
         INDEX idx_reply_ticket (ticket_id)
     )");
 
+    if (db()->fetchOne("SHOW COLUMNS FROM support_ticket_replies LIKE 'is_internal'") === null) {
+        db()->execute('ALTER TABLE support_ticket_replies ADD COLUMN is_internal TINYINT(1) DEFAULT 0 AFTER message');
+    }
+
     seedSupportTicketDefaults();
     $done = true;
 }
@@ -95,7 +99,6 @@ function seedSupportTicketDefaults(): void
         ['technical', 'Technical / Live Session', 'Access links and platform errors', 'fa-laptop-code', 3],
         ['refund', 'Refunds & Cancellations', 'Refund requests', 'fa-rotate-left', 4],
         ['account', 'Account & Login', 'Password and sign-in', 'fa-key', 5],
-        ['certificate', 'Certificates', 'Certificate eligibility', 'fa-certificate', 6],
         ['other', 'Other', 'General enquiries', 'fa-ellipsis', 99],
     ];
     foreach ($cats as [$slug, $name, $desc, $icon, $ord]) {
@@ -149,7 +152,7 @@ function defaultTeamForCategory(int $catId): ?int
     if (!$cat) {
         return null;
     }
-    $map = ['enrollment' => 'enrollment', 'payment' => 'billing', 'refund' => 'billing', 'technical' => 'technical', 'account' => 'general', 'certificate' => 'enrollment', 'other' => 'general'];
+    $map = ['enrollment' => 'enrollment', 'payment' => 'billing', 'refund' => 'billing', 'technical' => 'technical', 'account' => 'general', 'other' => 'general'];
     $t = db()->fetchOne('SELECT id FROM support_teams WHERE slug=?', [$map[$cat['slug']] ?? 'general']);
     return $t ? (int) $t['id'] : null;
 }
@@ -161,15 +164,31 @@ function createSupportTicket(array $d): int
     if (!isset(supportTicketPriorities()[$prio])) {
         $prio = 'medium';
     }
+    $ticketNo = generateTicketNo();
     $tid = db()->insert(
         'INSERT INTO support_tickets (ticket_no,user_id,name,email,phone,category_id,subject,message,priority,assigned_team_id) VALUES (?,?,?,?,?,?,?,?,?,?)',
-        [generateTicketNo(), $d['user_id'] ?? null, $d['name'], $d['email'], $d['phone'] ?? null, $d['category_id'], $d['subject'], $d['message'], $prio, defaultTeamForCategory((int) $d['category_id'])]
+        [$ticketNo, $d['user_id'] ?? null, $d['name'], $d['email'], $d['phone'] ?? null, $d['category_id'], $d['subject'], $d['message'], $prio, defaultTeamForCategory((int) $d['category_id'])]
     );
     db()->insert('INSERT INTO support_ticket_replies (ticket_id,sender_type,sender_user_id,message) VALUES (?,?,?,?)', [$tid, 'user', $d['user_id'] ?? null, $d['message']]);
     if (!empty($d['user_id'])) {
         require_once __DIR__ . '/helpers.php';
         sendNotification((int) $d['user_id'], 'support', 'Ticket created', 'Your support ticket was submitted.', $tid, 'support_ticket');
     }
+
+    require_once __DIR__ . '/form-submissions.php';
+    recordFormSubmission([
+        'form_key'          => 'support-ticket',
+        'form_label'        => 'Support desk ticket',
+        'source_page'       => 'supportdesk.php',
+        'full_name'         => $d['name'],
+        'email'             => $d['email'],
+        'phone'             => $d['phone'] ?? null,
+        'summary'           => ($d['subject'] ?? '') . ' — ' . $ticketNo,
+        'payload'           => $d,
+        'storage_table'     => 'support_tickets',
+        'storage_record_id' => $tid,
+    ]);
+
     return $tid;
 }
 
@@ -214,6 +233,7 @@ function verifyTicketAccess(array $t, string $email = ''): bool
 
 function getTicketReplies(int $tid, bool $internal = false): array
 {
+    ensureSupportTicketSchema();
     $sql = "SELECT r.*,u.full_name user_name,a.full_name admin_name FROM support_ticket_replies r
             LEFT JOIN users u ON u.id=r.sender_user_id LEFT JOIN admin a ON a.id=r.sender_admin_id WHERE r.ticket_id=?";
     if (!$internal) {
@@ -224,6 +244,7 @@ function getTicketReplies(int $tid, bool $internal = false): array
 
 function addTicketReply(int $tid, string $type, string $msg, ?int $uid = null, ?int $aid = null, bool $int = false): void
 {
+    ensureSupportTicketSchema();
     db()->insert('INSERT INTO support_ticket_replies (ticket_id,sender_type,sender_user_id,sender_admin_id,message,is_internal) VALUES (?,?,?,?,?,?)', [$tid, $type, $uid, $aid, $msg, $int ? 1 : 0]);
     db()->execute('UPDATE support_tickets SET updated_at=NOW() WHERE id=?', [$tid]);
 }
@@ -296,7 +317,7 @@ function renderSupportDeskStyles(): void
         .'.prio-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:.4rem}'
         .'.team-item{display:flex;gap:.7rem;padding:.55rem 0;border-bottom:1px solid rgba(0,212,255,.06);font-size:.84rem}'
         .'.team-item i{width:34px;height:34px;border-radius:8px;background:rgba(0,255,136,.08);color:var(--cyber-green);display:flex;align-items:center;justify-content:center}'
-        .'.sd-form .form-control,.sd-form .form-select{background:rgba(255,255,255,.05)!important;border:1px solid var(--cyber-border)!important;color:var(--cyber-text)!important;border-radius:6px!important;padding:.65rem .9rem!important}'
+        .'.sd-form .form-control{background:rgba(255,255,255,.05)!important;border:1px solid var(--cyber-border)!important;color:var(--cyber-text)!important;border-radius:6px!important;padding:.65rem .9rem!important}'
         .'.sd-form .form-label{color:var(--cyber-muted);font-size:.8rem}'
         .'.btn-sd{background:var(--cyber-accent);color:#050b18;border:none;padding:.7rem 1.2rem;border-radius:6px;font-weight:700;width:100%;cursor:pointer}'
         .'.btn-sd:hover{background:var(--cyber-green)}'
@@ -312,4 +333,7 @@ function renderSupportDeskStyles(): void
         .'.chat-mini .cb.user{background:rgba(0,212,255,.1);border:1px solid var(--cyber-border)}'
         .'.chat-mini .cb.admin{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);margin-left:auto}'
         .'</style>';
+    if (function_exists('renderFormSelectStyles')) {
+        renderFormSelectStyles();
+    }
 }
